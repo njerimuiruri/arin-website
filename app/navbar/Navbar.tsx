@@ -35,7 +35,7 @@ const Navbar = () => {
                 { name: 'Policy Dialogues', href: '/convening-platforms/policy-dialogues' },
                 { name: 'Events', href: '/convening-platforms/events' },
                 { name: 'Conferences', href: '/convening-platforms/conferences' },
-                { name: 'COP', href: '/convening-platforms/cop' },
+                { name: 'Conference of the Parties', href: '/convening-platforms/cop' },
             ]
         },
         {

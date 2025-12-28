@@ -3,8 +3,20 @@ import React, { useState } from 'react';
 import { X, Mail, Linkedin, Award, BookOpen, Users } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
 
+
+type SecretariatMember = {
+    id: number;
+    name: string;
+    role: string;
+    image: string;
+    bio: string;
+    expertise: string[];
+    email: string;
+    linkedin: string;
+};
+
 const SecretariatPage = () => {
-    const [selectedMember, setSelectedMember] = useState(null);
+    const [selectedMember, setSelectedMember] = useState<SecretariatMember | null>(null);
 
     const secretariatMembers = [
         {
