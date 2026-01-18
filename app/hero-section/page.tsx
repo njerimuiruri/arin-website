@@ -8,6 +8,8 @@ import UpcomingEventsSection from "./sections/UpcomingEventsSection";
 import LatestProjectsSection from "./sections/LatestProjectsSection";
 import PartnersSection from "./sections/PartnersSection";
 import CTASection from "./sections/CTASection";
+import AfricaPresenceMap from "./sections/AfricaPresenceMap";
+import ImpactStories from "./sections/impactstories";
 
 const latestPosts = [
     {
@@ -55,12 +57,26 @@ const upcomingEvents = [
 ];
 
 const partners = [
-    { name: "Partner 1", logo: "/api/placeholder/150/80" },
-    { name: "Partner 2", logo: "/api/placeholder/150/80" },
-    { name: "Partner 3", logo: "/api/placeholder/150/80" },
-    { name: "Partner 4", logo: "/api/placeholder/150/80" },
-    { name: "Partner 5", logo: "/api/placeholder/150/80" },
-    { name: "Partner 6", logo: "/api/placeholder/150/80" }
+    { name: "Partner 1", logo: "/partners/adaptation_research_alliance.png" },
+    { name: "Partner 2", logo: "/partners/afidep.png" },
+    { name: "Partner 3", logo: "/partners/easteco.png" },
+    { name: "Partner 4", logo: "/partners/franfurt_school.png" },
+    { name: "Partner 5", logo: "/partners/gcrf.jpg" },
+    { name: "Partner 6", logo: "/partners/giz.png" },
+    { name: "Partner 1", logo: "/partners/iclei.jpg" },
+    { name: "Partner 2", logo: "/partners/kenia.png" },
+    { name: "Partner 3", logo: "/partners/idrc.png" },
+    { name: "Partner 4", logo: "/partners/kings_college_london.png" },
+    { name: "Partner 5", logo: "/partners/nairobi_county.jpg" },
+    { name: "Partner 6", logo: "/partners/redcross.png" },
+    { name: "Partner 4", logo: "/partners/sdi.png" },
+    { name: "Partner 5", logo: "/partners/ssn.jpg" },
+    { name: "Partner 6", logo: "/partners/steps_africa.jpg" },
+    { name: "Partner 5", logo: "/partners/tomorrowscities.png" },
+    { name: "Partner 6", logo: "/partners/ucl.jpg" },
+    { name: "Partner 4", logo: "/partners/uk_foreign_office.jpg" },
+    { name: "Partner 5", logo: "/partners/ukcdr-scaled.jpg" },
+    { name: "Partner 6", logo: "/partners/ukri.png" }
 ];
 
 const latestProjects = [
@@ -91,10 +107,13 @@ const HeroSection = () => {
             <FeaturesSection />
             <FocusAreasSection />
             <MissionAreasSection />
-            <LatestPostsSection latestPosts={latestPosts} />
-            <UpcomingEventsSection upcomingEvents={upcomingEvents} />
-            <LatestProjectsSection latestProjects={latestProjects} />
+            <AfricaPresenceMap />
+            {/* <LatestPostsSection latestPosts={latestPosts} /> */}
+            {/* <UpcomingEventsSection upcomingEvents={upcomingEvents} /> */}
+            {/* <LatestProjectsSection latestProjects={latestProjects} /> */}
+            <ImpactStories />
             <PartnersSection partners={partners} />
+
             <CTASection />
         </div>
     );

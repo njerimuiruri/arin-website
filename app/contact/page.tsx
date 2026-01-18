@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { MapPin, Phone, Mail, Send, Facebook, Twitter, Instagram, Users, Building2, CheckCircle } from 'lucide-react';
 import Navbar from '../navbar/Navbar';
+import { contactService } from '@/services/contactService';
 
 const ContactPage = () => {
     const [formData, setFormData] = useState({
@@ -21,27 +22,36 @@ const ContactPage = () => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
 
-        // Simulate form submission
-        setTimeout(() => {
-            setIsSubmitting(false);
-            setSubmitSuccess(true);
-            setFormData({
-                name: '',
-                email: '',
-                phone: '',
-                subject: '',
-                message: ''
-            });
+        try {
+            const result = await contactService.submitContact(formData);
 
-            // Reset success message after 5 seconds
-            setTimeout(() => {
-                setSubmitSuccess(false);
-            }, 5000);
-        }, 1500);
+            if (result.success) {
+                setSubmitSuccess(true);
+                setFormData({
+                    name: '',
+                    email: '',
+                    phone: '',
+                    subject: '',
+                    message: ''
+                });
+
+                // Reset success message after 5 seconds
+                setTimeout(() => {
+                    setSubmitSuccess(false);
+                }, 5000);
+            } else {
+                alert(result.message);
+            }
+        } catch (error) {
+            console.error('Error submitting form:', error);
+            alert('There was an error submitting your message. Please try again.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (

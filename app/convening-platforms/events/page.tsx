@@ -1,336 +1,255 @@
 "use client";
-import React, { useState } from 'react';
-import { ArrowRight, Calendar, MapPin, Clock, Users, Search, Filter } from 'lucide-react';
+import React, { useEffect, useState, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
+import { Search, Calendar, MapPin, Clock } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
+import { getEvents } from '@/services/eventsService';
 
 const EventsPage = () => {
-    const [searchTerm, setSearchTerm] = useState('');
-    const [selectedType, setSelectedType] = useState('All');
-    const [activeTab, setActiveTab] = useState('upcoming'); // 'upcoming' or 'past'
+	const router = useRouter();
+	const [events, setEvents] = useState<any[]>([]);
+	const [loading, setLoading] = useState(true);
+	const [searchTerm, setSearchTerm] = useState('');
+	const [categoryFilter, setCategoryFilter] = useState('All');
+	const [statusFilter, setStatusFilter] = useState('All');
 
-    const upcomingEvents = [
-        {
-            id: 'climate-summit-2025',
-            title: 'African Climate Summit 2025',
-            date: 'March 15, 2025',
-            time: '9:00 AM - 5:00 PM',
-            location: 'Nairobi, Kenya',
-            type: 'Conference',
-            excerpt: 'Join leaders, researchers, and policymakers to discuss climate action strategies and solutions for Africa.',
-            attendees: '500+',
-            tags: ['Climate Change', 'Policy', 'Networking'],
-            image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80'
-        },
-        {
-            id: 'research-workshop-2025',
-            title: 'Research Methods Workshop',
-            date: 'April 10, 2025',
-            time: '10:00 AM - 4:00 PM',
-            location: 'Virtual',
-            type: 'Workshop',
-            excerpt: 'Intensive training on qualitative and quantitative research methods for African researchers.',
-            attendees: '100+',
-            tags: ['Research', 'Training', 'Capacity Building'],
-            image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&q=80'
-        },
-        {
-            id: 'climate-action-webinar-2025',
-            title: 'Climate Action Planning Webinar',
-            date: 'April 25, 2025',
-            time: '3:00 PM - 4:30 PM',
-            location: 'Virtual',
-            type: 'Webinar',
-            excerpt: 'Online session on developing effective climate action plans for African municipalities.',
-            attendees: '250+',
-            tags: ['Climate Action', 'Planning', 'Virtual'],
-            image: 'https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?w=800&q=80'
-        },
-        {
-            id: 'policy-dialogue-2025',
-            title: 'Policy Dialogue on Sustainable Development',
-            date: 'May 20, 2025',
-            time: '2:00 PM - 6:00 PM',
-            location: 'Accra, Ghana',
-            type: 'Dialogue',
-            excerpt: 'Engaging policymakers and stakeholders in conversations about sustainable development goals.',
-            attendees: '200+',
-            tags: ['Policy', 'SDGs', 'Development'],
-            image: 'https://images.unsplash.com/photo-1591115765373-5207764f72e7?w=800&q=80'
-        },
-        {
-            id: 'gender-equality-seminar-2025',
-            title: 'Gender Equality in Climate Research Seminar',
-            date: 'June 5, 2025',
-            time: '10:00 AM - 12:00 PM',
-            location: 'Addis Ababa, Ethiopia',
-            type: 'Seminar',
-            excerpt: 'Examining gender perspectives in climate change research and policy making.',
-            attendees: '80+',
-            tags: ['Gender', 'Research', 'Climate'],
-            image: 'https://images.unsplash.com/photo-1573164713988-8665fc963095?w=800&q=80'
-        }
-    ];
+	useEffect(() => {
+		async function fetchEvents() {
+			try {
+				const data = await getEvents();
+				setEvents(data);
+			} catch (error) {
+				console.error('Failed to fetch events:', error);
+			} finally {
+				setLoading(false);
+			}
+		}
+		fetchEvents();
+	}, []);
 
-    const pastEvents = [
-        {
-            id: 'arin-conference-2024',
-            title: 'ARIN Annual Conference 2024',
-            date: 'November 12, 2024',
-            time: '9:00 AM - 6:00 PM',
-            location: 'Kigali, Rwanda',
-            type: 'Conference',
-            excerpt: 'Annual gathering of ARIN fellows and partners to share research findings and network.',
-            attendees: '600+',
-            tags: ['Research', 'Networking', 'Impact'],
-            image: 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=800&q=80'
-        },
-        {
-            id: 'climate-finance-workshop-2024',
-            title: 'Climate Finance Capacity Building Workshop',
-            date: 'September 5, 2024',
-            time: '10:00 AM - 4:00 PM',
-            location: 'Lagos, Nigeria',
-            type: 'Workshop',
-            excerpt: 'Training on accessing climate finance mechanisms for African countries.',
-            attendees: '150+',
-            tags: ['Climate Finance', 'Training', 'Capacity'],
-            image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80'
-        },
-        {
-            id: 'ndc-implementation-webinar-2024',
-            title: 'NDC Implementation Strategies Webinar',
-            date: 'September 20, 2024',
-            time: '2:00 PM - 3:30 PM',
-            location: 'Virtual',
-            type: 'Webinar',
-            excerpt: 'Virtual discussion on effective strategies for implementing Nationally Determined Contributions.',
-            attendees: '300+',
-            tags: ['NDC', 'Implementation', 'Virtual'],
-            image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80'
-        },
-        {
-            id: 'youth-summit-2024',
-            title: 'African Youth Climate Summit',
-            date: 'August 22, 2024',
-            time: '9:00 AM - 5:00 PM',
-            location: 'Dakar, Senegal',
-            type: 'Summit',
-            excerpt: 'Empowering young African leaders to take action on climate change.',
-            attendees: '300+',
-            tags: ['Youth', 'Climate', 'Leadership'],
-            image: 'https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=800&q=80'
-        },
-        {
-            id: 'adaptation-seminar-2024',
-            title: 'Climate Adaptation Financing Seminar',
-            date: 'July 30, 2024',
-            time: '11:00 AM - 1:00 PM',
-            location: 'Cape Town, South Africa',
-            type: 'Seminar',
-            excerpt: 'Expert seminar on accessing and managing climate adaptation finance.',
-            attendees: '90+',
-            tags: ['Adaptation', 'Finance', 'Seminar'],
-            image: 'https://images.unsplash.com/photo-1560439513-74b037a25d84?w=800&q=80'
-        },
-        {
-            id: 'adaptation-dialogue-2024',
-            title: 'Community-Led Adaptation Dialogue',
-            date: 'July 18, 2024',
-            time: '2:00 PM - 5:00 PM',
-            location: 'Kampala, Uganda',
-            type: 'Dialogue',
-            excerpt: 'Sharing best practices in locally-led adaptation initiatives.',
-            attendees: '120+',
-            tags: ['Adaptation', 'Community', 'Dialogue'],
-            image: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800&q=80'
-        }
-    ];
+	const filteredEvents = useMemo(() => {
+		return events.filter(event => {
+			const matchesSearch = event.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+				event.location?.toLowerCase().includes(searchTerm.toLowerCase());
+			const matchesCategory = categoryFilter === 'All' || event.category === categoryFilter;
+			const matchesStatus = statusFilter === 'All' || event.status === statusFilter;
+			return matchesSearch && matchesCategory && matchesStatus;
+		});
+	}, [events, searchTerm, categoryFilter, statusFilter]);
 
-    const eventTypes = ['All', 'Conference', 'Workshop', 'Webinar', 'Seminar', 'Dialogue', 'Summit'];
+	const formatDate = (dateString: string) => {
+		const d = new Date(dateString);
+		return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+	};
 
-    const currentEvents = activeTab === 'upcoming' ? upcomingEvents : pastEvents;
+	const formatTime = (timeString: string) => {
+		if (!timeString) return '';
+		const [hours, minutes] = timeString.split(':');
+		const hour = parseInt(hours);
+		const ampm = hour >= 12 ? 'PM' : 'AM';
+		const displayHour = hour % 12 || 12;
+		return `${displayHour}:${minutes} ${ampm}`;
+	};
 
-    const filteredEvents = currentEvents.filter(event => {
-        const matchesSearch = event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            event.excerpt.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesType = selectedType === 'All' || event.type === selectedType;
-        return matchesSearch && matchesType;
-    });
+	const buildImageUrl = (img?: string) => {
+		if (!img) return '';
+		return img.startsWith('http') ? img : `http://localhost:5001${img}`;
+	};
 
-    const handleEventClick = (eventId) => {
-        console.log('Navigate to event:', eventId);
-        alert(`Navigate to event: ${eventId}\n\nIn your Next.js app, use:\nrouter.push(\`/events/${eventId}\`)`);
-    };
+	const getCategoryColor = (category: string) => {
+		switch (category) {
+			case 'Conference':
+				return 'bg-purple-500';
+			case 'Workshop':
+				return 'bg-blue-500';
+			case 'Webinar':
+				return 'bg-green-500';
+			case 'Dialogue':
+				return 'bg-amber-500';
+			case 'Friday Reviews':
+				return 'bg-pink-500';
+			default:
+				return 'bg-gray-500';
+		}
+	};
 
-    return (
-        <>
-            <Navbar />
-            <div className="w-full bg-gradient-to-br from-slate-50 via-white to-stone-50 min-h-screen">
-                {/* Hero Section */}
-                <section className="max-w-[1600px] mx-auto px-6 py-12">
-                    <div className="text-center mb-8">
-                        <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
-                            ARIN{' '}
-                            <span className="bg-gradient-to-r from-[#46a1bb] to-[#021d49] bg-clip-text text-transparent">
-                                Events
-                            </span>
-                        </h1>
+	const getStatusColor = (status: string) => {
+		return status === 'Upcoming'
+			? 'bg-emerald-500'
+			: 'bg-gray-500';
+	};
 
-                        <p className="text-lg text-gray-600 leading-relaxed max-w-3xl mx-auto">
-                            Join us at conferences, workshops, and dialogues driving research excellence and policy impact across Africa
-                        </p>
-                    </div>
+	return (
+		<>
+			<Navbar />
+			<div className="w-full bg-gradient-to-br from-slate-50 via-blue-50/30 to-white min-h-screen">
+				{/* Hero Section */}
+				<div className="bg-gradient-to-r from-[#021d49] to-[#46a1bb] text-white">
+					<section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+						<div className="text-center">
+							<h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+								Events & Gatherings
+							</h1>
+							<p className="text-lg sm:text-xl text-gray-100 max-w-3xl mx-auto leading-relaxed">
+								Join us for conferences, workshops, webinars, and dialogues that bring together experts and stakeholders to address critical challenges.
+							</p>
+						</div>
+					</section>
+				</div>
 
-                    {/* Tabs for Upcoming/Past Events */}
-                    <div className="flex justify-center mb-8">
-                        <div className="bg-white rounded-lg p-1 shadow-md border border-gray-200">
-                            <button
-                                onClick={() => setActiveTab('upcoming')}
-                                className={`px-8 py-3 rounded-lg font-semibold transition-all ${activeTab === 'upcoming'
-                                    ? 'bg-gradient-to-r from-[#021d49] to-[#46a1bb] text-white shadow-md'
-                                    : 'text-gray-600 hover:text-gray-900'
-                                    }`}
-                            >
-                                Upcoming Events
-                            </button>
-                            <button
-                                onClick={() => setActiveTab('past')}
-                                className={`px-8 py-3 rounded-lg font-semibold transition-all ${activeTab === 'past'
-                                    ? 'bg-gradient-to-r from-[#021d49] to-[#46a1bb] text-white shadow-md'
-                                    : 'text-gray-600 hover:text-gray-900'
-                                    }`}
-                            >
-                                Past Events
-                            </button>
-                        </div>
-                    </div>
+				<section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+					{/* Filters */}
+					<div className="mb-8 space-y-4">
+						<div className="flex flex-col md:flex-row gap-4">
+							{/* Search */}
+							<div className="flex-1 relative">
+								<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+								<input
+									type="text"
+									placeholder="Search events by title or location..."
+									value={searchTerm}
+									onChange={(e) => setSearchTerm(e.target.value)}
+									className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#46a1bb] focus:border-transparent outline-none transition-all"
+								/>
+							</div>
 
-                    {/* Search and Filter Section */}
-                    <div className="max-w-4xl mx-auto mb-8">
-                        <div className="bg-white rounded-xl p-4 shadow-lg border border-gray-200">
-                            <div className="grid md:grid-cols-2 gap-4">
-                                {/* Search Bar */}
-                                <div className="relative">
-                                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                                    <input
-                                        type="text"
-                                        placeholder="Search events..."
-                                        value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
-                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#46a1bb] focus:outline-none transition-colors"
-                                    />
-                                </div>
+							{/* Category Filter */}
+							<select
+								value={categoryFilter}
+								onChange={(e) => setCategoryFilter(e.target.value)}
+								className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#46a1bb] focus:border-transparent outline-none transition-all bg-white"
+							>
+								<option value="All">All Categories</option>
+								<option value="Conference">Conference</option>
+								<option value="Workshop">Workshop</option>
+								<option value="Webinar">Webinar</option>
+								<option value="Dialogue">Dialogue</option>
+								<option value="Friday Reviews">Friday Reviews</option>
+							</select>
 
-                                {/* Type Filter */}
-                                <div className="relative">
-                                    <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                                    <select
-                                        value={selectedType}
-                                        onChange={(e) => setSelectedType(e.target.value)}
-                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#46a1bb] focus:outline-none transition-colors appearance-none bg-white cursor-pointer"
-                                    >
-                                        {eventTypes.map(type => (
-                                            <option key={type} value={type}>{type}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+							{/* Status Filter */}
+							<select
+								value={statusFilter}
+								onChange={(e) => setStatusFilter(e.target.value)}
+								className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#46a1bb] focus:border-transparent outline-none transition-all bg-white"
+							>
+								<option value="All">All Status</option>
+								<option value="Upcoming">Upcoming</option>
+								<option value="Past">Past</option>
+							</select>
+						</div>
 
-                    {/* Events Grid */}
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {filteredEvents.map((event) => (
-                            <div
-                                key={event.id}
-                                className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-[#46a1bb] cursor-pointer group"
-                                onClick={() => handleEventClick(event.id)}
-                            >
-                                {/* Event Image */}
-                                <div className="relative h-48 overflow-hidden">
-                                    <img
-                                        src={event.image}
-                                        alt={event.title}
-                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                                    />
-                                    <div className="absolute top-4 left-4">
-                                        <span className="px-3 py-1 bg-gradient-to-r from-[#021d49] to-[#46a1bb] text-white font-bold text-xs uppercase tracking-wide rounded-full shadow-lg">
-                                            {event.type}
-                                        </span>
-                                    </div>
-                                </div>
+						<p className="text-gray-600 text-sm">
+							Showing <span className="font-semibold text-[#46a1bb]">{filteredEvents.length}</span> event{filteredEvents.length !== 1 ? 's' : ''}
+						</p>
+					</div>
 
-                                <div className="p-6">
-                                    {/* Title */}
-                                    <h3 className="text-xl font-bold text-gray-900 group-hover:text-[#46a1bb] transition-colors leading-tight mb-4">
-                                        {event.title}
-                                    </h3>
+					{/* Loading State */}
+					{loading && (
+						<div className="text-center py-20">
+							<div className="animate-spin rounded-full h-16 w-16 border-4 border-[#46a1bb] border-t-transparent mx-auto"></div>
+							<p className="text-gray-600 mt-6 text-lg font-medium">Loading events...</p>
+						</div>
+					)}
 
-                                    {/* Date, Time, Location */}
-                                    <div className="space-y-2 mb-4">
-                                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                                            <Calendar className="w-4 h-4 text-[#46a1bb]" />
-                                            <span>{event.date}</span>
-                                        </div>
-                                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                                            <Clock className="w-4 h-4 text-[#46a1bb]" />
-                                            <span>{event.time}</span>
-                                        </div>
-                                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                                            <MapPin className="w-4 h-4 text-[#46a1bb]" />
-                                            <span>{event.location}</span>
-                                        </div>
-                                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                                            <Users className="w-4 h-4 text-[#46a1bb]" />
-                                            <span>{event.attendees} Expected</span>
-                                        </div>
-                                    </div>
+					{/* Empty State */}
+					{!loading && filteredEvents.length === 0 && (
+						<div className="text-center py-20 bg-white rounded-2xl shadow-sm border border-gray-200">
+							<div className="text-6xl mb-4">📅</div>
+							<h3 className="text-2xl font-bold text-gray-900 mb-2">No Events Found</h3>
+							<p className="text-gray-600">Try adjusting your filters to find more events.</p>
+						</div>
+					)}
 
-                                    {/* Excerpt */}
-                                    <p className="text-sm text-gray-600 leading-relaxed mb-4 line-clamp-2">
-                                        {event.excerpt}
-                                    </p>
+					{/* Events Grid */}
+					{!loading && filteredEvents.length > 0 && (
+						<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+							{filteredEvents.map((event) => {
+								const img = buildImageUrl(event.image);
+								return (
+									<div
+										key={event._id}
+										onClick={() => router.push(`/convening-platforms/events/${event._id}`)}
+										className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-2xl transition-all duration-300 cursor-pointer group flex flex-col h-full"
+									>
+										{/* Image Section */}
+										<div className="relative h-56 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
+											{img ? (
+												<img
+													src={img}
+													alt={event.title}
+													className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+												/>
+											) : (
+												<div className="w-full h-full flex items-center justify-center">
+													<Calendar className="w-16 h-16 text-gray-400" />
+												</div>
+											)}
+											<div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+                                            
+											{/* Badges on Image */}
+											<div className="absolute top-3 left-3 right-3 flex justify-between items-start gap-2">
+												<span className={`${getCategoryColor(event.category)} text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg backdrop-blur-sm`}>
+													{event.category}
+												</span>
+												<span className={`${getStatusColor(event.status)} text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg backdrop-blur-sm`}>
+													{event.status}
+												</span>
+											</div>
+										</div>
 
-                                    {/* Tags */}
-                                    <div className="flex flex-wrap gap-2 mb-4">
-                                        {event.tags.map((tag, index) => (
-                                            <span
-                                                key={index}
-                                                className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full"
-                                            >
-                                                {tag}
-                                            </span>
-                                        ))}
-                                    </div>
+										{/* Content Section */}
+										<div className="p-6 flex-1 flex flex-col">
+											<h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-[#46a1bb] transition-colors">
+												{event.title}
+											</h3>
 
-                                    {/* View Details Button */}
-                                    <button
-                                        onClick={(e) => { e.stopPropagation(); handleEventClick(event.id); }}
-                                        className="w-full px-5 py-2.5 bg-gradient-to-r from-[#021d49] to-[#46a1bb] text-white font-semibold rounded-lg shadow-md flex items-center gap-2 justify-center hover:shadow-lg transition-all duration-200"
-                                    >
-                                        <span>View Details</span>
-                                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+											<div className="space-y-2 mb-4">
+												<div className="flex items-center gap-2 text-sm text-gray-600">
+													<Calendar className="w-4 h-4 text-[#46a1bb] flex-shrink-0" />
+													<span className="font-medium">{formatDate(event.date)}</span>
+												</div>
+                                                
+												{event.time && (
+													<div className="flex items-center gap-2 text-sm text-gray-600">
+														<Clock className="w-4 h-4 text-green-600 flex-shrink-0" />
+														<span>{formatTime(event.time)}</span>
+													</div>
+												)}
 
-                    {/* No Results Message */}
-                    {filteredEvents.length === 0 && (
-                        <div className="text-center py-16">
-                            <Calendar className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                            <h3 className="text-xl font-bold text-gray-900 mb-2">No events found</h3>
-                            <p className="text-gray-600">Try adjusting your search or filter criteria</p>
-                        </div>
-                    )}
-                </section>
+												{event.location && (
+													<div className="flex items-center gap-2 text-sm text-gray-600">
+														<MapPin className="w-4 h-4 text-amber-600 flex-shrink-0" />
+														<span className="line-clamp-1">{event.location}</span>
+													</div>
+												)}
+											</div>
 
+											{/* Description Preview */}
+											{event.description && (
+												<div
+													className="text-sm text-gray-600 line-clamp-3 mb-4"
+													dangerouslySetInnerHTML={{ __html: event.description }}
+												/>
+											)}
 
-            </div>
-
-        </>
-    );
+											{/* Read More Link */}
+											<div className="mt-auto pt-4 border-t border-gray-100">
+												<span className="text-[#46a1bb] font-semibold text-sm group-hover:gap-2 inline-flex items-center gap-1 transition-all">
+													Learn More
+													<span className="group-hover:translate-x-1 transition-transform">→</span>
+												</span>
+											</div>
+										</div>
+									</div>
+								);
+							})}
+						</div>
+					)}
+				</section>
+			</div>
+		</>
+	);
 };
 
 export default EventsPage;

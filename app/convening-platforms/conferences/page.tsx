@@ -1,65 +1,83 @@
 "use client";
-import React, { useState } from 'react';
-import { ArrowRight, Calendar, Users, Search, Filter, User, Presentation } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { ArrowRight, Calendar, Search, Filter, MapPin, Presentation } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
 
+interface Conference {
+    _id: string;
+    title: string;
+    description: string;
+    date: string;
+    venue?: string;
+    image?: string;
+    category?: string;
+    availableResources?: string[];
+    year?: number;
+}
+
 const ConferencesPage = () => {
+    const router = useRouter();
+    const [conferences, setConferences] = useState<Conference[]>([]);
+    const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedYear, setSelectedYear] = useState('All');
 
-    const conferences = [
-        {
-            id: 'arin-conference-2024',
-            title: '2024 : THE 4TH ANNUAL ARIN INTERNATIONAL CONFERENCE – BRIDGING KNOWLEDGE GAPS: INTEGRATING DISCIPLINES FOR CLIMATE AND HEALTH RESILIENCE',
-            date: 'July 29, 2024',
-            year: '2024',
-            author: 'Awino',
-            excerpt: 'The 4th International Conference has organized by the Africa Research and Impact Network (ARIN). ARIN is a consortium of over 200 researchers and policymakers with national focal points across…',
-            tags: ['ARIN International conference', 'Conferences', 'Climate', 'Health Resilience'],
-            image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80',
-            edition: '4th Annual'
-        },
-        {
-            id: 'arin-conference-2022',
-            title: '2022: "REBUILDING BETTER AND RESILIENT COMMUNITIES THROUGH A JUST TRANSITION FOR AFRICA -WHAT DOES COP 27 OFFER? "',
-            date: 'July 22, 2024',
-            year: '2022',
-            author: 'Awino',
-            excerpt: 'Introduction The World is on the verge of and amid several transitions structured by major social, economic, and environmental disruptions including climate change, COVID-19, and knowledge shifts. These disruptions are…',
-            tags: ['ARIN International conference', 'Just Transition', 'COP27', 'Resilience'],
-            image: 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=800&q=80',
-            edition: '2022 Conference'
-        },
-        {
-            id: 'arin-conference-2020',
-            title: "2020: INTERNATIONAL REFLECTIVE CONFERENCE 2021 ON 'EVIDENCE- DRIVEN SUSTAINABLE RECOVERY FROM GLOBAL INTRACTABLE CHALLENGES'",
-            date: 'July 22, 2024',
-            year: '2020',
-            author: 'Awino',
-            excerpt: "Click here to register for the conference END YEAR INTERNATIONAL REFLECTIVE CONFERENCE 'EVIDENCE - DRIVEN SUSTAINABLE RECOVERY FROM GLOBAL INTRACTABLE CHALLENGES' on 25th, 26th and 29th November 2021. As the world reconfigures its efforts towards addressing the changing nature of global challenges such…",
-            tags: ['ARIN International conference', 'Sustainable Recovery', 'Global Challenges'],
-            image: 'https://images.unsplash.com/photo-1591115765373-5207764f72e7?w=800&q=80',
-            edition: '2020/2021 Conference'
-        }
-    ];
+    useEffect(() => {
+        fetchConferences();
+    }, []);
 
-    const years = ['All', '2024', '2022', '2020'];
+    const fetchConferences = async () => {
+        try {
+            const apiBaseUrl = (typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_API_BASE_URL : '') || 'http://localhost:5001';
+            const response = await fetch(apiBaseUrl + '/conferences', {
+                headers: { 'Content-Type': 'application/json' },
+            });
+            if (!response.ok) throw new Error('Failed to fetch conferences');
+            const data = await response.json();
+            
+            // Fix image URLs to include backend base URL
+            const fixedData = data.map((conf: Conference) => ({
+                ...conf,
+                image: conf.image && conf.image.startsWith('/uploads') 
+                    ? apiBaseUrl + conf.image 
+                    : conf.image
+            }));
+            
+            setConferences(fixedData);
+        } catch (error) {
+            console.error('Error fetching conferences:', error);
+            setConferences([]);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const years = ['All', ...Array.from(new Set(conferences.map(c => c.year?.toString() || ''))).filter(Boolean).sort().reverse()];
 
     const filteredConferences = conferences.filter(conference => {
         const matchesSearch = conference.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            conference.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            conference.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-        const matchesYear = selectedYear === 'All' || conference.year === selectedYear;
+            conference.description.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesYear = selectedYear === 'All' || conference.year?.toString() === selectedYear;
         return matchesSearch && matchesYear;
     });
 
     const handleConferenceClick = (conferenceId: string) => {
-        console.log('Navigate to conference:', conferenceId);
-        alert(`Navigate to conference: ${conferenceId}\n\nIn your Next.js app, use:\nrouter.push(\`/conferences/${conferenceId}\`)`);
+        router.push(`/convening-platforms/conferences/${conferenceId}`);
     };
 
-    return (
+    if (loading) {
+        return (
+            <>
+                <Navbar />
+                <div className="w-full bg-linear-to-br from-slate-50 via-white to-stone-50 min-h-screen flex items-center justify-center">
+                    <div className="animate-pulse text-center">Loading conferences...</div>
+                </div>
+            </>
+        );
+    }
 
+    return (
         <>
             <Navbar />
             <div className="w-full bg-linear-to-br from-slate-50 via-white to-stone-50 min-h-screen">
@@ -118,70 +136,63 @@ const ConferencesPage = () => {
                     <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-6 max-w-6xl mx-auto">
                         {filteredConferences.map((conference) => (
                             <div
-                                key={conference.id}
+                                key={conference._id}
                                 className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-[#46a1bb] cursor-pointer group"
-                                onClick={() => handleConferenceClick(conference.id)}
+                                onClick={() => handleConferenceClick(conference._id)}
                             >
                                 {/* Image */}
                                 <div className="relative h-56 overflow-hidden">
-                                    <img
-                                        src={conference.image}
-                                        alt={conference.title}
-                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                                    />
-                                    <div className="absolute top-4 left-4">
-                                        <span className="px-3 py-1 bg-linear-to-r from-[#021d49] to-[#46a1bb] text-white font-bold text-xs uppercase tracking-wide rounded-full shadow-lg">
-                                            {conference.edition}
-                                        </span>
-                                    </div>
-                                    <div className="absolute top-4 right-4">
-                                        <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-gray-900 font-bold text-sm rounded-full shadow-lg">
-                                            {conference.year}
-                                        </span>
-                                    </div>
+                                    {conference.image ? (
+                                        <img
+                                            src={conference.image}
+                                            alt={conference.title}
+                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full bg-gradient-to-br from-[#021d49] to-[#46a1bb] flex items-center justify-center">
+                                            <Presentation className="w-16 h-16 text-white/50" />
+                                        </div>
+                                    )}
+                                    {conference.year && (
+                                        <div className="absolute top-4 right-4">
+                                            <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-gray-900 font-bold text-sm rounded-full shadow-lg">
+                                                {conference.year}
+                                            </span>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="p-6">
                                     {/* Title */}
-                                    <h3 className="text-xl font-bold text-gray-900 group-hover:text-[#46a1bb] transition-colors leading-tight mb-4">
+                                    <h3 className="text-xl font-bold text-gray-900 group-hover:text-[#46a1bb] transition-colors leading-tight mb-3 line-clamp-3">
                                         {conference.title}
                                     </h3>
 
-                                    {/* Author and Date */}
-                                    <div className="space-y-2 mb-4">
-                                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                                            <User className="w-4 h-4 text-[#46a1bb]" />
-                                            <span>Posted by {conference.author}</span>
-                                        </div>
+                                    {/* Date and Venue */}
+                                    <div className="space-y-2 mb-3">
                                         <div className="flex items-center gap-2 text-sm text-gray-600">
                                             <Calendar className="w-4 h-4 text-[#46a1bb]" />
-                                            <span>{conference.date}</span>
+                                            <span>{new Date(conference.date).toLocaleDateString()}</span>
                                         </div>
+                                        {conference.venue && (
+                                            <div className="flex items-center gap-2 text-sm text-gray-600">
+                                                <MapPin className="w-4 h-4 text-[#46a1bb]" />
+                                                <span>{conference.venue}</span>
+                                            </div>
+                                        )}
                                     </div>
 
-                                    {/* Excerpt */}
-                                    <p className="text-sm text-gray-600 leading-relaxed mb-4 line-clamp-3">
-                                        {conference.excerpt}
+                                    {/* Description */}
+                                    <p className="text-sm text-gray-600 leading-relaxed mb-4 line-clamp-2">
+                                        {conference.description.replace(/<[^>]*>/g, '')}
                                     </p>
-
-                                    {/* Tags */}
-                                    <div className="flex flex-wrap gap-2 mb-4">
-                                        {conference.tags.map((tag, index) => (
-                                            <span
-                                                key={index}
-                                                className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full"
-                                            >
-                                                {tag}
-                                            </span>
-                                        ))}
-                                    </div>
 
                                     {/* Read More Button */}
                                     <button
-                                        onClick={(e) => { e.stopPropagation(); handleConferenceClick(conference.id); }}
+                                        onClick={(e) => { e.stopPropagation(); handleConferenceClick(conference._id); }}
                                         className="w-full px-5 py-2.5 bg-linear-to-r from-[#021d49] to-[#46a1bb] text-white font-semibold rounded-lg shadow-md flex items-center gap-2 justify-center hover:shadow-lg transition-all duration-200"
                                     >
-                                        <span>Read More</span>
+                                        <span>View Details</span>
                                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                                     </button>
                                 </div>

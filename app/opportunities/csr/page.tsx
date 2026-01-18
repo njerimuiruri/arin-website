@@ -1,40 +1,73 @@
 "use client";
-import React, { useState } from 'react';
-import { ArrowRight, Calendar, Users, Search, Filter, Heart, User } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { ArrowRight, Search, Filter, Heart, Users, Briefcase, Calendar } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
 
+interface Csr {
+    _id: string;
+    title: string;
+    description: string;
+    image?: string;
+    availableResources?: string[];
+}
+
 const CSRPage = () => {
+    const router = useRouter();
+    const [csrActivities, setCsrActivities] = useState<Csr[]>([]);
+    const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedYear, setSelectedYear] = useState('All');
 
-    const csrActivities = [
-        {
-            id: 'odhong-football-club',
-            title: 'The Inauguration of Odhong Football Club in Nyakach-Kisumu County by the ARIN Convener Dr. Joanes Atela',
-            date: 'May 31, 2021',
-            year: '2021',
-            author: 'ARIN Team',
-            excerpt: 'In support of youth empowerment, the ARIN Convener Dr Joanes Atela was joined by ARIN…',
-            tags: ['Youth Empowerment', 'Sports', 'Community Development'],
-            image: 'https://images.unsplash.com/photo-1575361204480-aadea25e6e68?w=800&q=80',
-            category: 'Youth Empowerment'
+    useEffect(() => {
+        fetchCsrActivities();
+    }, []);
+
+    const fetchCsrActivities = async () => {
+        try {
+            const apiBaseUrl = (typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_API_BASE_URL : '') || 'http://localhost:5001';
+            const response = await fetch(apiBaseUrl + '/csr', {
+                headers: { 'Content-Type': 'application/json' },
+            });
+            if (!response.ok) throw new Error('Failed to fetch CSR activities');
+            const data = await response.json();
+            
+            // Fix image URLs to include backend base URL
+            const fixedData = data.map((csr: Csr) => ({
+                ...csr,
+                image: csr.image && csr.image.startsWith('/uploads') 
+                    ? apiBaseUrl + csr.image 
+                    : csr.image
+            }));
+            
+            setCsrActivities(fixedData);
+        } catch (error) {
+            console.error('Error fetching CSR activities:', error);
+            setCsrActivities([]);
+        } finally {
+            setLoading(false);
         }
-    ];
-
-    const years = ['All', '2021'];
+    };
 
     const filteredActivities = csrActivities.filter(activity => {
         const matchesSearch = activity.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            activity.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            activity.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-        const matchesYear = selectedYear === 'All' || activity.year === selectedYear;
-        return matchesSearch && matchesYear;
+            activity.description.toLowerCase().includes(searchTerm.toLowerCase());
+        return matchesSearch;
     });
 
-    const handleActivityClick = (activityId) => {
-        console.log('Navigate to CSR activity:', activityId);
-        alert(`Navigate to CSR activity: ${activityId}\n\nIn your Next.js app, use:\nrouter.push(\`/csr/${activityId}\`)`);
+    const handleActivityClick = (activityId: string) => {
+        router.push(`/opportunities/csr/${activityId}`);
     };
+
+    if (loading) {
+        return (
+            <>
+                <Navbar />
+                <div className="w-full bg-gradient-to-br from-slate-50 via-white to-stone-50 min-h-screen flex items-center justify-center">
+                    <div className="animate-pulse text-center">Loading CSR activities...</div>
+                </div>
+            </>
+        );
+    }
 
     return (
         <>
@@ -61,32 +94,16 @@ const CSRPage = () => {
                     {/* Search and Filter Section */}
                     <div className="max-w-4xl mx-auto mb-8">
                         <div className="bg-white rounded-xl p-4 shadow-lg border border-gray-200">
-                            <div className="grid md:grid-cols-2 gap-4">
-                                {/* Search Bar */}
-                                <div className="relative">
-                                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                                    <input
-                                        type="text"
-                                        placeholder="Search CSR activities..."
-                                        value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
-                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#46a1bb] focus:outline-none transition-colors"
-                                    />
-                                </div>
-
-                                {/* Year Filter */}
-                                <div className="relative">
-                                    <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                                    <select
-                                        value={selectedYear}
-                                        onChange={(e) => setSelectedYear(e.target.value)}
-                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#46a1bb] focus:outline-none transition-colors appearance-none bg-white cursor-pointer"
-                                    >
-                                        {years.map(year => (
-                                            <option key={year} value={year}>{year}</option>
-                                        ))}
-                                    </select>
-                                </div>
+                            {/* Search Bar */}
+                            <div className="relative">
+                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                                <input
+                                    type="text"
+                                    placeholder="Search CSR activities..."
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#46a1bb] focus:outline-none transition-colors"
+                                />
                             </div>
                         </div>
                     </div>

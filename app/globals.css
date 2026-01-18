@@ -123,3 +123,92 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* HTML Content Rendering Styles */
+.html-content {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #4b5563;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.html-content p {
+  margin-bottom: 1.5rem;
+  text-align: justify;
+  color: #4b5563;
+}
+
+.html-content h1,
+.html-content h2,
+.html-content h3,
+.html-content h4,
+.html-content h5,
+.html-content h6 {
+  font-weight: 700;
+  color: #021d49;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.html-content h1 {
+  font-size: 2rem;
+}
+
+.html-content h2 {
+  font-size: 1.75rem;
+}
+
+.html-content h3 {
+  font-size: 1.5rem;
+}
+
+.html-content h4 {
+  font-size: 1.25rem;
+}
+
+.html-content strong,
+.html-content b {
+  font-weight: 700;
+  color: #021d49;
+}
+
+.html-content em,
+.html-content i {
+  font-style: italic;
+}
+
+.html-content ul,
+.html-content ol {
+  margin-left: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.html-content li {
+  margin-bottom: 0.5rem;
+  color: #4b5563;
+}
+
+.html-content a {
+  color: #46a1bb;
+  text-decoration: underline;
+}
+
+.html-content a:hover {
+  color: #021d49;
+}
+
+.html-content blockquote {
+  border-left: 4px solid #46a1bb;
+  padding-left: 1.5rem;
+  margin-left: 0;
+  margin-bottom: 1.5rem;
+  font-style: italic;
+  color: #666;
+}
+
+.html-content br {
+  display: block;
+  content: "";
+  margin: 0.5rem 0;
+}

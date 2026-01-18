@@ -1,59 +1,79 @@
 "use client";
-import React, { useState } from 'react';
-import { ArrowRight, Calendar, Globe, Search, Filter, User } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { ArrowRight, Calendar, Globe, Search, Filter } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
 
+interface Cop {
+    _id: string;
+    title: string;
+    description: string;
+    date: string;
+    image?: string;
+    availableResources?: string[];
+    year?: number;
+}
+
 const COPPage = () => {
+    const router = useRouter();
+    const [cops, setCops] = useState<Cop[]>([]);
+    const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedYear, setSelectedYear] = useState('All');
 
-    const copItems = [
-        {
-            id: 'locally-led-adaptation-metrics',
-            title: 'Locally Led Adaptation Metrics Unlocking Finance with Community-Defined Indicators',
-            date: 'November 10, 2025',
-            year: '2025',
-            author: 'Awino',
-            excerpt: 'The transition to Locally Led Adaptation (LLA) in Africa is fundamentally hampered by a persistent accountability gap. Despite broad political endorsement, adaptation finance and reporting continue to…',
-            tags: ['COP', 'Policy Briefs', 'Locally Led Adaptation', 'Climate Finance'],
-            image: 'https://images.unsplash.com/photo-1569163139394-de4798aa62b4?w=800&q=80'
-        },
-        {
-            id: 'climate-health-emergency',
-            title: 'Climate-Health Emergency Policy Pathways for Resilience in Africa (2024)',
-            date: 'November 10, 2025',
-            year: '2025',
-            author: 'Awino',
-            excerpt: 'Africa faces a profound and immediate climate-health emergency. Climate related hazards accounted for over 56% of public health emergencies on the continent between 2001 and…',
-            tags: ['COP', 'Policy Briefs', 'Climate Health', 'Resilience'],
-            image: 'https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?w=800&q=80'
-        },
-        {
-            id: 'arin-position-cop30',
-            title: 'The Africa Research and Impact Network (ARIN) Position at COP30',
-            date: 'November 10, 2025',
-            year: '2025',
-            author: 'Awino',
-            excerpt: 'Driving the Global Goal on Adaptation (GGA) from the Ground Up At COP30, ARIN asserts that Africa must not only participate in, but lead…',
-            tags: ['COP', 'Global Goal on Adaptation', 'COP30'],
-            image: 'https://images.unsplash.com/photo-1473186578172-c141e6798cf4?w=800&q=80'
+    useEffect(() => {
+        fetchCops();
+    }, []);
+
+    const fetchCops = async () => {
+        try {
+            const apiBaseUrl = (typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_API_BASE_URL : '') || 'http://localhost:5001';
+            const response = await fetch(apiBaseUrl + '/cop', {
+                headers: { 'Content-Type': 'application/json' },
+            });
+            if (!response.ok) throw new Error('Failed to fetch COP items');
+            const data = await response.json();
+            
+            // Fix image URLs to include backend base URL
+            const fixedData = data.map((cop: Cop) => ({
+                ...cop,
+                image: cop.image && cop.image.startsWith('/uploads') 
+                    ? apiBaseUrl + cop.image 
+                    : cop.image
+            }));
+            
+            setCops(fixedData);
+        } catch (error) {
+            console.error('Error fetching COP items:', error);
+            setCops([]);
+        } finally {
+            setLoading(false);
         }
-    ];
+    };
 
-    const years = ['All', '2025', '2024'];
+    const years = ['All', ...Array.from(new Set(cops.map(c => c.year?.toString() || ''))).filter(Boolean).sort().reverse()];
 
-    const filteredItems = copItems.filter(item => {
-        const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            item.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            item.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-        const matchesYear = selectedYear === 'All' || item.year === selectedYear;
+    const filteredCops = cops.filter(cop => {
+        const matchesSearch = cop.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            cop.description.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesYear = selectedYear === 'All' || cop.year?.toString() === selectedYear;
         return matchesSearch && matchesYear;
     });
 
-    const handleItemClick = (itemId) => {
-        console.log('Navigate to COP item:', itemId);
-        alert(`Navigate to COP item: ${itemId}\n\nIn your Next.js app, use:\nrouter.push(\`/cop/${itemId}\`)`);
+    const handleCopClick = (copId: string) => {
+        router.push(`/convening-platforms/cop/${copId}`);
     };
+
+    if (loading) {
+        return (
+            <>
+                <Navbar />
+                <div className="w-full bg-gradient-to-br from-slate-50 via-white to-stone-50 min-h-screen flex items-center justify-center">
+                    <div className="animate-pulse text-center">Loading COP content...</div>
+                </div>
+            </>
+        );
+    }
 
     return (
         <>
@@ -111,68 +131,60 @@ const COPPage = () => {
                     </div>
 
                     {/* COP Items Grid */}
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {filteredItems.map((item) => (
+                    <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-6 max-w-6xl mx-auto">
+                        {filteredCops.map((cop) => (
                             <div
-                                key={item.id}
+                                key={cop._id}
                                 className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-[#46a1bb] cursor-pointer group"
-                                onClick={() => handleItemClick(item.id)}
+                                onClick={() => handleCopClick(cop._id)}
                             >
                                 {/* Image */}
-                                <div className="relative h-48 overflow-hidden">
-                                    <img
-                                        src={item.image}
-                                        alt={item.title}
-                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                                    />
-                                    <div className="absolute top-4 left-4">
-                                        <span className="px-3 py-1 bg-gradient-to-r from-[#021d49] to-[#46a1bb] text-white font-bold text-xs uppercase tracking-wide rounded-full shadow-lg">
-                                            COP
-                                        </span>
-                                    </div>
+                                <div className="relative h-56 overflow-hidden">
+                                    {cop.image ? (
+                                        <img
+                                            src={cop.image}
+                                            alt={cop.title}
+                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full bg-gradient-to-br from-[#021d49] to-[#46a1bb] flex items-center justify-center">
+                                            <Globe className="w-16 h-16 text-white/50" />
+                                        </div>
+                                    )}
+                                    {cop.year && (
+                                        <div className="absolute top-4 right-4">
+                                            <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-gray-900 font-bold text-sm rounded-full shadow-lg">
+                                                {cop.year}
+                                            </span>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="p-6">
                                     {/* Title */}
-                                    <h3 className="text-xl font-bold text-gray-900 group-hover:text-[#46a1bb] transition-colors leading-tight mb-4">
-                                        {item.title}
+                                    <h3 className="text-xl font-bold text-gray-900 group-hover:text-[#46a1bb] transition-colors leading-tight mb-3 line-clamp-3">
+                                        {cop.title}
                                     </h3>
 
-                                    {/* Author and Date */}
-                                    <div className="space-y-2 mb-4">
-                                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                                            <User className="w-4 h-4 text-[#46a1bb]" />
-                                            <span>Posted by {item.author}</span>
-                                        </div>
+                                    {/* Date */}
+                                    <div className="space-y-2 mb-3">
                                         <div className="flex items-center gap-2 text-sm text-gray-600">
                                             <Calendar className="w-4 h-4 text-[#46a1bb]" />
-                                            <span>{item.date}</span>
+                                            <span>{new Date(cop.date).toLocaleDateString()}</span>
                                         </div>
                                     </div>
 
-                                    {/* Excerpt */}
-                                    <p className="text-sm text-gray-600 leading-relaxed mb-4 line-clamp-3">
-                                        {item.excerpt}
+                                    {/* Description */}
+                                    <p className="text-sm text-gray-600 leading-relaxed mb-4 line-clamp-2">
+                                        {cop.description.replace(/<[^>]*>/g, '')}
                                     </p>
-
-                                    {/* Tags */}
-                                    <div className="flex flex-wrap gap-2 mb-4">
-                                        {item.tags.map((tag, index) => (
-                                            <span
-                                                key={index}
-                                                className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full"
-                                            >
-                                                {tag}
-                                            </span>
-                                        ))}
-                                    </div>
 
                                     {/* Read More Button */}
                                     <button
-                                        onClick={(e) => { e.stopPropagation(); handleItemClick(item.id); }}
+                                        onClick={(e) => { e.stopPropagation(); handleCopClick(cop._id); }}
                                         className="w-full px-5 py-2.5 bg-gradient-to-r from-[#021d49] to-[#46a1bb] text-white font-semibold rounded-lg shadow-md flex items-center gap-2 justify-center hover:shadow-lg transition-all duration-200"
                                     >
-                                        <span>Read More</span>
+                                        <span>View Details</span>
                                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                                     </button>
                                 </div>
@@ -181,7 +193,7 @@ const COPPage = () => {
                     </div>
 
                     {/* No Results Message */}
-                    {filteredItems.length === 0 && (
+                    {filteredCops.length === 0 && (
                         <div className="text-center py-16">
                             <Globe className="w-12 h-12 text-gray-300 mx-auto mb-3" />
                             <h3 className="text-xl font-bold text-gray-900 mb-2">No COP content found</h3>

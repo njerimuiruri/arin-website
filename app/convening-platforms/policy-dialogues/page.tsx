@@ -1,45 +1,56 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { ArrowRight, Calendar, MessageSquare, Search, Filter } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
+import { getPolicyDialogues } from '@/services/policyDialoguesService';
 
 const PolicyDialoguesPage = () => {
+    const router = useRouter();
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedYear, setSelectedYear] = useState('All');
+    const [dialogues, setDialogues] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-    const dialogues = [
-        {
-            id: 'community-leaders-drr',
-            title: 'Community Leaders Dialogues on Disaster Risk Reduction (DRR) and Gender Intersectionality under the Nairobi City Risk Hub, 2020',
-            date: 'December 10, 2020',
-            year: '2020',
-            excerpt: 'The Nairobi Risk Hub Secretariat (African Centre for Technology Studies -ACTS), Nairobi City County Government…',
-            tags: ['DRR', 'Gender', 'Urban Risk'],
-            status: 'Completed'
-        },
-        {
-            id: 'climate-finance-ndcs',
-            title: 'Making Climate Finance Work for Africa: Using NDCs to Leverage Climate Finance for Innovation System Building',
-            date: 'August 10, 2020',
-            year: '2020',
-            excerpt: 'The workshop was organized by the Africa Sustainability Hub (ASH), a networked research and knowledge…',
-            tags: ['Climate Finance', 'NDCs', 'Innovation'],
-            status: 'Completed'
+    useEffect(() => {
+        async function fetchDialogues() {
+            try {
+                const data = await getPolicyDialogues();
+                setDialogues(data);
+            } catch (err) {
+                console.error('Failed to fetch policy dialogues:', err);
+                setError('Failed to load policy dialogues');
+            } finally {
+                setLoading(false);
+            }
         }
-    ];
+        fetchDialogues();
+    }, []);
 
-    const years = ['All', '2020'];
+    // Extract unique years from dialogues
+    const years = ['All', ...Array.from(new Set(dialogues.map(d => new Date(d.date).getFullYear().toString()))).sort().reverse()];
+
+    const formatDate = (dateString: string) => {
+        const d = new Date(dateString);
+        return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    };
+
+    const buildImageUrl = (path: string) => {
+        if (!path) return '';
+        return path.startsWith('http') ? path : `http://localhost:5001${path}`;
+    };
 
     const filteredDialogues = dialogues.filter(dialogue => {
         const matchesSearch = dialogue.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            dialogue.excerpt.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesYear = selectedYear === 'All' || dialogue.year === selectedYear;
+            dialogue.description.toLowerCase().includes(searchTerm.toLowerCase());
+        const dialogueYear = new Date(dialogue.date).getFullYear().toString();
+        const matchesYear = selectedYear === 'All' || dialogueYear === selectedYear;
         return matchesSearch && matchesYear;
     });
 
-    const handleDialogueClick = (dialogueId) => {
-        console.log('Navigate to dialogue:', dialogueId);
-        alert(`Navigate to policy dialogue: ${dialogueId}\n\nIn your Next.js app, use:\nrouter.push(\`/policy-dialogues/${dialogueId}\`)`);
+    const handleDialogueClick = (dialogueId: string) => {
+        router.push(`/convening-platforms/policy-dialogues/${dialogueId}`);
     };
 
     return (
@@ -95,66 +106,90 @@ const PolicyDialoguesPage = () => {
                     </div>
 
                     {/* Dialogues Grid */}
-                    <div className="grid md:grid-cols-2 gap-6 max-w-6xl mx-auto">
-                        {filteredDialogues.map((dialogue) => (
-                            <div
-                                key={dialogue.id}
-                                className="bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-[#46a1bb] cursor-pointer"
-                                onClick={() => handleDialogueClick(dialogue.id)}
-                            >
-                                {/* Header with Status */}
-                                <div className="flex items-start justify-between mb-4">
-                                    <div className="flex items-center gap-2">
-                                        <MessageSquare className="w-5 h-5 text-[#46a1bb]" />
-                                        <span className="text-sm font-semibold text-[#46a1bb]">Policy Dialogue</span>
-                                    </div>
-                                    <span className={`px-3 py-1 ${dialogue.status === 'Ongoing' ? 'bg-green-500' : 'bg-blue-500'} text-white text-xs font-bold rounded-full whitespace-nowrap`}>
-                                        {dialogue.status}
-                                    </span>
-                                </div>
-
-                                {/* Title */}
-                                <h3 className="text-xl font-bold text-gray-900 hover:text-[#46a1bb] transition-colors leading-tight mb-4">
-                                    {dialogue.title}
-                                </h3>
-
-                                {/* Date */}
-                                <div className="flex items-center gap-2 mb-4 text-sm text-gray-600">
-                                    <Calendar className="w-4 h-4" />
-                                    <span>{dialogue.date}</span>
-                                </div>
-
-                                {/* Excerpt */}
-                                <p className="text-sm text-gray-600 leading-relaxed mb-4">
-                                    {dialogue.excerpt}
-                                </p>
-
-                                {/* Tags */}
-                                <div className="flex flex-wrap gap-2 mb-4">
-                                    {dialogue.tags.map((tag, index) => (
-                                        <span
-                                            key={index}
-                                            className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-semibold rounded-full"
-                                        >
-                                            {tag}
-                                        </span>
-                                    ))}
-                                </div>
-
-                                {/* Read More Button */}
-                                <button
-                                    onClick={(e) => { e.stopPropagation(); handleDialogueClick(dialogue.id); }}
-                                    className="w-full px-5 py-2.5 bg-gradient-to-r from-[#021d49] to-[#46a1bb] text-white font-semibold rounded-lg shadow-md flex items-center gap-2 justify-center hover:shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#46a1bb] focus:ring-opacity-60"
-                                    aria-label={`Read more about ${dialogue.title}`}
+                    {loading ? (
+                        <div className="text-center py-16">
+                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#46a1bb] mx-auto"></div>
+                            <p className="text-gray-600 mt-4">Loading policy dialogues...</p>
+                        </div>
+                    ) : error ? (
+                        <div className="text-center py-16">
+                            <MessageSquare className="w-12 h-12 text-red-300 mx-auto mb-3" />
+                            <h3 className="text-xl font-bold text-gray-900 mb-2">Error Loading Dialogues</h3>
+                            <p className="text-gray-600">{error}</p>
+                        </div>
+                    ) : (
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+                            {filteredDialogues.map((dialogue) => (
+                                <div
+                                    key={dialogue._id}
+                                    className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-[#46a1bb] cursor-pointer flex flex-col h-full"
+                                    onClick={() => handleDialogueClick(dialogue._id)}
                                 >
-                                    <span>read more</span>
-                                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                                </button>
-                            </div>
-                        ))}
-                    </div>
+                                    {/* Image Container */}
+                                    {dialogue.image && (
+                                        <div className="relative h-48 overflow-hidden bg-gray-200">
+                                            <img
+                                                src={buildImageUrl(dialogue.image)}
+                                                alt={dialogue.title}
+                                                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                                            />
+                                            {/* Overlay with Status */}
+                                            <div className="absolute top-0 right-0 p-3">
+                                                <span className={`px-3 py-1 ${dialogue.status === 'Ongoing' ? 'bg-green-500' : dialogue.status === 'Completed' ? 'bg-blue-500' : 'bg-yellow-500'} text-white text-xs font-bold rounded-full whitespace-nowrap shadow-lg`}>
+                                                    {dialogue.status}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    )}
 
-                    {filteredDialogues.length === 0 && (
+                                    {/* Content Container - Sticky */}
+                                    <div className="p-5 flex flex-col flex-1">
+                                        {/* Icon and Label */}
+                                        <div className="flex items-center gap-2 mb-3">
+                                            <MessageSquare className="w-5 h-5 text-[#46a1bb] flex-shrink-0" />
+                                            <span className="text-xs font-semibold text-[#46a1bb] uppercase tracking-wide">Policy Dialogue</span>
+                                        </div>
+
+                                        {/* Title */}
+                                        <h3 className="text-lg font-bold text-gray-900 hover:text-[#46a1bb] transition-colors leading-tight mb-3 line-clamp-2">
+                                            {dialogue.title}
+                                        </h3>
+
+                                        {/* Date */}
+                                        <div className="flex items-center gap-2 mb-4 text-sm text-gray-600">
+                                            <Calendar className="w-4 h-4 flex-shrink-0 text-[#46a1bb]" />
+                                            <span className="font-medium">{formatDate(dialogue.date)}</span>
+                                        </div>
+
+                                        {/* Excerpt */}
+                                        <p className="text-sm text-gray-600 leading-relaxed mb-4 flex-grow line-clamp-3">
+                                            {dialogue.description.replace(/<[^>]*>/g, '').substring(0, 120)}...
+                                        </p>
+
+                                        {/* Resources Count */}
+                                        {dialogue.availableResources && dialogue.availableResources.length > 0 && (
+                                            <div className="mb-4 inline-flex items-center gap-2 text-xs text-gray-500 bg-gray-100 rounded-full px-3 py-1 w-fit">
+                                                <span>📎</span>
+                                                <span>{dialogue.availableResources.length} resource{dialogue.availableResources.length > 1 ? 's' : ''}</span>
+                                            </div>
+                                        )}
+
+                                        {/* Read More Button */}
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); handleDialogueClick(dialogue._id); }}
+                                            className="w-full px-4 py-2.5 bg-gradient-to-r from-[#021d49] to-[#46a1bb] text-white font-semibold rounded-lg shadow-md flex items-center gap-2 justify-center hover:shadow-lg hover:from-[#46a1bb] hover:to-[#021d49] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#46a1bb] focus:ring-opacity-60"
+                                            aria-label={`Read more about ${dialogue.title}`}
+                                        >
+                                            <span>Read More</span>
+                                            <ArrowRight className="w-4 h-4 transition-transform" />
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                    {!loading && !error && filteredDialogues.length === 0 && (
                         <div className="text-center py-16">
                             <MessageSquare className="w-12 h-12 text-gray-300 mx-auto mb-3" />
                             <h3 className="text-xl font-bold text-gray-900 mb-2">No policy dialogues found</h3>
