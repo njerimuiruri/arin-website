@@ -1,54 +1,45 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FileText, Calendar, Search, Filter, ChevronLeft, ChevronRight, Users, ArrowRight } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
+import { getJournalArticles } from '@/services/journalArticlesService';
 
 const JournalArticlesPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [currentPage, setCurrentPage] = useState(1);
+    const [articles, setArticles] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const articlesPerPage = 6;
 
-    const articles = [
-        {
-            id: 'health-professionals-climate',
-            title: 'Improving health professionals\' capacity to respond to the climate crisis in Africa: outcomes of the Africa climate and health responder course',
-            date: 'October 28, 2025',
-            category: 'Health & Climate',
-            authors: 'Danielly de P. Magalhães1*†, Cecilia Sorensen1,2†,Nicola Hamacher1, Haley Campbell1, Hannah N. W. Weinstein1,  Patrick O. Owili3, Alex R. Ario4,5, Glory M. E. Nja6,7,8,  Charles A. Michael9, Yewande Alimi9, Hervé Hien4,  Woldekidan Amde6,10, Sokhna Thiam11,…',
-            excerpt: '',
-            image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80',
-            hasImage: true
-        },
-        {
-            id: 'air-quality-nairobi',
-            title: 'Political Economy of the Air Quality Management of Nairobi City',
-            date: 'August 4, 2025',
-            category: 'Environmental Policy',
-            authors: 'Washington Kanyangi1 Joanes Atela1 George Mwaniki2 Tom Randa3 Humphrey Agevi1,4* Eurallyah Akinyi1',
-            excerpt: 'The quality of air…',
-            image: 'https://images.unsplash.com/photo-1519452575417-564c1401ecc0?w=800&q=80',
-            hasImage: true
-        },
-        {
-            id: 'fiscal-decentralization-healthcare',
-            title: 'Fiscal Decentralization and Devolved Healthcare Service Availability Outcomes in Kenya: Evidence From Panel Dynamic Approach',
-            date: 'July 8, 2025',
-            category: 'Health Economics',
-            authors: 'Isaiah Maket a,b,* , Remmy Naibei c,d,*',
-            excerpt: 'The study examined the effect of fiscal…',
-            image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=80',
-            hasImage: true
+    useEffect(() => {
+        loadArticles();
+    }, []);
+
+    const loadArticles = async () => {
+        try {
+            setLoading(true);
+            const data = await getJournalArticles();
+            setArticles(data);
+            setError(null);
+        } catch (err) {
+            setError(err.message);
+            console.error('Failed to load journal articles:', err);
+        } finally {
+            setLoading(false);
         }
-    ];
+    };
 
     const categories = ['All', 'Health & Climate', 'Environmental Policy', 'Health Economics'];
 
     const filteredArticles = articles.filter(article => {
+        const authorsStr = Array.isArray(article.authors) ? article.authors.join(', ') : (article.authors || '');
+        const descriptionStr = article.description || '';
         const matchesSearch = article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            article.authors.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            article.excerpt.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesCategory = selectedCategory === 'All' || article.category === selectedCategory;
+            authorsStr.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            descriptionStr.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesCategory = selectedCategory === 'All' || (article.category && article.category.includes(selectedCategory));
         return matchesSearch && matchesCategory;
     });
 
@@ -64,9 +55,43 @@ const JournalArticlesPage = () => {
     };
 
     const handleArticleClick = (articleId) => {
-        console.log('Navigate to article:', articleId);
-        alert(`Navigate to article: ${articleId}\n\nIn your Next.js app, use:\nrouter.push(\`/journal-articles/${articleId}\`)`);
+        window.location.href = `/press/journal-articles/${articleId}`;
     };
+
+    if (loading) {
+        return (
+            <>
+                <Navbar />
+                <div className="min-h-screen flex items-center justify-center">
+                    <div className="text-center">
+                        <FileText className="w-16 h-16 text-[#46a1bb] mx-auto mb-4 animate-pulse" />
+                        <p className="text-gray-600">Loading journal articles...</p>
+                    </div>
+                </div>
+            </>
+        );
+    }
+
+    if (error) {
+        return (
+            <>
+                <Navbar />
+                <div className="min-h-screen flex items-center justify-center">
+                    <div className="text-center">
+                        <FileText className="w-16 h-16 text-red-500 mx-auto mb-4" />
+                        <p className="text-red-600 mb-2">Failed to load journal articles</p>
+                        <p className="text-gray-600 text-sm">{error}</p>
+                        <button 
+                            onClick={loadArticles}
+                            className="mt-4 px-6 py-2 bg-[#46a1bb] text-white rounded-lg hover:bg-[#021d49]"
+                        >
+                            Retry
+                        </button>
+                    </div>
+                </div>
+            </>
+        );
+    }
 
     return (
         <>
@@ -149,18 +174,26 @@ const JournalArticlesPage = () => {
 
                     {/* Articles Grid Layout */}
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-                        {currentArticles.map((article) => (
+                        {currentArticles.map((article) => {
+                            const authorsDisplay = Array.isArray(article.authors) 
+                                ? article.authors.join(', ') 
+                                : (article.authors || 'Unknown Author');
+                            const dateDisplay = article.datePosted 
+                                ? new Date(article.datePosted).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+                                : 'Date not available';
+                            
+                            return (
                             <div
-                                key={article.id}
+                                key={article._id || article.id}
                                 className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-[#46a1bb] cursor-pointer group flex flex-col"
-                                onClick={() => handleArticleClick(article.id)}
+                                onClick={() => handleArticleClick(article._id || article.id)}
                             >
                                 {/* Article Image */}
                                 <div className="relative h-48 overflow-hidden bg-gradient-to-br from-[#021d49] to-[#46a1bb]">
-                                    {article.hasImage ? (
+                                    {article.image ? (
                                         <>
                                             <img
-                                                src={article.image}
+                                                src={article.image.startsWith('http') ? article.image : `http://localhost:5001${article.image}`}
                                                 alt={article.title}
                                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                             />
@@ -185,7 +218,7 @@ const JournalArticlesPage = () => {
                                 <div className="p-6 flex flex-col flex-grow">
                                     {/* Category */}
                                     <span className="inline-block px-3 py-1 bg-gradient-to-r from-[#021d49] to-[#46a1bb] text-white font-bold text-xs uppercase tracking-wide rounded-full mb-3 self-start">
-                                        {article.category}
+                                        {article.category || 'Article'}
                                     </span>
 
                                     {/* Title */}
@@ -196,7 +229,7 @@ const JournalArticlesPage = () => {
                                     {/* Date */}
                                     <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
                                         <Calendar className="w-4 h-4 text-[#46a1bb]" />
-                                        <span>{article.date}</span>
+                                        <span>{dateDisplay}</span>
                                     </div>
 
                                     {/* Authors */}
@@ -206,22 +239,23 @@ const JournalArticlesPage = () => {
                                             <div className="flex-1">
                                                 <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1">Authors</p>
                                                 <p className="text-xs text-gray-700 leading-relaxed line-clamp-3">
-                                                    {article.authors}
+                                                    {authorsDisplay}
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
 
-                                    {/* Excerpt - if available */}
-                                    {article.excerpt && (
-                                        <p className="text-sm text-gray-600 leading-relaxed mb-4 line-clamp-2">
-                                            {article.excerpt}
-                                        </p>
+                                    {/* Description - if available */}
+                                    {article.description && (
+                                        <div 
+                                            className="text-sm text-gray-600 leading-relaxed mb-4 line-clamp-2"
+                                            dangerouslySetInnerHTML={{ __html: article.description }}
+                                        />
                                     )}
 
                                     {/* Button */}
                                     <button
-                                        onClick={(e) => { e.stopPropagation(); handleArticleClick(article.id); }}
+                                        onClick={(e) => { e.stopPropagation(); handleArticleClick(article._id || article.id); }}
                                         className="mt-auto w-full px-4 py-3 bg-gradient-to-r from-[#021d49] to-[#46a1bb] hover:shadow-xl text-white font-semibold rounded-lg shadow-md flex items-center gap-2 justify-center transition-all duration-200"
                                     >
                                         <span>read more</span>
@@ -229,7 +263,7 @@ const JournalArticlesPage = () => {
                                     </button>
                                 </div>
                             </div>
-                        ))}
+                        )})}
                     </div>
 
                     {/* No Results Message */}

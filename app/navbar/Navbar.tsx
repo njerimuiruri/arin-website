@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
+import Image from 'next/image';
 
 const Navbar = () => {
     const [activeMenu, setActiveMenu] = useState(null);
@@ -94,9 +95,14 @@ const Navbar = () => {
                 <div className="flex items-center justify-between h-16">
                     {/* Logo */}
                     <a href="/" className="flex items-center">
-                        <div className="text-[32px] font-bold text-[#021d49] tracking-tight">
-                            ARIN
-                        </div>
+                        <Image
+                            src="/Arin.png"
+                            alt="ARIN Logo"
+                            width={120}
+                            height={48}
+                            priority
+                            className="object-contain"
+                        />
                     </a>
 
                     {/* Navigation Menu */}

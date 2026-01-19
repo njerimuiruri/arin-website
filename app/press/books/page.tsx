@@ -1,46 +1,44 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BookOpen, Calendar, Search, Filter, ChevronLeft, ChevronRight, FileText, Users } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
+import { getBooks } from '@/services/booksService';
 
 const BooksPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [currentPage, setCurrentPage] = useState(1);
+    const [books, setBooks] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const booksPerPage = 6;
 
-    const books = [
-        {
-            id: 'earth-system-governance',
-            title: 'Earth System Governance – Africa\'s Right to Development in a Climate-Constrained World',
-            authors: 'Kennedy Mbeva, Reuben Makomere, Joanes Atela, Victoria Chengo and Charles Tonui',
-            postedBy: 'Gordon Gogo',
-            postedDate: 'December 13, 2024',
-            category: 'Publications, Books',
-            description: 'The book is a comprehensive rendition of Africa\'s sustainable development…',
-            image: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?w=800&q=80',
-            hasImage: true
-        },
-        {
-            id: 'transformative-pathways',
-            title: 'Transformative pathways to sustainability: learning across disciplines, cultures and contexts',
-            authors: 'Dinesh Abrol, Marina Apgar, Joanes Atela, Robert Byrne, Lakshmi Charli-Joseph, Victoria Chengo, Almendra Cremaschi, Rachael Durrant, Hallie Eakin, Adrian Ely, Anabel Marin, Fiona Marshall, David Ockwell, Nathan…',
-            postedBy: 'Gordon Gogo',
-            postedDate: 'December 11, 2024',
-            category: 'Publications, Books',
-            description: '',
-            image: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&q=80',
-            hasImage: true
+    useEffect(() => {
+        loadBooks();
+    }, []);
+
+    const loadBooks = async () => {
+        try {
+            setLoading(true);
+            const data = await getBooks();
+            setBooks(data);
+            setError(null);
+        } catch (err) {
+            setError(err.message);
+            console.error('Failed to load books:', err);
+        } finally {
+            setLoading(false);
         }
-    ];
+    };
 
     const categories = ['All', 'Publications', 'Books', 'Research'];
 
     const filteredBooks = books.filter(book => {
+        const authorsStr = Array.isArray(book.authors) ? book.authors.join(', ') : (book.authors || '');
         const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            book.authors.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            book.description.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesCategory = selectedCategory === 'All' || book.category.includes(selectedCategory);
+            authorsStr.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (book.description || '').toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesCategory = selectedCategory === 'All' || (book.category && book.category.includes(selectedCategory));
         return matchesSearch && matchesCategory;
     });
 
@@ -56,9 +54,43 @@ const BooksPage = () => {
     };
 
     const handleBookClick = (bookId) => {
-        console.log('Navigate to book:', bookId);
-        alert(`Navigate to book: ${bookId}\n\nIn your Next.js app, use:\nrouter.push(\`/books/${bookId}\`)`);
+        window.location.href = `/press/books/${bookId}`;
     };
+
+    if (loading) {
+        return (
+            <>
+                <Navbar />
+                <div className="min-h-screen flex items-center justify-center">
+                    <div className="text-center">
+                        <BookOpen className="w-16 h-16 text-[#46a1bb] mx-auto mb-4 animate-pulse" />
+                        <p className="text-gray-600">Loading books...</p>
+                    </div>
+                </div>
+            </>
+        );
+    }
+
+    if (error) {
+        return (
+            <>
+                <Navbar />
+                <div className="min-h-screen flex items-center justify-center">
+                    <div className="text-center">
+                        <BookOpen className="w-16 h-16 text-red-500 mx-auto mb-4" />
+                        <p className="text-red-600 mb-2">Failed to load books</p>
+                        <p className="text-gray-600 text-sm">{error}</p>
+                        <button 
+                            onClick={loadBooks}
+                            className="mt-4 px-6 py-2 bg-[#46a1bb] text-white rounded-lg hover:bg-[#021d49]"
+                        >
+                            Retry
+                        </button>
+                    </div>
+                </div>
+            </>
+        );
+    }
 
     return (
         <>
@@ -142,16 +174,24 @@ const BooksPage = () => {
 
                     {/* Books List - Horizontal Card Layout */}
                     <div className="space-y-6 max-w-6xl mx-auto">
-                        {currentBooks.map((book) => (
+                        {currentBooks.map((book) => {
+                            const authorsDisplay = Array.isArray(book.authors) 
+                                ? book.authors.join(', ') 
+                                : (book.authors || 'Unknown Author');
+                            const dateDisplay = book.datePosted 
+                                ? new Date(book.datePosted).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+                                : 'Date not available';
+                            
+                            return (
                             <div
-                                key={book.id}
+                                key={book._id || book.id}
                                 className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-[#46a1bb] cursor-pointer group"
-                                onClick={() => handleBookClick(book.id)}
+                                onClick={() => handleBookClick(book._id || book.id)}
                             >
                                 <div className="md:flex">
                                     {/* Left Side - Book Cover Image */}
                                     <div className="md:w-2/5 relative h-64 md:h-auto overflow-hidden bg-gradient-to-br from-[#021d49] to-[#46a1bb]">
-                                        {book.hasImage ? (
+                                        {book.image ? (
                                             <>
                                                 <img
                                                     src={book.image}
@@ -180,7 +220,7 @@ const BooksPage = () => {
                                         {/* Header */}
                                         <div className="mb-4">
                                             <span className="inline-block px-3 py-1 bg-gradient-to-r from-[#021d49] to-[#46a1bb] text-white font-bold text-xs uppercase tracking-wide rounded-full mb-3">
-                                                {book.category}
+                                                {book.category || 'Book'}
                                             </span>
                                             <h3 className="text-2xl font-bold text-gray-900 group-hover:text-[#46a1bb] transition-colors leading-tight mb-3">
                                                 {book.title}
@@ -194,7 +234,7 @@ const BooksPage = () => {
                                                 <div>
                                                     <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1">Authors</p>
                                                     <p className="text-sm text-gray-700 leading-relaxed">
-                                                        {book.authors}
+                                                        {authorsDisplay}
                                                     </p>
                                                 </div>
                                             </div>
@@ -202,9 +242,10 @@ const BooksPage = () => {
 
                                         {/* Description - if available */}
                                         {book.description && (
-                                            <p className="text-sm text-gray-600 leading-relaxed mb-4">
-                                                {book.description}
-                                            </p>
+                                            <div 
+                                                className="text-sm text-gray-600 leading-relaxed mb-4 line-clamp-3"
+                                                dangerouslySetInnerHTML={{ __html: book.description }}
+                                            />
                                         )}
 
                                         {/* Metadata and Button Row */}
@@ -213,14 +254,13 @@ const BooksPage = () => {
                                             <div className="flex-1">
                                                 <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
                                                     <Calendar className="w-4 h-4 text-[#46a1bb]" />
-                                                    <span>{book.postedDate}</span>
+                                                    <span>{dateDisplay}</span>
                                                 </div>
-                                                <p className="text-xs text-gray-500">Posted by {book.postedBy}</p>
                                             </div>
 
                                             {/* Button */}
                                             <button
-                                                onClick={(e) => { e.stopPropagation(); handleBookClick(book.id); }}
+                                                onClick={(e) => { e.stopPropagation(); handleBookClick(book._id || book.id); }}
                                                 className="px-6 py-3 bg-gradient-to-r from-[#021d49] to-[#46a1bb] hover:shadow-xl text-white font-semibold rounded-lg shadow-md flex items-center gap-2 justify-center transition-all duration-200 whitespace-nowrap"
                                             >
                                                 <FileText className="w-4 h-4" />
@@ -230,7 +270,7 @@ const BooksPage = () => {
                                     </div>
                                 </div>
                             </div>
-                        ))}
+                        )})}
                     </div>
 
                     {/* No Results Message */}

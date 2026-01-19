@@ -186,9 +186,11 @@ const AnnualReportsPage = () => {
                                     </div>
 
                                     {/* Description/Excerpt */}
-                                    <p className="text-gray-600 leading-relaxed mb-4 line-clamp-3">
-                                        {report.description}
-                                    </p>
+                                  {/* Description/Excerpt */}
+<div 
+    className="text-gray-600 leading-relaxed mb-4 line-clamp-3"
+    dangerouslySetInnerHTML={{ __html: report.description }}
+/>
 
                                     {/* Tags */}
                                     <div className="flex flex-wrap gap-2 mb-6">
