@@ -81,7 +81,7 @@ const JournalArticlesPage = () => {
                         <FileText className="w-16 h-16 text-red-500 mx-auto mb-4" />
                         <p className="text-red-600 mb-2">Failed to load journal articles</p>
                         <p className="text-gray-600 text-sm">{error}</p>
-                        <button 
+                        <button
                             onClick={loadArticles}
                             className="mt-4 px-6 py-2 bg-[#46a1bb] text-white rounded-lg hover:bg-[#021d49]"
                         >
@@ -175,95 +175,96 @@ const JournalArticlesPage = () => {
                     {/* Articles Grid Layout */}
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
                         {currentArticles.map((article) => {
-                            const authorsDisplay = Array.isArray(article.authors) 
-                                ? article.authors.join(', ') 
+                            const authorsDisplay = Array.isArray(article.authors)
+                                ? article.authors.join(', ')
                                 : (article.authors || 'Unknown Author');
-                            const dateDisplay = article.datePosted 
+                            const dateDisplay = article.datePosted
                                 ? new Date(article.datePosted).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
                                 : 'Date not available';
-                            
+
                             return (
-                            <div
-                                key={article._id || article.id}
-                                className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-[#46a1bb] cursor-pointer group flex flex-col"
-                                onClick={() => handleArticleClick(article._id || article.id)}
-                            >
-                                {/* Article Image */}
-                                <div className="relative h-48 overflow-hidden bg-gradient-to-br from-[#021d49] to-[#46a1bb]">
-                                    {article.image ? (
-                                        <>
-                                            <img
-                                                src={article.image.startsWith('http') ? article.image : `http://localhost:5001${article.image}`}
-                                                alt={article.title}
-                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                            />
-                                            {/* Gradient Overlay */}
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-                                        </>
-                                    ) : (
-                                        <div className="w-full h-full flex items-center justify-center">
-                                            <FileText className="w-16 h-16 text-white/30" />
+                                <div
+                                    key={article._id || article.id}
+                                    className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-[#46a1bb] cursor-pointer group flex flex-col"
+                                    onClick={() => handleArticleClick(article._id || article.id)}
+                                >
+                                    {/* Article Image */}
+                                    <div className="relative h-48 overflow-hidden bg-gradient-to-br from-[#021d49] to-[#46a1bb]">
+                                        {article.coverImage ? (
+                                            <>
+                                                <img
+                                                    src={article.coverImage.startsWith('http') ? article.coverImage : `http://localhost:5001${article.coverImage}`}
+                                                    alt={article.title}
+                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                />
+                                                {/* Gradient Overlay */}
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+                                            </>
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center">
+                                                <FileText className="w-16 h-16 text-white/30" />
+                                            </div>
+                                        )}
+
+                                        {/* Category Badge */}
+                                        <div className="absolute top-4 right-4">
+                                            <span className="px-3 py-1 bg-white/90 text-[#021d49] font-bold text-xs uppercase tracking-wide rounded-full shadow-lg">
+                                                Article
+                                            </span>
                                         </div>
-                                    )}
+                                    </div>
 
-                                    {/* Category Badge */}
-                                    <div className="absolute top-4 right-4">
-                                        <span className="px-3 py-1 bg-white/90 text-[#021d49] font-bold text-xs uppercase tracking-wide rounded-full shadow-lg">
-                                            Article
+                                    {/* Content */}
+                                    <div className="p-6 flex flex-col flex-grow">
+                                        {/* Category */}
+                                        <span className="inline-block px-3 py-1 bg-gradient-to-r from-[#021d49] to-[#46a1bb] text-white font-bold text-xs uppercase tracking-wide rounded-full mb-3 self-start">
+                                            {article.category || 'Article'}
                                         </span>
-                                    </div>
-                                </div>
 
-                                {/* Content */}
-                                <div className="p-6 flex flex-col flex-grow">
-                                    {/* Category */}
-                                    <span className="inline-block px-3 py-1 bg-gradient-to-r from-[#021d49] to-[#46a1bb] text-white font-bold text-xs uppercase tracking-wide rounded-full mb-3 self-start">
-                                        {article.category || 'Article'}
-                                    </span>
+                                        {/* Title */}
+                                        <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#46a1bb] transition-colors leading-tight mb-3 line-clamp-3">
+                                            {article.title}
+                                        </h3>
 
-                                    {/* Title */}
-                                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#46a1bb] transition-colors leading-tight mb-3 line-clamp-3">
-                                        {article.title}
-                                    </h3>
+                                        {/* Date */}
+                                        <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
+                                            <Calendar className="w-4 h-4 text-[#46a1bb]" />
+                                            <span>{dateDisplay}</span>
+                                        </div>
 
-                                    {/* Date */}
-                                    <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
-                                        <Calendar className="w-4 h-4 text-[#46a1bb]" />
-                                        <span>{dateDisplay}</span>
-                                    </div>
-
-                                    {/* Authors */}
-                                    <div className="mb-4 bg-gray-50 rounded-lg p-3 flex-grow">
-                                        <div className="flex items-start gap-2">
-                                            <Users className="w-4 h-4 text-[#46a1bb] flex-shrink-0 mt-0.5" />
-                                            <div className="flex-1">
-                                                <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1">Authors</p>
-                                                <p className="text-xs text-gray-700 leading-relaxed line-clamp-3">
-                                                    {authorsDisplay}
-                                                </p>
+                                        {/* Authors */}
+                                        <div className="mb-4 bg-gray-50 rounded-lg p-3 flex-grow">
+                                            <div className="flex items-start gap-2">
+                                                <Users className="w-4 h-4 text-[#46a1bb] flex-shrink-0 mt-0.5" />
+                                                <div className="flex-1">
+                                                    <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1">Authors</p>
+                                                    <p className="text-xs text-gray-700 leading-relaxed line-clamp-3">
+                                                        {authorsDisplay}
+                                                    </p>
+                                                </div>
                                             </div>
                                         </div>
+
+                                        {/* Description - if available */}
+                                        {article.description && (
+                                            <div
+                                                className="text-sm text-gray-600 leading-relaxed mb-4 line-clamp-2"
+                                                dangerouslySetInnerHTML={{ __html: article.description }}
+                                            />
+                                        )}
+
+                                        {/* Button */}
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); handleArticleClick(article._id || article.id); }}
+                                            className="mt-auto w-full px-4 py-3 bg-gradient-to-r from-[#021d49] to-[#46a1bb] hover:shadow-xl text-white font-semibold rounded-lg shadow-md flex items-center gap-2 justify-center transition-all duration-200"
+                                        >
+                                            <span>read more</span>
+                                            <ArrowRight className="w-4 h-4" />
+                                        </button>
                                     </div>
-
-                                    {/* Description - if available */}
-                                    {article.description && (
-                                        <div 
-                                            className="text-sm text-gray-600 leading-relaxed mb-4 line-clamp-2"
-                                            dangerouslySetInnerHTML={{ __html: article.description }}
-                                        />
-                                    )}
-
-                                    {/* Button */}
-                                    <button
-                                        onClick={(e) => { e.stopPropagation(); handleArticleClick(article._id || article.id); }}
-                                        className="mt-auto w-full px-4 py-3 bg-gradient-to-r from-[#021d49] to-[#46a1bb] hover:shadow-xl text-white font-semibold rounded-lg shadow-md flex items-center gap-2 justify-center transition-all duration-200"
-                                    >
-                                        <span>read more</span>
-                                        <ArrowRight className="w-4 h-4" />
-                                    </button>
                                 </div>
-                            </div>
-                        )})}
+                            )
+                        })}
                     </div>
 
                     {/* No Results Message */}

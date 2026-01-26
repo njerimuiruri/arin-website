@@ -13,7 +13,7 @@ interface JournalArticle {
     description: string;
     authors?: string[];
     datePosted?: string;
-    image?: string;
+    coverImage?: string;
     availableResources?: string[];
     year?: number;
 }
@@ -160,10 +160,10 @@ export default function JournalArticleDetailPage() {
                     </div>
 
                     {/* Cover Image */}
-                    {article.image && (
+                    {article.coverImage && (
                         <div className="mb-8">
                             <img
-                                src={article.image.startsWith('http') ? article.image : `http://localhost:5001${article.image}`}
+                                src={article.coverImage.startsWith('http') ? article.coverImage : `http://localhost:5001${article.coverImage}`}
                                 alt={article.title}
                                 className="w-full h-96 object-cover rounded-lg shadow-lg border border-gray-200"
                             />
