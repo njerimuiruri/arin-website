@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { policyBriefsService } from '@/services/policyBriefsService';
 import { FileText, Calendar, Search, Filter, ChevronLeft, ChevronRight, ArrowRight, Lightbulb } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
 
@@ -8,51 +9,30 @@ const PolicyBriefsPage = () => {
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [currentPage, setCurrentPage] = useState(1);
     const briefsPerPage = 6;
+    const [briefs, setBriefs] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    const briefs = [
-        {
-            id: 'climate-resilience-metrics',
-            title: 'Accelerating Global Climate Resilience through Robust Adaptation Metrics',
-            date: 'November 21, 2025',
-            category: 'Climate Adaptation',
-            excerpt: 'Persistent gaps in coordination, measurement, and  attribution hinder coherent integration of adaptation  across global frameworks…',
-            image: 'https://images.unsplash.com/photo-1569163139394-de4798aa62b6?w=800&q=80',
-            hasImage: true
-        },
-        {
-            id: 'locally-led-adaptation',
-            title: 'Locally Led Adaptation Metrics Unlocking Finance with Community-Defined Indicators',
-            date: 'November 10, 2025',
-            category: 'Finance & Development',
-            excerpt: 'The transition to Locally Led Adaptation (LLA) in Africa is fundamentally hampered by a persistent…',
-            image: 'https://images.unsplash.com/photo-1573167243872-43c6433b9d40?w=800&q=80',
-            hasImage: true
-        },
-        {
-            id: 'climate-health-emergency',
-            title: 'Climate-Health Emergency Policy Pathways for Resilience in Africa (2024)',
-            date: 'November 10, 2025',
-            category: 'Health Policy',
-            excerpt: 'Africa faces a profound and immediate climate-health emergency. Climate related hazards accounted for over 56%…',
-            image: 'https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?w=800&q=80',
-            hasImage: true
-        },
-        {
-            id: 'gender-gap-energy',
-            title: 'Closing the gender gap Building inclusive energy',
-            date: 'October 8, 2025',
-            category: 'Energy & Gender',
-            excerpt: 'The global energy transition, while necessary for climate resilience and sustainable development,  risks deepening existing gender…',
-            image: 'https://images.unsplash.com/photo-1473186578172-c141e6798cf4?w=800&q=80',
-            hasImage: true
-        }
-    ];
+    useEffect(() => {
+        const fetchBriefs = async () => {
+            try {
+                const data = await policyBriefsService.getAll();
+                setBriefs(data);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchBriefs();
+    }, []);
 
-    const categories = ['All', 'Climate Adaptation', 'Finance & Development', 'Health Policy', 'Energy & Gender'];
+    // Dynamically get categories from briefs
+    const categories = ['All', ...Array.from(new Set(briefs.map(b => b.category).filter(Boolean)))];
 
     const filteredBriefs = briefs.filter(brief => {
-        const matchesSearch = brief.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            brief.excerpt.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesSearch = (brief.title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (brief.excerpt || '').toLowerCase().includes(searchTerm.toLowerCase());
         const matchesCategory = selectedCategory === 'All' || brief.category === selectedCategory;
         return matchesSearch && matchesCategory;
     });
@@ -69,8 +49,8 @@ const PolicyBriefsPage = () => {
     };
 
     const handleBriefClick = (briefId) => {
-        console.log('Navigate to brief:', briefId);
-        alert(`Navigate to policy brief: ${briefId}\n\nIn your Next.js app, use:\nrouter.push(\`/policy-briefs/${briefId}\`)`);
+        // TODO: Replace with Next.js router navigation
+        window.location.href = `/press/policy-briefs/${briefId}`;
     };
 
     return (
@@ -153,79 +133,106 @@ const PolicyBriefsPage = () => {
                     </div>
 
                     {/* Policy Briefs Grid Layout */}
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-                        {currentBriefs.map((brief) => (
-                            <div
-                                key={brief.id}
-                                className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-[#46a1bb] cursor-pointer group flex flex-col"
-                                onClick={() => handleBriefClick(brief.id)}
-                            >
-                                {/* Brief Image */}
-                                <div className="relative h-48 overflow-hidden bg-gradient-to-br from-[#021d49] to-[#46a1bb]">
-                                    {brief.hasImage ? (
-                                        <>
-                                            <img
-                                                src={brief.image}
-                                                alt={brief.title}
-                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                            />
-                                            {/* Gradient Overlay */}
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-                                        </>
-                                    ) : (
-                                        <div className="w-full h-full flex items-center justify-center">
-                                            <Lightbulb className="w-16 h-16 text-white/30" />
-                                        </div>
-                                    )}
-
-                                    {/* Badge */}
-                                    <div className="absolute top-4 right-4">
-                                        <span className="px-3 py-1 bg-white/90 text-[#021d49] font-bold text-xs uppercase tracking-wide rounded-full shadow-lg">
-                                            Policy Brief
-                                        </span>
-                                    </div>
-                                </div>
-
-                                {/* Content */}
-                                <div className="p-6 flex flex-col flex-grow">
-                                    {/* Category */}
-                                    <span className="inline-block px-3 py-1 bg-gradient-to-r from-[#021d49] to-[#46a1bb] text-white font-bold text-xs uppercase tracking-wide rounded-full mb-3 self-start">
-                                        {brief.category}
-                                    </span>
-
-                                    {/* Title */}
-                                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#46a1bb] transition-colors leading-tight mb-3 line-clamp-3">
-                                        {brief.title}
-                                    </h3>
-
-                                    {/* Date */}
-                                    <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
-                                        <Calendar className="w-4 h-4 text-[#46a1bb]" />
-                                        <span>{brief.date}</span>
-                                    </div>
-
-                                    {/* Excerpt */}
-                                    <div className="mb-4 flex-grow">
-                                        <p className="text-sm text-gray-600 leading-relaxed line-clamp-3">
-                                            {brief.excerpt}
-                                        </p>
-                                    </div>
-
-                                    {/* Button */}
-                                    <button
-                                        onClick={(e) => { e.stopPropagation(); handleBriefClick(brief.id); }}
-                                        className="mt-auto w-full px-4 py-3 bg-gradient-to-r from-[#021d49] to-[#46a1bb] hover:shadow-xl text-white font-semibold rounded-lg shadow-md flex items-center gap-2 justify-center transition-all duration-200"
+                    {loading && (
+                        <div className="text-center py-16">
+                            <Lightbulb className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                            <h3 className="text-xl font-bold text-gray-900 mb-2">Loading policy briefs…</h3>
+                        </div>
+                    )}
+                    {error && (
+                        <div className="text-center py-16">
+                            <Lightbulb className="w-12 h-12 text-red-300 mx-auto mb-3" />
+                            <h3 className="text-xl font-bold text-red-700 mb-2">{error}</h3>
+                        </div>
+                    )}
+                    {!loading && !error && (
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+                            {currentBriefs.map((brief) => {
+                                // Use image or coverImage for compatibility
+                                const coverImg = brief.image || brief.coverImage;
+                                // Strip HTML tags from description
+                                const stripHtml = (html) => html ? html.replace(/<[^>]+>/g, '') : '';
+                                const plainDesc = stripHtml(brief.description || '');
+                                // Truncate to 10 words
+                                const desc = plainDesc.split(' ').slice(0, 10).join(' ');
+                                // Format date
+                                let dateStr = '';
+                                if (brief.datePosted) {
+                                    const d = new Date(brief.datePosted);
+                                    dateStr = d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+                                }
+                                return (
+                                    <div
+                                        key={brief._id || brief.id}
+                                        className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-[#46a1bb] cursor-pointer group flex flex-col"
+                                        onClick={() => handleBriefClick(brief._id || brief.id)}
                                     >
-                                        <span>read more</span>
-                                        <ArrowRight className="w-4 h-4" />
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                                        {/* Brief Image */}
+                                        <div className="relative h-48 overflow-hidden bg-gradient-to-br from-[#021d49] to-[#46a1bb]">
+                                            {coverImg ? (
+                                                <>
+                                                    <img
+                                                        src={coverImg}
+                                                        alt={brief.title}
+                                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                    />
+                                                    {/* Gradient Overlay */}
+                                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+                                                </>
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center">
+                                                    <Lightbulb className="w-16 h-16 text-white/30" />
+                                                </div>
+                                            )}
 
-                    {/* No Results Message */}
-                    {filteredBriefs.length === 0 && (
+                                            {/* Badge */}
+                                            <div className="absolute top-4 right-4">
+                                                <span className="px-3 py-1 bg-white/90 text-[#021d49] font-bold text-xs uppercase tracking-wide rounded-full shadow-lg">
+                                                    Policy Brief
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        {/* Content */}
+                                        <div className="p-6 flex flex-col flex-grow">
+                                            {/* Category */}
+                                            <span className="inline-block px-3 py-1 bg-gradient-to-r from-[#021d49] to-[#46a1bb] text-white font-bold text-xs uppercase tracking-wide rounded-full mb-3 self-start">
+                                                {brief.category}
+                                            </span>
+
+                                            {/* Title */}
+                                            <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#46a1bb] transition-colors leading-tight mb-3 line-clamp-3">
+                                                {brief.title}
+                                            </h3>
+
+                                            {/* Date */}
+                                            <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
+                                                <Calendar className="w-4 h-4 text-[#46a1bb]" />
+                                                <span>{dateStr}</span>
+                                            </div>
+
+                                            {/* Truncated Description (plain text, no HTML) */}
+                                            <div className="mb-4 flex-grow">
+                                                <p className="text-sm text-gray-600 leading-relaxed line-clamp-3">
+                                                    {desc}{plainDesc.split(' ').length > 10 ? '...' : ''}
+                                                </p>
+                                            </div>
+
+                                            {/* Button */}
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); handleBriefClick(brief._id || brief.id); }}
+                                                className="mt-auto w-full px-4 py-3 bg-gradient-to-r from-[#021d49] to-[#46a1bb] hover:shadow-xl text-white font-semibold rounded-lg shadow-md flex items-center gap-2 justify-center transition-all duration-200"
+                                            >
+                                                <span>read more</span>
+                                                <ArrowRight className="w-4 h-4" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
+                    {!loading && !error && filteredBriefs.length === 0 && (
                         <div className="text-center py-16">
                             <Lightbulb className="w-12 h-12 text-gray-300 mx-auto mb-3" />
                             <h3 className="text-xl font-bold text-gray-900 mb-2">No policy briefs found</h3>

@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:5001/journal-articles";
+const BASE_URL = "http://localhost:5001/api/journal-articles";
 
 export async function getJournalArticles() {
   const res = await fetch(BASE_URL, { cache: 'no-store' });
