@@ -30,20 +30,20 @@ const ConferencesPage = () => {
     const fetchConferences = async () => {
         try {
             const apiBaseUrl = (typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_API_BASE_URL : '') || 'http://localhost:5001';
-            const response = await fetch(apiBaseUrl + '/conferences', {
+            const response = await fetch(apiBaseUrl + '/api/conferences', {
                 headers: { 'Content-Type': 'application/json' },
             });
             if (!response.ok) throw new Error('Failed to fetch conferences');
             const data = await response.json();
-            
+
             // Fix image URLs to include backend base URL
             const fixedData = data.map((conf: Conference) => ({
                 ...conf,
-                image: conf.image && conf.image.startsWith('/uploads') 
-                    ? apiBaseUrl + conf.image 
+                image: conf.image && conf.image.startsWith('/uploads')
+                    ? apiBaseUrl.replace(/\/api$/, '') + conf.image
                     : conf.image
             }));
-            
+
             setConferences(fixedData);
         } catch (error) {
             console.error('Error fetching conferences:', error);
@@ -183,9 +183,10 @@ const ConferencesPage = () => {
                                     </div>
 
                                     {/* Description */}
-                                    <p className="text-sm text-gray-600 leading-relaxed mb-4 line-clamp-2">
-                                        {conference.description.replace(/<[^>]*>/g, '')}
-                                    </p>
+                                    <div
+                                        className="text-sm text-gray-600 leading-relaxed mb-4 line-clamp-2"
+                                        dangerouslySetInnerHTML={{ __html: conference.description }}
+                                    />
 
                                     {/* Read More Button */}
                                     <button

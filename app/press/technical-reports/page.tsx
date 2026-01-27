@@ -1,46 +1,29 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FileText, Calendar, Search, Filter, ChevronLeft, ChevronRight, ArrowRight, User, BookOpen } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
 
 const TechnicalReportsPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
+    const [reports, setReports] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const reportsPerPage = 6;
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    const reports = [
-        {
-            id: 'soar-2025-workshop',
-            title: 'State of Adaptation Report(SOAR) 2025 Stakeholder Dialogue: Workshop Report',
-            postedBy: 'Awino',
-            postedDate: 'November 5, 2025',
-            category: 'Technical Reports',
-            excerpt: 'The State of Adaptation in Africa (SoAR) Report 2025 is a flagship assessment of Africa\'s',
-            image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=80',
-            hasImage: true
-        },
-        {
-            id: 'lama-precop-webinar-2',
-            title: '2nd LAMA Pre-Cop Webinar Technical Report',
-            postedBy: 'Awino',
-            postedDate: 'September 19, 2025',
-            category: 'Technical Reports',
-            excerpt: 'The Locally-led Adaptation Metrics for Africa (LAMA) project, implemented by the Africa  Research and Impact Network (ARIN), seeks to support measurement and reporting on the …',
-            image: 'https://images.unsplash.com/photo-1553877522-43269d4ea984?w=800&q=80',
-            hasImage: true
-        },
-        {
-            id: 'precop-webinar-1',
-            title: 'Pre-COP 1st Webinar Technical Report',
-            postedBy: 'Awino',
-            postedDate: 'September 18, 2025',
-            category: 'Technical Reports',
-            excerpt: 'The Locally Led Adaptation Metrics for Africa (LAMA) project, implemented by the Africa  Research and Impact Network (ARIN), aims to strengthen the measurement and  reporting…',
-            image: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80',
-            hasImage: true
-        }
-    ];
+    useEffect(() => {
+        setLoading(true);
+        import('@/services/technicalReportsService').then(({ technicalReportsService }) => {
+            technicalReportsService.getAll()
+                .then(data => {
+                    setReports(data);
+                    setError(null);
+                })
+                .catch(err => setError(err.message || 'Failed to fetch technical reports'))
+                .finally(() => setLoading(false));
+        });
+    }, []);
 
     const categories = ['All', 'Technical Reports', 'Workshop Reports', 'Webinar Reports'];
 
