@@ -111,9 +111,10 @@ const SecretariatPage = () => {
                                     {/* Image */}
                                     <div className="relative h-80 overflow-hidden bg-gray-100">
                                         <img
-                                            src={member.image ? `http://localhost:5001${member.image}` : 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop'}
+                                            src={member.image && member.image.startsWith('http') ? member.image : member.image ? `http://localhost:5001${member.image}` : 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop'}
                                             alt={`${member.firstName} ${member.lastName}`}
                                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                            onError={e => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop'; }}
                                         />
                                     </div>
 
@@ -124,9 +125,7 @@ const SecretariatPage = () => {
                                         </h3>
                                         <p className="text-sm text-[#459db8] font-medium mb-4">{member.role}</p>
 
-                                        <p className="text-sm text-gray-600 line-clamp-2 mb-4">
-                                            {member.bio ? member.bio.substring(0, 100) + (member.bio.length > 100 ? '...' : '') : 'No bio available'}
-                                        </p>
+                                        <div className="text-sm text-gray-600 line-clamp-2 mb-4" dangerouslySetInnerHTML={{ __html: member.bio ? member.bio.substring(0, 100) + (member.bio.length > 100 ? '...' : '') : 'No bio available' }} />
 
                                         <div className="flex items-center gap-2 text-[#459db8] text-sm font-medium group-hover:gap-3 transition-all">
                                             <span>View Profile</span>
@@ -161,9 +160,10 @@ const SecretariatPage = () => {
                                 <div className="flex flex-col sm:flex-row items-start gap-6">
                                     <div className="w-24 h-24 rounded-2xl overflow-hidden shadow-lg flex-shrink-0 ring-4 ring-[#459db8]/20">
                                         <img
-                                            src={selectedMember.image ? `http://localhost:5001${selectedMember.image}` : 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop'}
+                                            src={selectedMember.image && selectedMember.image.startsWith('http') ? selectedMember.image : selectedMember.image ? `http://localhost:5001${selectedMember.image}` : 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop'}
                                             alt={`${selectedMember.firstName} ${selectedMember.lastName}`}
                                             className="w-full h-full object-cover"
+                                            onError={e => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop'; }}
                                         />
                                     </div>
                                     <div className="flex-1">
@@ -187,9 +187,7 @@ const SecretariatPage = () => {
                                         </div>
                                         <h3 className="text-xl font-bold text-gray-900">Biography</h3>
                                     </div>
-                                    <p className="text-gray-600 leading-relaxed pl-13 whitespace-pre-line">
-                                        {selectedMember.bio || 'No bio available'}
-                                    </p>
+                                    <div className="text-gray-600 leading-relaxed pl-13 whitespace-pre-line" dangerouslySetInnerHTML={{ __html: selectedMember.bio || 'No bio available' }} />
                                 </div>
                             </div>
                         </div>

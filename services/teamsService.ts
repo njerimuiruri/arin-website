@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:5001/teams";
+const BASE_URL = "http://localhost:5001/api/teams";
 
 export async function getTeamMembers() {
   try {
