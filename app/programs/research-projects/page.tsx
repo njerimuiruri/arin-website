@@ -112,70 +112,70 @@ const ResearchProjectsPage = () => {
                             <div className="col-span-full text-center py-12 text-red-600">{error}</div>
                         )}
                         {filteredProjects.map((project) => {
-                            const imageUrl = buildImageUrl(project.image);
+                            const imageUrl = buildImageUrl(project.coverImage);
                             return (
-                            <div
-                                key={project._id}
-                                className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-[#46a1bb] cursor-pointer overflow-hidden"
-                                onClick={() => handleProjectClick(project._id)}
-                            >
-                                {/* Main Image */}
-                                {imageUrl ? (
-                                    <div className="h-44 w-full bg-slate-100">
-                                        <img src={imageUrl} alt={project.title || 'Project image'} className="h-full w-full object-cover" />
-                                    </div>
-                                ) : (
-                                    <div className="h-44 w-full bg-slate-100 flex items-center justify-center text-slate-400 text-sm">
-                                        No image
-                                    </div>
-                                )}
-                                <div className="p-5 space-y-3">
-                                {/* Header with Status */}
-                                <div className="flex items-start justify-between mb-3">
-                                    <div className="flex-1">
-                                        <h3 className="text-lg font-bold text-gray-900 hover:text-[#46a1bb] transition-colors leading-tight mb-2">
-                                            {project.title}
-                                        </h3>
-                                    </div>
-                                    {/* Optional status badge if available */}
-                                </div>
-
-                                {/* Date and Category */}
-                                <div className="flex items-center gap-3 mb-3 text-sm text-gray-600">
-                                    <div className="flex items-center gap-1">
-                                        <Calendar className="w-4 h-4" />
-                                        <span>{project.date ? new Date(project.date).toLocaleDateString() : ''}</span>
-                                    </div>
-                                </div>
-
-                                {/* Category Badge */}
-                                <div className="mb-3">
-                                    <span className="inline-block px-3 py-1 bg-gray-100 text-gray-700 text-xs font-semibold rounded-full">
-                                        {project.category}
-                                    </span>
-                                </div>
-
-                                {/* Excerpt */}
-                                <p className="text-sm text-gray-600 leading-relaxed mb-3 line-clamp-2">
-                                    {stripHtml(project.description || '').slice(0, 160)}
-                                </p>
-
-                                {/* Tags */}
-                                <div className="flex flex-wrap gap-1 mb-3">
-                                    {/* Optional tags if available */}
-                                </div>
-
-                                {/* View Details Link */}
-                                <button
-                                    onClick={(e) => { e.stopPropagation(); handleProjectClick(project._id); }}
-                                    className="mt-2 px-5 py-2.5 bg-linear-to-r from-blue-600 to-blue-400 text-white font-semibold rounded-lg shadow-md flex items-center gap-2 justify-center hover:from-blue-700 hover:to-blue-500 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-60 w-full"
-                                    aria-label={`Read more about ${project.title}`}
+                                <div
+                                    key={project._id}
+                                    className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-[#46a1bb] cursor-pointer overflow-hidden"
+                                    onClick={() => handleProjectClick(project._id)}
                                 >
-                                    <span>Read More</span>
-                                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                                </button>
+                                    {/* Main Image */}
+                                    {imageUrl ? (
+                                        <div className="h-44 w-full bg-slate-100">
+                                            <img src={imageUrl} alt={project.title || 'Project image'} className="h-full w-full object-cover" />
+                                        </div>
+                                    ) : (
+                                        <div className="h-44 w-full bg-slate-100 flex items-center justify-center text-slate-400 text-sm">
+                                            No image
+                                        </div>
+                                    )}
+                                    <div className="p-5 space-y-3">
+                                        {/* Header with Status */}
+                                        <div className="flex items-start justify-between mb-3">
+                                            <div className="flex-1">
+                                                <h3 className="text-lg font-bold text-gray-900 hover:text-[#46a1bb] transition-colors leading-tight mb-2">
+                                                    {project.title}
+                                                </h3>
+                                            </div>
+                                            {/* Optional status badge if available */}
+                                        </div>
+
+                                        {/* Date and Category */}
+                                        <div className="flex items-center gap-3 mb-3 text-sm text-gray-600">
+                                            <div className="flex items-center gap-1">
+                                                <Calendar className="w-4 h-4" />
+                                                <span>{project.date ? new Date(project.date).toLocaleDateString() : ''}</span>
+                                            </div>
+                                        </div>
+
+                                        {/* Category Badge */}
+                                        <div className="mb-3">
+                                            <span className="inline-block px-3 py-1 bg-gray-100 text-gray-700 text-xs font-semibold rounded-full">
+                                                {project.category}
+                                            </span>
+                                        </div>
+
+                                        {/* Excerpt */}
+                                        <p className="text-sm text-gray-600 leading-relaxed mb-3 line-clamp-2">
+                                            {stripHtml(project.description || '').slice(0, 160)}
+                                        </p>
+
+                                        {/* Tags */}
+                                        <div className="flex flex-wrap gap-1 mb-3">
+                                            {/* Optional tags if available */}
+                                        </div>
+
+                                        {/* View Details Link */}
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); handleProjectClick(project._id); }}
+                                            className="mt-2 px-5 py-2.5 bg-linear-to-r from-blue-600 to-blue-400 text-white font-semibold rounded-lg shadow-md flex items-center gap-2 justify-center hover:from-blue-700 hover:to-blue-500 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-60 w-full"
+                                            aria-label={`Read more about ${project.title}`}
+                                        >
+                                            <span>Read More</span>
+                                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
                             );
                         })}
                     </div>
@@ -195,10 +195,10 @@ const ResearchProjectsPage = () => {
                     <div className="bg-linear-to-br from-[#021d49] via-gray-900 to-[#021d49] rounded-2xl p-10 text-white shadow-2xl">
                         <h2 className="text-3xl font-bold mb-8 text-center">Our Impact</h2>
                         <div className="grid md:grid-cols-4 gap-6">
-                                <div className="text-center">
-                                    <div className="text-4xl font-bold text-[#46a1bb] mb-2">{projects.length}</div>
-                                    <p className="text-gray-300 text-sm">Active Projects</p>
-                                </div>
+                            <div className="text-center">
+                                <div className="text-4xl font-bold text-[#46a1bb] mb-2">{projects.length}</div>
+                                <p className="text-gray-300 text-sm">Active Projects</p>
+                            </div>
                             <div className="text-center">
                                 <div className="text-4xl font-bold text-[#46a1bb] mb-2">15+</div>
                                 <p className="text-gray-300 text-sm">Partner Countries</p>

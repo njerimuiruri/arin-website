@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:5001/research-projects";
+const BASE_URL = "http://localhost:5001/api/research-projects";
 
 export async function getResearchProjects() {
   const res = await fetch(BASE_URL, { cache: 'no-store' });
