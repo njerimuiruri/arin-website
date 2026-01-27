@@ -162,7 +162,15 @@ const ResearchProjectsPage = () => {
 
                                         {/* Tags */}
                                         <div className="flex flex-wrap gap-1 mb-3">
-                                            {/* Optional tags if available */}
+                                            {project.teamMembers && project.teamMembers.length > 0 && (
+                                                <div className="flex flex-wrap gap-1">
+                                                    {project.teamMembers.map((member: string, idx: number) => (
+                                                        <span key={idx} className="inline-block px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full border border-blue-100">
+                                                            {member}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            )}
                                         </div>
 
                                         {/* View Details Link */}

@@ -25,20 +25,20 @@ const CSRPage = () => {
     const fetchCsrActivities = async () => {
         try {
             const apiBaseUrl = (typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_API_BASE_URL : '') || 'http://localhost:5001';
-            const response = await fetch(apiBaseUrl + '/csr', {
+            const response = await fetch(apiBaseUrl + '/api/csr', {
                 headers: { 'Content-Type': 'application/json' },
             });
             if (!response.ok) throw new Error('Failed to fetch CSR activities');
             const data = await response.json();
-            
+
             // Fix image URLs to include backend base URL
             const fixedData = data.map((csr: Csr) => ({
                 ...csr,
-                image: csr.image && csr.image.startsWith('/uploads') 
-                    ? apiBaseUrl + csr.image 
+                image: csr.image && csr.image.startsWith('/uploads')
+                    ? apiBaseUrl + csr.image
                     : csr.image
             }));
-            
+
             setCsrActivities(fixedData);
         } catch (error) {
             console.error('Error fetching CSR activities:', error);

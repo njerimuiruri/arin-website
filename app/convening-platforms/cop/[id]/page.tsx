@@ -28,17 +28,17 @@ const CopDetailPage = () => {
             if (!id) return;
             try {
                 const apiBaseUrl = (typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_API_BASE_URL : '') || 'http://localhost:5001';
-                const response = await fetch(`${apiBaseUrl}/cop/${id}`, {
+                const response = await fetch(`${apiBaseUrl}/api/cop/${id}`, {
                     headers: { 'Content-Type': 'application/json' },
                 });
                 if (!response.ok) throw new Error('Failed to fetch COP item');
                 const data = await response.json();
-                
+
                 // Fix image URL to include backend base URL
                 if (data.image && data.image.startsWith('/uploads')) {
                     data.image = apiBaseUrl + data.image;
                 }
-                
+
                 setCop(data);
             } catch (err) {
                 console.error('Failed to fetch COP item:', err);

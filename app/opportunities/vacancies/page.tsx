@@ -28,20 +28,20 @@ const VacanciesPage = () => {
     const fetchVacancies = async () => {
         try {
             const apiBaseUrl = (typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_API_BASE_URL : '') || 'http://localhost:5001';
-            const response = await fetch(apiBaseUrl + '/vacancies', {
+            const response = await fetch(apiBaseUrl + '/api/vacancies', {
                 headers: { 'Content-Type': 'application/json' },
             });
             if (!response.ok) throw new Error('Failed to fetch vacancies');
             const data = await response.json();
-            
+
             // Fix image URLs to include backend base URL
             const fixedData = data.map((vacancy: Vacancy) => ({
                 ...vacancy,
-                image: vacancy.image && vacancy.image.startsWith('/uploads') 
-                    ? apiBaseUrl + vacancy.image 
+                image: vacancy.image && vacancy.image.startsWith('/uploads')
+                    ? apiBaseUrl + vacancy.image
                     : vacancy.image
             }));
-            
+
             setVacancies(fixedData);
         } catch (error) {
             console.error('Error fetching vacancies:', error);
@@ -187,7 +187,7 @@ const VacanciesPage = () => {
                                         </h3>
 
                                         {/* Description */}
-                                        <div 
+                                        <div
                                             className="text-sm text-gray-600 line-clamp-3 mb-3"
                                             dangerouslySetInnerHTML={{ __html: vacancy.description.substring(0, 150) + '...' }}
                                         />
