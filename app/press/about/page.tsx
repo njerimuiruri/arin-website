@@ -16,11 +16,11 @@ const ARINPressPage = () => {
                 <section className="max-w-[1400px] mx-auto px-6 py-12">
                     <div className="text-center mb-12">
                         <div className="flex items-center justify-center gap-3 mb-4">
-                            <BookOpen className="w-12 h-12 text-[#46a1bb]" />
+                            <BookOpen className="w-12 h-12 text-[#021d49]" />
                         </div>
                         <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
                             ARIN{' '}
-                            <span className="bg-gradient-to-r from-[#46a1bb] to-[#021d49] bg-clip-text text-transparent">
+                            <span className="bg-gradient-to-r from-[#021d49] to-[#021d49] bg-clip-text text-transparent">
                                 Press
                             </span>
                         </h1>
@@ -40,7 +40,7 @@ const ARINPressPage = () => {
                                     className="w-full h-80 object-cover rounded-xl shadow-md"
                                 />
                                 <div className="absolute top-4 right-4">
-                                    <span className="px-4 py-2 bg-gradient-to-r from-[#021d49] to-[#46a1bb] text-white font-bold text-sm uppercase tracking-wide rounded-lg shadow-xl">
+                                    <span className="px-4 py-2 bg-gradient-to-r from-[#021d49] to-[#021d49] text-white font-bold text-sm uppercase tracking-wide rounded-lg shadow-xl">
                                         ARIN Press
                                     </span>
                                 </div>
@@ -53,7 +53,7 @@ const ARINPressPage = () => {
                                 </p>
                                 <button
                                     onClick={handlePDFClick}
-                                    className="w-full px-6 py-4 bg-gradient-to-r from-[#021d49] to-[#46a1bb] text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-3"
+                                    className="w-full px-6 py-4 bg-gradient-to-r from-[#021d49] to-[#021d49] text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-3"
                                 >
                                     <FileText className="w-5 h-5" />
                                     <span>Read ARIN Press PDF</span>
@@ -78,8 +78,8 @@ const ARINPressPage = () => {
                         <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
                             <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">ARIN Network Aims</h2>
                             <div className="grid md:grid-cols-3 gap-6">
-                                <div className="bg-gradient-to-br from-[#46a1bb]/5 to-[#021d49]/5 rounded-xl p-6 border border-[#46a1bb]/20">
-                                    <div className="w-12 h-12 rounded-full bg-[#46a1bb] flex items-center justify-center mb-4">
+                                <div className="bg-gradient-to-br from-[#021d49]/5 to-[#021d49]/5 rounded-xl p-6 border border-[#021d49]/20">
+                                    <div className="w-12 h-12 rounded-full bg-[#021d49] flex items-center justify-center mb-4">
                                         <Target className="w-6 h-6 text-white" />
                                     </div>
                                     <h3 className="text-xl font-bold text-gray-900 mb-3">1. Evidence Consolidation</h3>
@@ -88,8 +88,8 @@ const ARINPressPage = () => {
                                     </p>
                                 </div>
 
-                                <div className="bg-gradient-to-br from-[#46a1bb]/5 to-[#021d49]/5 rounded-xl p-6 border border-[#46a1bb]/20">
-                                    <div className="w-12 h-12 rounded-full bg-[#46a1bb] flex items-center justify-center mb-4">
+                                <div className="bg-gradient-to-br from-[#021d49]/5 to-[#021d49]/5 rounded-xl p-6 border border-[#021d49]/20">
+                                    <div className="w-12 h-12 rounded-full bg-[#021d49] flex items-center justify-center mb-4">
                                         <CheckCircle className="w-6 h-6 text-white" />
                                     </div>
                                     <h3 className="text-xl font-bold text-gray-900 mb-3">2. Research Excellence</h3>
@@ -98,8 +98,8 @@ const ARINPressPage = () => {
                                     </p>
                                 </div>
 
-                                <div className="bg-gradient-to-br from-[#46a1bb]/5 to-[#021d49]/5 rounded-xl p-6 border border-[#46a1bb]/20">
-                                    <div className="w-12 h-12 rounded-full bg-[#46a1bb] flex items-center justify-center mb-4">
+                                <div className="bg-gradient-to-br from-[#021d49]/5 to-[#021d49]/5 rounded-xl p-6 border border-[#021d49]/20">
+                                    <div className="w-12 h-12 rounded-full bg-[#021d49] flex items-center justify-center mb-4">
                                         <Users className="w-6 h-6 text-white" />
                                     </div>
                                     <h3 className="text-xl font-bold text-gray-900 mb-3">3. Peer Learning</h3>
@@ -115,7 +115,7 @@ const ARINPressPage = () => {
                     <div className="max-w-6xl mx-auto mb-12">
                         <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
                             <div className="flex items-center gap-3 mb-6">
-                                <Lightbulb className="w-8 h-8 text-[#46a1bb]" />
+                                <Lightbulb className="w-8 h-8 text-[#021d49]" />
                                 <h2 className="text-3xl font-bold text-gray-900">Our Experience & Expertise</h2>
                             </div>
                             <div className="space-y-4 text-gray-700 leading-relaxed">

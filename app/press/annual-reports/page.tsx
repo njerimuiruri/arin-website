@@ -40,7 +40,7 @@ const AnnualReportsPage = () => {
     }, []);
 
     const filteredReports = reports.filter(report => {
-        const matchesSearch = 
+        const matchesSearch =
             report.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
             (report.description && report.description.toLowerCase().includes(searchTerm.toLowerCase()));
         const matchesYear = selectedYear === 'All' || report.year === selectedYear;
@@ -72,11 +72,11 @@ const AnnualReportsPage = () => {
                 <section className="max-w-[1600px] mx-auto px-6 py-12">
                     <div className="text-center mb-8">
                         <div className="flex items-center justify-center gap-3 mb-4">
-                            <FileText className="w-12 h-12 text-[#46a1bb]" />
+                            <FileText className="w-12 h-12 text-[#021d49]" />
                         </div>
                         <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
                             Annual{' '}
-                            <span className="bg-gradient-to-r from-[#46a1bb] to-[#021d49] bg-clip-text text-transparent">
+                            <span className="bg-gradient-to-r from-[#021d49] to-[#021d49] bg-clip-text text-transparent">
                                 Reports
                             </span>
                         </h1>
@@ -98,7 +98,7 @@ const AnnualReportsPage = () => {
                                         placeholder="Search annual reports..."
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
-                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#46a1bb] focus:outline-none transition-colors"
+                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#021d49] focus:outline-none transition-colors"
                                     />
                                 </div>
 
@@ -108,7 +108,7 @@ const AnnualReportsPage = () => {
                                     <select
                                         value={selectedYear}
                                         onChange={(e) => setSelectedYear(e.target.value)}
-                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#46a1bb] focus:outline-none transition-colors appearance-none bg-white cursor-pointer"
+                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#021d49] focus:outline-none transition-colors appearance-none bg-white cursor-pointer"
                                     >
                                         {years.map(year => (
                                             <option key={year} value={year}>{year}</option>
@@ -122,111 +122,111 @@ const AnnualReportsPage = () => {
                     {/* Loading State */}
                     {loading && (
                         <div className="flex flex-col items-center justify-center py-16">
-                            <Loader className="w-8 h-8 text-[#46a1bb] animate-spin mb-3" />
+                            <Loader className="w-8 h-8 text-[#021d49] animate-spin mb-3" />
                             <p className="text-gray-600">Loading annual reports...</p>
                         </div>
                     )}
 
                     {/* Reports Grid */}
                     {!loading && (
-                    <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
-                        {filteredReports.map((report) => (
-                            <div
-                                key={report._id}
-                                className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-[#46a1bb] cursor-pointer group"
-                                onClick={() => handleReportClick(report._id)}
-                            >
-                                {/* Report Image */}
-                                <div className="relative h-64 overflow-hidden bg-gradient-to-br from-gray-200 to-gray-300">
-                                    {report.image ? (
-                                        <img
-                                            src={report.image}
-                                            alt={report.title}
-                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                            onError={(e) => {
-                                                (e.target as HTMLImageElement).style.display = 'none';
-                                            }}
-                                        />
-                                    ) : null}
-                                    {/* Gradient Overlay */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+                        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                            {filteredReports.map((report) => (
+                                <div
+                                    key={report._id}
+                                    className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-[#021d49] cursor-pointer group"
+                                    onClick={() => handleReportClick(report._id)}
+                                >
+                                    {/* Report Image */}
+                                    <div className="relative h-64 overflow-hidden bg-gradient-to-br from-gray-200 to-gray-300">
+                                        {report.image ? (
+                                            <img
+                                                src={report.image}
+                                                alt={report.title}
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                onError={(e) => {
+                                                    (e.target as HTMLImageElement).style.display = 'none';
+                                                }}
+                                            />
+                                        ) : null}
+                                        {/* Gradient Overlay */}
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
 
-                                    {/* Year Badge - Top Left */}
-                                    <div className="absolute top-4 left-4">
-                                        <span className="px-4 py-2 bg-gradient-to-r from-[#021d49] to-[#46a1bb] text-white font-bold text-lg uppercase tracking-wide rounded-lg shadow-xl">
-                                            {report.year}
-                                        </span>
-                                    </div>
+                                        {/* Year Badge - Top Left */}
+                                        <div className="absolute top-4 left-4">
+                                            <span className="px-4 py-2 bg-gradient-to-r from-[#021d49] to-[#021d49] text-white font-bold text-lg uppercase tracking-wide rounded-lg shadow-xl">
+                                                {report.year}
+                                            </span>
+                                        </div>
 
-                                    {/* Download Button - Top Right */}
-                                    {report.availableResources && report.availableResources.length > 0 && (
-                                    <button
-                                        onClick={(e) => handleDownloadPDF(e, report._id, report.title)}
-                                        className="absolute top-4 right-4 w-12 h-12 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-all duration-300 shadow-lg group/download"
-                                        aria-label="Download PDF"
-                                    >
-                                        <Download className="w-5 h-5 text-[#46a1bb] group-hover/download:scale-110 transition-transform" />
-                                    </button>
-                                    )}
-
-                                    {/* Title on Image - Bottom */}
-                                    <div className="absolute bottom-4 left-4 right-4">
-                                        <h3 className="text-2xl font-bold text-white leading-tight">
-                                            {report.title}
-                                        </h3>
-                                    </div>
-                                </div>
-
-                                {/* Content */}
-                                <div className="p-6">
-                                    {/* Date */}
-                                    <div className="flex items-center gap-2 mb-4 pb-4 border-b border-gray-200 text-sm text-gray-600">
-                                        <Calendar className="w-4 h-4 text-[#46a1bb]" />
-                                        <span>{new Date(report.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-                                    </div>
-
-                                    {/* Description/Excerpt */}
-                                  {/* Description/Excerpt */}
-<div 
-    className="text-gray-600 leading-relaxed mb-4 line-clamp-3"
-    dangerouslySetInnerHTML={{ __html: report.description }}
-/>
-
-                                    {/* Tags */}
-                                    <div className="flex flex-wrap gap-2 mb-6">
-                                        <span className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-semibold rounded-full">
-                                            Annual Reports
-                                        </span>
-                                        {report.category && (
-                                        <span className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-semibold rounded-full">
-                                            {report.category}
-                                        </span>
-                                        )}
-                                    </div>
-
-                                    {/* Action Buttons */}
-                                    <div className="grid grid-cols-2 gap-3">
-                                        <button
-                                            onClick={(e) => { e.stopPropagation(); handleReportClick(report._id); }}
-                                            className="px-4 py-3 bg-gradient-to-r from-[#021d49] to-[#46a1bb] text-white font-semibold rounded-lg shadow-md hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2"
-                                        >
-                                            <span>View</span>
-                                            <ArrowRight className="w-4 h-4" />
-                                        </button>
+                                        {/* Download Button - Top Right */}
                                         {report.availableResources && report.availableResources.length > 0 && (
-                                        <button
-                                            onClick={(e) => handleDownloadPDF(e, report._id, report.title)}
-                                            className="px-4 py-3 bg-white border-2 border-[#46a1bb] text-[#46a1bb] font-semibold rounded-lg hover:bg-[#46a1bb] hover:text-white transition-all duration-200 flex items-center justify-center gap-2"
-                                        >
-                                            <Download className="w-4 h-4" />
-                                            <span>PDF</span>
-                                        </button>
+                                            <button
+                                                onClick={(e) => handleDownloadPDF(e, report._id, report.title)}
+                                                className="absolute top-4 right-4 w-12 h-12 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-all duration-300 shadow-lg group/download"
+                                                aria-label="Download PDF"
+                                            >
+                                                <Download className="w-5 h-5 text-[#021d49] group-hover/download:scale-110 transition-transform" />
+                                            </button>
                                         )}
+
+                                        {/* Title on Image - Bottom */}
+                                        <div className="absolute bottom-4 left-4 right-4">
+                                            <h3 className="text-2xl font-bold text-white leading-tight">
+                                                {report.title}
+                                            </h3>
+                                        </div>
+                                    </div>
+
+                                    {/* Content */}
+                                    <div className="p-6">
+                                        {/* Date */}
+                                        <div className="flex items-center gap-2 mb-4 pb-4 border-b border-gray-200 text-sm text-gray-600">
+                                            <Calendar className="w-4 h-4 text-[#021d49]" />
+                                            <span>{new Date(report.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                                        </div>
+
+                                        {/* Description/Excerpt */}
+                                        {/* Description/Excerpt */}
+                                        <div
+                                            className="text-gray-600 leading-relaxed mb-4 line-clamp-3"
+                                            dangerouslySetInnerHTML={{ __html: report.description }}
+                                        />
+
+                                        {/* Tags */}
+                                        <div className="flex flex-wrap gap-2 mb-6">
+                                            <span className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-semibold rounded-full">
+                                                Annual Reports
+                                            </span>
+                                            {report.category && (
+                                                <span className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-semibold rounded-full">
+                                                    {report.category}
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        {/* Action Buttons */}
+                                        <div className="grid grid-cols-2 gap-3">
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); handleReportClick(report._id); }}
+                                                className="px-4 py-3 bg-gradient-to-r from-[#021d49] to-[#021d49] text-white font-semibold rounded-lg shadow-md hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2"
+                                            >
+                                                <span>View</span>
+                                                <ArrowRight className="w-4 h-4" />
+                                            </button>
+                                            {report.availableResources && report.availableResources.length > 0 && (
+                                                <button
+                                                    onClick={(e) => handleDownloadPDF(e, report._id, report.title)}
+                                                    className="px-4 py-3 bg-white border-2 border-[#021d49] text-[#021d49] font-semibold rounded-lg hover:bg-[#021d49] hover:text-white transition-all duration-200 flex items-center justify-center gap-2"
+                                                >
+                                                    <Download className="w-4 h-4" />
+                                                    <span>PDF</span>
+                                                </button>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
                     )}
 
                     {/* No Results Message */}

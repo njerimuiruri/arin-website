@@ -83,7 +83,7 @@ const EventDetailPage = () => {
                 <div className="w-full bg-gradient-to-br from-slate-50 via-blue-50/30 to-white min-h-screen">
                     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                         <div className="text-center py-20">
-                            <div className="animate-spin rounded-full h-16 w-16 border-4 border-[#46a1bb] border-t-transparent mx-auto"></div>
+                            <div className="animate-spin rounded-full h-16 w-16 border-4 border-[#021d49] border-t-transparent mx-auto"></div>
                             <p className="text-gray-600 mt-6 text-lg font-medium">Loading event...</p>
                         </div>
                     </section>
@@ -100,7 +100,7 @@ const EventDetailPage = () => {
                     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                         <button
                             onClick={() => router.back()}
-                            className="flex items-center gap-2 text-[#46a1bb] hover:text-[#021d49] mb-8 font-semibold transition-all hover:gap-3"
+                            className="flex items-center gap-2 text-[#021d49] hover:text-[#021d49] mb-8 font-semibold transition-all hover:gap-3"
                         >
                             <ArrowLeft className="w-5 h-5" />
                             Back
@@ -111,7 +111,7 @@ const EventDetailPage = () => {
                             <p className="text-gray-600 text-lg mb-6">The event you're looking for doesn't exist or has been removed.</p>
                             <button
                                 onClick={() => router.push('/convening-platforms/events')}
-                                className="px-6 py-3 bg-[#46a1bb] text-white rounded-lg hover:bg-[#021d49] transition-colors font-semibold"
+                                className="px-6 py-3 bg-[#021d49] text-white rounded-lg hover:bg-[#021d49] transition-colors font-semibold"
                             >
                                 View All Events
                             </button>
@@ -129,7 +129,7 @@ const EventDetailPage = () => {
             <Navbar />
             <div className="w-full bg-gradient-to-br from-slate-50 via-blue-50/30 to-white min-h-screen">
                 {/* Hero Section */}
-                <div className="bg-gradient-to-r from-[#021d49] to-[#46a1bb] text-white">
+                <div className="bg-gradient-to-r from-[#021d49] to-[#021d49] text-white">
                     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                         <button
                             onClick={() => router.push('/convening-platforms/events')}
@@ -176,7 +176,7 @@ const EventDetailPage = () => {
                                     <div className="flex flex-wrap items-center gap-6 text-gray-600 pb-6 border-b border-gray-200">
                                         <div className="flex items-center gap-2">
                                             <div className="p-2 bg-blue-50 rounded-lg">
-                                                <Calendar className="w-5 h-5 text-[#46a1bb]" />
+                                                <Calendar className="w-5 h-5 text-[#021d49]" />
                                             </div>
                                             <div>
                                                 <p className="text-xs text-gray-500 font-medium">Date</p>
@@ -228,8 +228,8 @@ const EventDetailPage = () => {
                             {/* Description Card */}
                             <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
                                 <div className="flex items-center gap-3 mb-6">
-                                    <div className="p-2 bg-[#46a1bb]/10 rounded-lg">
-                                        <FileText className="w-6 h-6 text-[#46a1bb]" />
+                                    <div className="p-2 bg-[#021d49]/10 rounded-lg">
+                                        <FileText className="w-6 h-6 text-[#021d49]" />
                                     </div>
                                     <h2 className="text-2xl font-bold text-gray-900">Event Description</h2>
                                 </div>
@@ -258,16 +258,16 @@ const EventDetailPage = () => {
                                                     href={resourceUrl}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="flex items-center gap-4 p-5 border-2 border-gray-200 rounded-xl hover:border-[#46a1bb] hover:bg-blue-50/50 transition-all group"
+                                                    className="flex items-center gap-4 p-5 border-2 border-gray-200 rounded-xl hover:border-[#021d49] hover:bg-blue-50/50 transition-all group"
                                                 >
-                                                    <div className="p-3 bg-gray-100 rounded-lg group-hover:bg-[#46a1bb]/10 transition-colors">
-                                                        <FileText className="w-6 h-6 text-gray-600 group-hover:text-[#46a1bb]" />
+                                                    <div className="p-3 bg-gray-100 rounded-lg group-hover:bg-[#021d49]/10 transition-colors">
+                                                        <FileText className="w-6 h-6 text-gray-600 group-hover:text-[#021d49]" />
                                                     </div>
                                                     <div className="flex-1">
-                                                        <p className="font-semibold text-gray-900 group-hover:text-[#46a1bb]">{fileName}</p>
+                                                        <p className="font-semibold text-gray-900 group-hover:text-[#021d49]">{fileName}</p>
                                                         <p className="text-sm text-gray-500">Click to download</p>
                                                     </div>
-                                                    <Download className="w-5 h-5 text-gray-400 group-hover:text-[#46a1bb]" />
+                                                    <Download className="w-5 h-5 text-gray-400 group-hover:text-[#021d49]" />
                                                 </a>
                                             );
                                         })}

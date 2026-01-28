@@ -41,11 +41,11 @@ export default function TechnicalReportDetailPage() {
                 <h1 className="text-3xl font-bold mb-2">{report.title}</h1>
                 <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
                     <span className="flex items-center gap-1">
-                        <User className="w-4 h-4 text-[#46a1bb]" />
+                        <User className="w-4 h-4 text-[#021d49]" />
                         {report.authors && report.authors.length > 0 ? report.authors.join(", ") : "Unknown Author"}
                     </span>
                     <span className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4 text-[#46a1bb]" />
+                        <Calendar className="w-4 h-4 text-[#021d49]" />
                         {report.datePosted ? new Date(report.datePosted).toLocaleDateString() : ""}
                     </span>
                 </div>

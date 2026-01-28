@@ -54,7 +54,7 @@ const SecretariatPage = () => {
                 <section className="max-w-7xl mx-auto px-6 py-16 lg:py-24">
                     <div className="text-center mb-16">
                         <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-white rounded-full shadow-sm border border-gray-200 mb-6">
-                            <Users className="w-4 h-4 text-[#459db8]" />
+                            <Users className="w-4 h-4 text-[#021d49]" />
                             <span className="text-sm text-gray-700 font-medium">
                                 Leadership Team
                             </span>
@@ -63,14 +63,14 @@ const SecretariatPage = () => {
                         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
                             Meet Our{' '}
                             <span className="relative inline-block">
-                                <span className="relative z-10 bg-gradient-to-r from-[#459db8] to-[#14234d] bg-clip-text text-transparent">
+                                <span className="relative z-10 bg-gradient-to-r from-[#021d49] to-[#14234d] bg-clip-text text-transparent">
                                     Team
                                 </span>
                                 <svg className="absolute -bottom-2 left-0 w-full h-3" viewBox="0 0 200 8" fill="none">
                                     <path d="M0 4C50 1 100 1 150 4C150 4 175 6 200 4" stroke="url(#gradient)" strokeWidth="3" fill="none" />
                                     <defs>
                                         <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                            <stop offset="0%" stopColor="#459db8" stopOpacity="0.4" />
+                                            <stop offset="0%" stopColor="#021d49" stopOpacity="0.4" />
                                             <stop offset="100%" stopColor="#14234d" stopOpacity="0.4" />
                                         </linearGradient>
                                     </defs>
@@ -86,7 +86,7 @@ const SecretariatPage = () => {
                     {/* Loading State */}
                     {loading && (
                         <div className="text-center py-12">
-                            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#459db8]"></div>
+                            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#021d49]"></div>
                             <p className="mt-4 text-gray-600">Loading team members...</p>
                         </div>
                     )}
@@ -105,7 +105,7 @@ const SecretariatPage = () => {
                             {members.map((member) => (
                                 <div
                                     key={member._id}
-                                    className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-[#459db8]/30 cursor-pointer"
+                                    className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-[#021d49]/30 cursor-pointer"
                                     onClick={() => setSelectedMember(member)}
                                 >
                                     {/* Image */}
@@ -120,14 +120,14 @@ const SecretariatPage = () => {
 
                                     {/* Content */}
                                     <div className="p-6">
-                                        <h3 className="text-xl font-bold text-gray-900 mb-1 group-hover:text-[#459db8] transition-colors">
+                                        <h3 className="text-xl font-bold text-gray-900 mb-1 group-hover:text-[#021d49] transition-colors">
                                             {member.firstName} {member.lastName}
                                         </h3>
-                                        <p className="text-sm text-[#459db8] font-medium mb-4">{member.role}</p>
+                                        <p className="text-sm text-[#021d49] font-medium mb-4">{member.role}</p>
 
                                         <div className="text-sm text-gray-600 line-clamp-2 mb-4" dangerouslySetInnerHTML={{ __html: member.bio ? member.bio.substring(0, 100) + (member.bio.length > 100 ? '...' : '') : 'No bio available' }} />
 
-                                        <div className="flex items-center gap-2 text-[#459db8] text-sm font-medium group-hover:gap-3 transition-all">
+                                        <div className="flex items-center gap-2 text-[#021d49] text-sm font-medium group-hover:gap-3 transition-all">
                                             <span>View Profile</span>
                                             <ArrowRight className="w-4 h-4" />
                                         </div>
@@ -158,7 +158,7 @@ const SecretariatPage = () => {
                                 </button>
 
                                 <div className="flex flex-col sm:flex-row items-start gap-6">
-                                    <div className="w-24 h-24 rounded-2xl overflow-hidden shadow-lg flex-shrink-0 ring-4 ring-[#459db8]/20">
+                                    <div className="w-24 h-24 rounded-2xl overflow-hidden shadow-lg flex-shrink-0 ring-4 ring-[#021d49]/20">
                                         <img
                                             src={selectedMember.image && selectedMember.image.startsWith('http') ? selectedMember.image : selectedMember.image ? `http://localhost:5001${selectedMember.image}` : 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop'}
                                             alt={`${selectedMember.firstName} ${selectedMember.lastName}`}
@@ -170,7 +170,7 @@ const SecretariatPage = () => {
                                         <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
                                             {selectedMember.firstName} {selectedMember.lastName}
                                         </h2>
-                                        <p className="text-lg text-[#459db8] font-semibold mb-4">
+                                        <p className="text-lg text-[#021d49] font-semibold mb-4">
                                             {selectedMember.role}
                                         </p>
                                     </div>
@@ -182,8 +182,8 @@ const SecretariatPage = () => {
                                 {/* Biography Section */}
                                 <div>
                                     <div className="flex items-center gap-3 mb-4">
-                                        <div className="w-10 h-10 bg-[#459db8]/10 rounded-xl flex items-center justify-center">
-                                            <BookOpen className="w-5 h-5 text-[#459db8]" />
+                                        <div className="w-10 h-10 bg-[#021d49]/10 rounded-xl flex items-center justify-center">
+                                            <BookOpen className="w-5 h-5 text-[#021d49]" />
                                         </div>
                                         <h3 className="text-xl font-bold text-gray-900">Biography</h3>
                                     </div>

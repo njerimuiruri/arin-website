@@ -62,7 +62,7 @@ const PolicyDialoguesPage = () => {
                     <div className="text-center mb-8">
                         <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
                             Policy{' '}
-                            <span className="bg-gradient-to-r from-[#46a1bb] to-[#021d49] bg-clip-text text-transparent">
+                            <span className="bg-gradient-to-r from-[#021d49] to-[#021d49] bg-clip-text text-transparent">
                                 Dialogues
                             </span>
                         </h1>
@@ -84,7 +84,7 @@ const PolicyDialoguesPage = () => {
                                         placeholder="Search policy dialogues..."
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
-                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#46a1bb] focus:outline-none transition-colors"
+                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#021d49] focus:outline-none transition-colors"
                                     />
                                 </div>
 
@@ -94,7 +94,7 @@ const PolicyDialoguesPage = () => {
                                     <select
                                         value={selectedYear}
                                         onChange={(e) => setSelectedYear(e.target.value)}
-                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#46a1bb] focus:outline-none transition-colors appearance-none bg-white cursor-pointer"
+                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#021d49] focus:outline-none transition-colors appearance-none bg-white cursor-pointer"
                                     >
                                         {years.map(year => (
                                             <option key={year} value={year}>{year}</option>
@@ -108,7 +108,7 @@ const PolicyDialoguesPage = () => {
                     {/* Dialogues Grid */}
                     {loading ? (
                         <div className="text-center py-16">
-                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#46a1bb] mx-auto"></div>
+                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#021d49] mx-auto"></div>
                             <p className="text-gray-600 mt-4">Loading policy dialogues...</p>
                         </div>
                     ) : error ? (
@@ -122,7 +122,7 @@ const PolicyDialoguesPage = () => {
                             {filteredDialogues.map((dialogue) => (
                                 <div
                                     key={dialogue._id}
-                                    className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-[#46a1bb] cursor-pointer flex flex-col h-full"
+                                    className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-[#021d49] cursor-pointer flex flex-col h-full"
                                     onClick={() => handleDialogueClick(dialogue._id)}
                                 >
                                     {/* Image Container */}
@@ -146,18 +146,18 @@ const PolicyDialoguesPage = () => {
                                     <div className="p-5 flex flex-col flex-1">
                                         {/* Icon and Label */}
                                         <div className="flex items-center gap-2 mb-3">
-                                            <MessageSquare className="w-5 h-5 text-[#46a1bb] flex-shrink-0" />
-                                            <span className="text-xs font-semibold text-[#46a1bb] uppercase tracking-wide">Policy Dialogue</span>
+                                            <MessageSquare className="w-5 h-5 text-[#021d49] flex-shrink-0" />
+                                            <span className="text-xs font-semibold text-[#021d49] uppercase tracking-wide">Policy Dialogue</span>
                                         </div>
 
                                         {/* Title */}
-                                        <h3 className="text-lg font-bold text-gray-900 hover:text-[#46a1bb] transition-colors leading-tight mb-3 line-clamp-2">
+                                        <h3 className="text-lg font-bold text-gray-900 hover:text-[#021d49] transition-colors leading-tight mb-3 line-clamp-2">
                                             {dialogue.title}
                                         </h3>
 
                                         {/* Date */}
                                         <div className="flex items-center gap-2 mb-4 text-sm text-gray-600">
-                                            <Calendar className="w-4 h-4 flex-shrink-0 text-[#46a1bb]" />
+                                            <Calendar className="w-4 h-4 flex-shrink-0 text-[#021d49]" />
                                             <span className="font-medium">{formatDate(dialogue.date)}</span>
                                         </div>
 
@@ -177,7 +177,7 @@ const PolicyDialoguesPage = () => {
                                         {/* Read More Button */}
                                         <button
                                             onClick={(e) => { e.stopPropagation(); handleDialogueClick(dialogue._id); }}
-                                            className="w-full px-4 py-2.5 bg-gradient-to-r from-[#021d49] to-[#46a1bb] text-white font-semibold rounded-lg shadow-md flex items-center gap-2 justify-center hover:shadow-lg hover:from-[#46a1bb] hover:to-[#021d49] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#46a1bb] focus:ring-opacity-60"
+                                            className="w-full px-4 py-2.5 bg-gradient-to-r from-[#021d49] to-[#021d49] text-white font-semibold rounded-lg shadow-md flex items-center gap-2 justify-center hover:shadow-lg hover:from-[#021d49] hover:to-[#021d49] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#021d49] focus:ring-opacity-60"
                                             aria-label={`Read more about ${dialogue.title}`}
                                         >
                                             <span>Read More</span>

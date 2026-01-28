@@ -77,7 +77,7 @@ const PolicyDialogueDetailPage = () => {
                 <div className="w-full bg-gradient-to-br from-slate-50 via-blue-50/30 to-white min-h-screen">
                     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                         <div className="text-center py-20">
-                            <div className="animate-spin rounded-full h-16 w-16 border-4 border-[#46a1bb] border-t-transparent mx-auto"></div>
+                            <div className="animate-spin rounded-full h-16 w-16 border-4 border-[#021d49] border-t-transparent mx-auto"></div>
                             <p className="text-gray-600 mt-6 text-lg font-medium">Loading policy dialogue...</p>
                         </div>
                     </section>
@@ -94,7 +94,7 @@ const PolicyDialogueDetailPage = () => {
                     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                         <button
                             onClick={() => router.back()}
-                            className="flex items-center gap-2 text-[#46a1bb] hover:text-[#021d49] mb-8 font-semibold transition-all hover:gap-3"
+                            className="flex items-center gap-2 text-[#021d49] hover:text-[#021d49] mb-8 font-semibold transition-all hover:gap-3"
                         >
                             <ArrowLeft className="w-5 h-5" />
                             Back
@@ -105,7 +105,7 @@ const PolicyDialogueDetailPage = () => {
                             <p className="text-gray-600 text-lg mb-6">The policy dialogue you're looking for doesn't exist or has been removed.</p>
                             <button
                                 onClick={() => router.push('/convening-platforms/policy-dialogues')}
-                                className="px-6 py-3 bg-[#46a1bb] text-white rounded-lg hover:bg-[#021d49] transition-colors font-semibold"
+                                className="px-6 py-3 bg-[#021d49] text-white rounded-lg hover:bg-[#021d49] transition-colors font-semibold"
                             >
                                 View All Dialogues
                             </button>
@@ -123,7 +123,7 @@ const PolicyDialogueDetailPage = () => {
             <Navbar />
             <div className="w-full bg-gradient-to-br from-slate-50 via-blue-50/30 to-white min-h-screen">
                 {/* Hero Section */}
-                <div className="bg-gradient-to-r from-[#021d49] to-[#46a1bb] text-white">
+                <div className="bg-gradient-to-r from-[#021d49] to-[#021d49] text-white">
                     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                         <button
                             onClick={() => router.push('/convening-platforms/policy-dialogues')}
@@ -168,7 +168,7 @@ const PolicyDialogueDetailPage = () => {
                                     <div className="flex flex-wrap items-center gap-6 text-gray-600 pb-6 border-b border-gray-200">
                                         <div className="flex items-center gap-2">
                                             <div className="p-2 bg-blue-50 rounded-lg">
-                                                <Calendar className="w-5 h-5 text-[#46a1bb]" />
+                                                <Calendar className="w-5 h-5 text-[#021d49]" />
                                             </div>
                                             <div>
                                                 <p className="text-xs text-gray-500 font-medium">Date</p>
@@ -196,8 +196,8 @@ const PolicyDialogueDetailPage = () => {
                             {/* Description Card */}
                             <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
                                 <div className="flex items-center gap-3 mb-6">
-                                    <div className="p-2 bg-[#46a1bb]/10 rounded-lg">
-                                        <FileText className="w-6 h-6 text-[#46a1bb]" />
+                                    <div className="p-2 bg-[#021d49]/10 rounded-lg">
+                                        <FileText className="w-6 h-6 text-[#021d49]" />
                                     </div>
                                     <h2 className="text-2xl font-bold text-gray-900">Overview</h2>
                                 </div>
@@ -226,9 +226,9 @@ const PolicyDialogueDetailPage = () => {
                                                     href={resourceUrl}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="flex items-center gap-4 p-5 border-2 border-gray-200 rounded-xl hover:border-[#46a1bb] hover:bg-blue-50/50 transition-all group"
+                                                    className="flex items-center gap-4 p-5 border-2 border-gray-200 rounded-xl hover:border-[#021d49] hover:bg-blue-50/50 transition-all group"
                                                 >
-                                                    <div className="p-3 bg-gradient-to-br from-[#46a1bb] to-[#021d49] rounded-lg group-hover:scale-110 transition-transform">
+                                                    <div className="p-3 bg-gradient-to-br from-[#021d49] to-[#021d49] rounded-lg group-hover:scale-110 transition-transform">
                                                         <Download className="w-5 h-5 text-white" />
                                                     </div>
                                                     <div className="flex-1 min-w-0">
@@ -278,7 +278,7 @@ const PolicyDialogueDetailPage = () => {
                             </div>
 
                             {/* Share Card */}
-                            <div className="bg-gradient-to-br from-[#46a1bb] via-[#2d7a8f] to-[#021d49] rounded-2xl shadow-lg p-6 text-white">
+                            <div className="bg-gradient-to-br from-[#021d49] via-[#2d7a8f] to-[#021d49] rounded-2xl shadow-lg p-6 text-white">
                                 <div className="flex items-center gap-3 mb-4">
                                     <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
                                         <Share2 className="w-6 h-6" />
@@ -302,7 +302,7 @@ const PolicyDialogueDetailPage = () => {
                                 <p className="text-sm text-gray-700 text-center mb-4">
                                     Have questions about this policy dialogue? We're here to help!
                                 </p>
-                                <button className="w-full py-2.5 bg-gradient-to-r from-[#46a1bb] to-[#021d49] text-white rounded-lg font-semibold hover:shadow-lg transition-all">
+                                <button className="w-full py-2.5 bg-gradient-to-r from-[#021d49] to-[#021d49] text-white rounded-lg font-semibold hover:shadow-lg transition-all">
                                     Contact Us
                                 </button>
                             </div>

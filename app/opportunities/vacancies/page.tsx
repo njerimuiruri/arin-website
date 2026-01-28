@@ -83,11 +83,11 @@ const VacanciesPage = () => {
                 <section className="max-w-[1400px] mx-auto px-6 py-12">
                     <div className="text-center mb-8">
                         <div className="flex items-center justify-center gap-3 mb-4">
-                            <Briefcase className="w-12 h-12 text-[#46a1bb]" />
+                            <Briefcase className="w-12 h-12 text-[#021d49]" />
                         </div>
                         <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
                             Career{' '}
-                            <span className="bg-gradient-to-r from-[#46a1bb] to-[#021d49] bg-clip-text text-transparent">
+                            <span className="bg-gradient-to-r from-[#021d49] to-[#021d49] bg-clip-text text-transparent">
                                 Opportunities
                             </span>
                         </h1>
@@ -98,7 +98,7 @@ const VacanciesPage = () => {
                     </div>
 
                     {/* Stats Section */}
-                    <div className="bg-gradient-to-br from-[#021d49] to-[#46a1bb] rounded-2xl p-10 text-white shadow-2xl mb-12">
+                    <div className="bg-gradient-to-br from-[#021d49] to-[#021d49] rounded-2xl p-10 text-white shadow-2xl mb-12">
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                             <div className="text-center">
                                 <div className="text-3xl font-bold mb-1">{vacancies.length}</div>
@@ -127,7 +127,7 @@ const VacanciesPage = () => {
                                         placeholder="Search vacancies..."
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
-                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#46a1bb] focus:outline-none transition-colors"
+                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#021d49] focus:outline-none transition-colors"
                                     />
                                 </div>
 
@@ -137,7 +137,7 @@ const VacanciesPage = () => {
                                     <select
                                         value={selectedType}
                                         onChange={(e) => setSelectedType(e.target.value)}
-                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#46a1bb] focus:outline-none transition-colors appearance-none bg-white cursor-pointer"
+                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#021d49] focus:outline-none transition-colors appearance-none bg-white cursor-pointer"
                                     >
                                         {jobTypes.map(type => (
                                             <option key={type} value={type}>{type}</option>
@@ -160,7 +160,7 @@ const VacanciesPage = () => {
                             {filteredVacancies.map((vacancy) => (
                                 <div
                                     key={vacancy._id}
-                                    className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-[#46a1bb] cursor-pointer group"
+                                    className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-[#021d49] cursor-pointer group"
                                     onClick={() => handleVacancyClick(vacancy._id)}
                                 >
                                     {/* Image */}
@@ -177,12 +177,12 @@ const VacanciesPage = () => {
                                     {/* Content */}
                                     <div className="p-6">
                                         <div className="flex items-start justify-between mb-3">
-                                            <span className="inline-block px-3 py-1 bg-gradient-to-r from-[#021d49] to-[#46a1bb] text-white font-bold text-xs uppercase tracking-wide rounded-full">
+                                            <span className="inline-block px-3 py-1 bg-gradient-to-r from-[#021d49] to-[#021d49] text-white font-bold text-xs uppercase tracking-wide rounded-full">
                                                 {vacancy.employmentType}
                                             </span>
                                         </div>
 
-                                        <h3 className="text-xl font-bold text-gray-900 group-hover:text-[#46a1bb] transition-colors mb-2">
+                                        <h3 className="text-xl font-bold text-gray-900 group-hover:text-[#021d49] transition-colors mb-2">
                                             {vacancy.positionName}
                                         </h3>
 
@@ -211,7 +211,7 @@ const VacanciesPage = () => {
                                         {/* Button */}
                                         <button
                                             onClick={(e) => { e.stopPropagation(); handleVacancyClick(vacancy._id); }}
-                                            className="w-full px-4 py-2 bg-gradient-to-r from-[#021d49] to-[#46a1bb] text-white font-semibold rounded-lg hover:shadow-lg transition-all duration-200 flex items-center gap-2 justify-center"
+                                            className="w-full px-4 py-2 bg-gradient-to-r from-[#021d49] to-[#021d49] text-white font-semibold rounded-lg hover:shadow-lg transition-all duration-200 flex items-center gap-2 justify-center"
                                         >
                                             <span>View Details</span>
                                             <ArrowRight className="w-4 h-4" />
@@ -229,17 +229,17 @@ const VacanciesPage = () => {
                         <h2 className="text-3xl font-bold mb-6 text-center">Why Join ARIN?</h2>
                         <div className="grid md:grid-cols-3 gap-8 mb-8">
                             <div className="text-center">
-                                <Briefcase className="w-10 h-10 text-[#46a1bb] mx-auto mb-4" />
+                                <Briefcase className="w-10 h-10 text-[#021d49] mx-auto mb-4" />
                                 <h3 className="text-xl font-bold mb-2">Collaborative Network</h3>
                                 <p className="text-gray-300 text-sm">Work with over 200 researchers and policymakers across Africa</p>
                             </div>
                             <div className="text-center">
-                                <Users className="w-10 h-10 text-[#46a1bb] mx-auto mb-4" />
+                                <Users className="w-10 h-10 text-[#021d49] mx-auto mb-4" />
                                 <h3 className="text-xl font-bold mb-2">Impactful Work</h3>
                                 <p className="text-gray-300 text-sm">Drive evidence-based policy change and sustainable development</p>
                             </div>
                             <div className="text-center">
-                                <Calendar className="w-10 h-10 text-[#46a1bb] mx-auto mb-4" />
+                                <Calendar className="w-10 h-10 text-[#021d49] mx-auto mb-4" />
                                 <h3 className="text-xl font-bold mb-2">Professional Growth</h3>
                                 <p className="text-gray-300 text-sm">Access continuous learning and career development opportunities</p>
                             </div>

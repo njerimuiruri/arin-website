@@ -117,8 +117,8 @@ const Navbar = () => {
                                 >
                                     <button
                                         className={`flex items-center gap-1 text-[15px] font-medium transition-colors py-2 ${isActive(item.href)
-                                            ? 'text-[#46a1bb]'
-                                            : 'text-[#021d49] hover:text-[#46a1bb]'
+                                            ? 'text-[#021d49]'
+                                            : 'text-[#021d49] hover:text-[#021d49]'
                                             }`}
                                     >
                                         {item.name}
@@ -144,8 +144,8 @@ const Navbar = () => {
                                                             key={subIndex}
                                                             href={subItem.href}
                                                             className={`block px-5 py-3 text-[15px] transition-all rounded-lg whitespace-nowrap ${pathname === subItem.href
-                                                                ? 'bg-[#46a1bb] text-white font-medium'
-                                                                : 'text-[#021d49] hover:bg-[#46a1bb]/10 hover:text-[#46a1bb] font-normal'
+                                                                ? 'bg-[#021d49] text-white font-medium'
+                                                                : 'text-[#021d49] hover:bg-[#021d49]/10 hover:text-[#021d49] font-normal'
                                                                 }`}
                                                         >
                                                             {subItem.name}
@@ -163,8 +163,8 @@ const Navbar = () => {
                                 <a
                                     href="/contact"
                                     className={`text-[15px] font-medium transition-colors ${pathname === '/contact'
-                                        ? 'text-[#46a1bb]'
-                                        : 'text-[#021d49] hover:text-[#46a1bb]'
+                                        ? 'text-[#021d49]'
+                                        : 'text-[#021d49] hover:text-[#021d49]'
                                         }`}
                                 >
                                     Contact Us
@@ -177,7 +177,7 @@ const Navbar = () => {
                     <div className="hidden lg:block">
                         <a
                             href="/join"
-                            className="px-6 py-2.5 bg-[#46a1bb] hover:bg-[#021d49] text-white font-medium text-[15px] rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
+                            className="px-6 py-2.5 bg-[#021d49] hover:bg-[#021d49] text-white font-medium text-[15px] rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
                         >
                             Join Us
                         </a>
@@ -208,7 +208,7 @@ const Navbar = () => {
                                         <>
                                             <button
                                                 onClick={() => setMobileSubmenuOpen(mobileSubmenuOpen === index ? null : index)}
-                                                className={`w-full flex items-center justify-between px-4 py-3 text-[15px] font-medium rounded-lg transition-colors ${isActive(item.href) ? 'text-[#46a1bb] bg-[#46a1bb]/10' : 'text-[#021d49] hover:bg-gray-50'
+                                                className={`w-full flex items-center justify-between px-4 py-3 text-[15px] font-medium rounded-lg transition-colors ${isActive(item.href) ? 'text-[#021d49] bg-[#021d49]/10' : 'text-[#021d49] hover:bg-gray-50'
                                                     }`}
                                             >
                                                 {item.name}
@@ -224,8 +224,8 @@ const Navbar = () => {
                                                             key={subIndex}
                                                             href={subItem.href}
                                                             className={`block px-4 py-2.5 text-[14px] rounded-lg transition-colors ${pathname === subItem.href
-                                                                ? 'bg-[#46a1bb] text-white font-medium'
-                                                                : 'text-[#021d49] hover:bg-[#46a1bb]/10 hover:text-[#46a1bb]'
+                                                                ? 'bg-[#021d49] text-white font-medium'
+                                                                : 'text-[#021d49] hover:bg-[#021d49]/10 hover:text-[#021d49]'
                                                                 }`}
                                                         >
                                                             {subItem.name}
@@ -237,7 +237,7 @@ const Navbar = () => {
                                     ) : (
                                         <a
                                             href={item.href}
-                                            className={`block px-4 py-3 text-[15px] font-medium rounded-lg transition-colors ${pathname === item.href ? 'text-[#46a1bb] bg-[#46a1bb]/10' : 'text-[#021d49] hover:bg-gray-50'
+                                            className={`block px-4 py-3 text-[15px] font-medium rounded-lg transition-colors ${pathname === item.href ? 'text-[#021d49] bg-[#021d49]/10' : 'text-[#021d49] hover:bg-gray-50'
                                                 }`}
                                         >
                                             {item.name}
@@ -249,7 +249,7 @@ const Navbar = () => {
                             {/* Mobile Contact Us */}
                             <a
                                 href="/contact"
-                                className={`block px-4 py-3 text-[15px] font-medium rounded-lg transition-colors ${pathname === '/contact' ? 'text-[#46a1bb] bg-[#46a1bb]/10' : 'text-[#021d49] hover:bg-gray-50'
+                                className={`block px-4 py-3 text-[15px] font-medium rounded-lg transition-colors ${pathname === '/contact' ? 'text-[#021d49] bg-[#021d49]/10' : 'text-[#021d49] hover:bg-gray-50'
                                     }`}
                             >
                                 Contact Us
@@ -258,7 +258,7 @@ const Navbar = () => {
                             {/* Mobile CTA Button */}
                             <a
                                 href="/join"
-                                className="block text-center px-6 py-3 bg-[#46a1bb] hover:bg-[#021d49] text-white font-medium text-[15px] rounded-lg transition-all duration-300 shadow-md mt-4"
+                                className="block text-center px-6 py-3 bg-[#021d49] hover:bg-[#021d49] text-white font-medium text-[15px] rounded-lg transition-all duration-300 shadow-md mt-4"
                             >
                                 Join Us
                             </a>

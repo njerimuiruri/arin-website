@@ -34,7 +34,7 @@ const CAPCHAPage = () => {
 
             <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-stone-50">
                 {/* Hero Section with Image */}
-                <div className="relative bg-gradient-to-r from-[#021d49] to-[#46a1bb] overflow-hidden">
+                <div className="relative bg-gradient-to-r from-[#021d49] to-[#021d49] overflow-hidden">
                     <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLW9wYWNpdHk9IjAuMSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-20" />
 
                     <div className="relative max-w-7xl mx-auto px-6 py-16">
@@ -48,8 +48,8 @@ const CAPCHAPage = () => {
 
                                 <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 leading-tight">
                                     Consultative Platform On{' '}
-                                    <span className="text-[#46a1bb]">Climate And Health In</span>{' '}
-                                    <span className="text-[#46a1bb]">Africa</span>
+                                    <span className="text-[#021d49]">Climate And Health In</span>{' '}
+                                    <span className="text-[#021d49]">Africa</span>
                                 </h1>
 
                                 <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 leading-tight">
@@ -84,7 +84,7 @@ const CAPCHAPage = () => {
 
                             {/* Right Image */}
                             <div className="relative">
-                                <div className="absolute inset-0 bg-gradient-to-br from-[#46a1bb]/20 to-transparent rounded-2xl"></div>
+                                <div className="absolute inset-0 bg-gradient-to-br from-[#021d49]/20 to-transparent rounded-2xl"></div>
                                 <img
                                     src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80"
                                     alt="Natural stream flowing through rocks and greenery - representing climate and health connection in Africa"
@@ -100,15 +100,15 @@ const CAPCHAPage = () => {
                 </div>
 
                 {/* ARIN Platform Announcement Banner with Animation */}
-                <div className="bg-white border-b-4 border-[#46a1bb] shadow-lg relative overflow-hidden">
+                <div className="bg-white border-b-4 border-[#021d49] shadow-lg relative overflow-hidden">
                     {/* Animated background pulse */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#46a1bb]/5 via-transparent to-[#46a1bb]/5 animate-pulse"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#021d49]/5 via-transparent to-[#021d49]/5 animate-pulse"></div>
 
                     <div className="max-w-7xl mx-auto px-6 py-8 relative">
                         <div className="grid md:grid-cols-2 gap-8 items-center">
                             <div>
                                 <div className="flex items-center gap-3 mb-3">
-                                    <div className="w-12 h-12 bg-gradient-to-br from-[#46a1bb] to-[#021d49] rounded-full flex items-center justify-center animate-bounce">
+                                    <div className="w-12 h-12 bg-gradient-to-br from-[#021d49] to-[#021d49] rounded-full flex items-center justify-center animate-bounce">
                                         <Shield className="w-6 h-6 text-white" />
                                     </div>
                                     <div>
@@ -122,8 +122,8 @@ const CAPCHAPage = () => {
                             </div>
                             <div className="bg-gradient-to-br from-[#021d49] to-[#1a3a5c] rounded-xl p-6 text-white relative">
                                 {/* Animated corner indicator */}
-                                <div className="absolute -top-2 -right-2 w-6 h-6 bg-[#46a1bb] rounded-full animate-ping"></div>
-                                <div className="absolute -top-2 -right-2 w-6 h-6 bg-[#46a1bb] rounded-full"></div>
+                                <div className="absolute -top-2 -right-2 w-6 h-6 bg-[#021d49] rounded-full animate-ping"></div>
+                                <div className="absolute -top-2 -right-2 w-6 h-6 bg-[#021d49] rounded-full"></div>
 
                                 <h4 className="text-lg font-bold mb-4">Access the Full Platform</h4>
                                 <p className="text-white/90 text-sm mb-4">
@@ -136,7 +136,7 @@ const CAPCHAPage = () => {
                                         href="https://capcha-arin-africa.org/"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-2 px-6 py-3 bg-[#46a1bb] hover:bg-[#3a8ba0] text-white font-bold rounded-lg transition-all hover:scale-105 hover:shadow-xl group"
+                                        className="inline-flex items-center gap-2 px-6 py-3 bg-[#021d49] hover:bg-[#3a8ba0] text-white font-bold rounded-lg transition-all hover:scale-105 hover:shadow-xl group"
                                     >
                                         <span className="relative">
                                             Visit CAPCHA Platform
@@ -149,17 +149,17 @@ const CAPCHAPage = () => {
                                     <div className="absolute -right-12 top-1/2 -translate-y-1/2 hidden lg:block">
                                         <div className="relative">
                                             <div className="animate-bounce">
-                                                <svg className="w-10 h-10 text-[#46a1bb]" fill="currentColor" viewBox="0 0 24 24">
+                                                <svg className="w-10 h-10 text-[#021d49]" fill="currentColor" viewBox="0 0 24 24">
                                                     <path d="M13.5 2C13.5 2.44425 13.3069 2.84339 13 3.11805V5H18C19.6569 5 21 6.34315 21 8V11.5H19V8C19 7.44772 18.5523 7 18 7H13V20C13 20.5523 13.4477 21 14 21H18C18.5523 21 19 20.5523 19 20V17.5H21V20C21 21.6569 19.6569 23 18 23H14C12.3431 23 11 21.6569 11 20V3.11805C10.6931 2.84339 10.5 2.44425 10.5 2C10.5 1.17157 11.1716 0.5 12 0.5C12.8284 0.5 13.5 1.17157 13.5 2Z" />
                                                 </svg>
                                             </div>
                                             <div className="absolute top-0 left-0 animate-ping">
-                                                <svg className="w-10 h-10 text-[#46a1bb] opacity-75" fill="currentColor" viewBox="0 0 24 24">
+                                                <svg className="w-10 h-10 text-[#021d49] opacity-75" fill="currentColor" viewBox="0 0 24 24">
                                                     <path d="M13.5 2C13.5 2.44425 13.3069 2.84339 13 3.11805V5H18C19.6569 5 21 6.34315 21 8V11.5H19V8C19 7.44772 18.5523 7 18 7H13V20C13 20.5523 13.4477 21 14 21H18C18.5523 21 19 20.5523 19 20V17.5H21V20C21 21.6569 19.6569 23 18 23H14C12.3431 23 11 21.6569 11 20V3.11805C10.6931 2.84339 10.5 2.44425 10.5 2C10.5 1.17157 11.1716 0.5 12 0.5C12.8284 0.5 13.5 1.17157 13.5 2Z" />
                                                 </svg>
                                             </div>
                                         </div>
-                                        <p className="text-xs font-bold text-[#46a1bb] mt-1 animate-pulse">Click here!</p>
+                                        <p className="text-xs font-bold text-[#021d49] mt-1 animate-pulse">Click here!</p>
                                     </div>
                                 </div>
                             </div>
@@ -173,13 +173,13 @@ const CAPCHAPage = () => {
                     <section className="mb-16">
                         <div className="grid md:grid-cols-2 gap-6">
                             <div className="bg-gradient-to-br from-[#021d49] to-[#1a3a5c] rounded-2xl p-8 shadow-lg text-white">
-                                <Target className="w-10 h-10 text-[#46a1bb] mb-4" />
+                                <Target className="w-10 h-10 text-[#021d49] mb-4" />
                                 <h2 className="text-2xl font-bold mb-4">Vision Statement</h2>
                                 <p className="text-white/90 leading-relaxed text-lg">
                                     Building a transdisciplinary community of practice towards enhanced decision support environment on C & H research and policy in Africa
                                 </p>
                             </div>
-                            <div className="bg-gradient-to-br from-[#46a1bb] to-[#3a8ba0] rounded-2xl p-8 shadow-lg text-white">
+                            <div className="bg-gradient-to-br from-[#021d49] to-[#3a8ba0] rounded-2xl p-8 shadow-lg text-white">
                                 <Activity className="w-10 h-10 text-white mb-4" />
                                 <h2 className="text-2xl font-bold mb-4">Mission Statement</h2>
                                 <p className="text-white/90 leading-relaxed text-lg">
@@ -266,9 +266,9 @@ const CAPCHAPage = () => {
                         <h2 className="text-3xl font-bold text-gray-900 mb-6">CAPCHA Activities</h2>
                         <div className="space-y-6">
                             {activities.map((activity, index) => (
-                                <div key={index} className="bg-white rounded-xl p-8 shadow-lg border border-gray-100 hover:border-[#46a1bb] transition-all">
+                                <div key={index} className="bg-white rounded-xl p-8 shadow-lg border border-gray-100 hover:border-[#021d49] transition-all">
                                     <div className="flex items-start gap-4 mb-4">
-                                        <div className="w-12 h-12 bg-gradient-to-br from-[#46a1bb] to-[#021d49] rounded-lg flex items-center justify-center text-white flex-shrink-0">
+                                        <div className="w-12 h-12 bg-gradient-to-br from-[#021d49] to-[#021d49] rounded-lg flex items-center justify-center text-white flex-shrink-0">
                                             {activity.icon}
                                         </div>
                                         <h3 className="text-2xl font-bold text-gray-900">{activity.title}</h3>
@@ -280,7 +280,7 @@ const CAPCHAPage = () => {
                                             <ul className="grid md:grid-cols-2 gap-2">
                                                 {activity.methods.map((method, idx) => (
                                                     <li key={idx} className="flex items-center gap-2 text-gray-700">
-                                                        <div className="w-1.5 h-1.5 bg-[#46a1bb] rounded-full"></div>
+                                                        <div className="w-1.5 h-1.5 bg-[#021d49] rounded-full"></div>
                                                         {method}
                                                     </li>
                                                 ))}
@@ -425,7 +425,7 @@ const CAPCHAPage = () => {
                                 href="https://capcha-arin-africa.org/"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#021d49] to-[#46a1bb] text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition-all"
+                                className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#021d49] to-[#021d49] text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition-all"
                             >
                                 <Users className="w-5 h-5" />
                                 <span>View Full Advisory Members Profiles</span>
@@ -437,7 +437,7 @@ const CAPCHAPage = () => {
                     {/* CTA Section */}
                     <section className="bg-gradient-to-br from-[#021d49] via-[#1a3a5c] to-[#021d49] rounded-2xl p-12 shadow-2xl text-center">
                         <div className="max-w-3xl mx-auto">
-                            <div className="w-16 h-16 bg-[#46a1bb] rounded-full flex items-center justify-center mx-auto mb-6">
+                            <div className="w-16 h-16 bg-[#021d49] rounded-full flex items-center justify-center mx-auto mb-6">
                                 <ExternalLink className="w-8 h-8 text-white" />
                             </div>
                             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">

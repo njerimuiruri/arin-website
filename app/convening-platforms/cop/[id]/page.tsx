@@ -109,7 +109,7 @@ const CopDetailPage = () => {
                         {/* Meta Information */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 pb-8 border-b">
                             <div className="flex items-center gap-3">
-                                <Calendar className="text-[#46a1bb]" size={24} />
+                                <Calendar className="text-[#021d49]" size={24} />
                                 <div>
                                     <p className="text-sm text-gray-500">Date</p>
                                     <p className="font-semibold text-gray-900">{new Date(cop.date).toLocaleDateString('en-US', {
@@ -131,7 +131,7 @@ const CopDetailPage = () => {
                         {cop.availableResources && cop.availableResources.length > 0 && (
                             <div className="mb-8 pt-8 border-t">
                                 <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                                    <FileText className="text-[#46a1bb]" />
+                                    <FileText className="text-[#021d49]" />
                                     Available Resources
                                 </h2>
                                 <div className="space-y-3">
@@ -160,7 +160,7 @@ const CopDetailPage = () => {
                         <p className="text-gray-300 mb-6">Visit our COP page to see all policy briefs and position papers</p>
                         <button
                             onClick={() => router.push('/convening-platforms/cop')}
-                            className="px-6 py-3 bg-[#46a1bb] text-white font-semibold rounded-lg hover:bg-[#3a8aa6] transition-colors"
+                            className="px-6 py-3 bg-[#021d49] text-white font-semibold rounded-lg hover:bg-[#3a8aa6] transition-colors"
                         >
                             Back to All COP Content
                         </button>

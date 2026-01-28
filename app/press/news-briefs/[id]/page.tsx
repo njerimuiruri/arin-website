@@ -38,12 +38,12 @@ export default function NewsBriefDetailPage() {
                 <h1 className="text-3xl font-bold mb-2">{brief.title}</h1>
                 <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
                     <span className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4 text-[#46a1bb]" />
+                        <Calendar className="w-4 h-4 text-[#021d49]" />
                         {brief.datePosted ? new Date(brief.datePosted).toLocaleDateString() : ""}
                     </span>
                     {brief.authors && brief.authors.length > 0 && (
                         <span className="flex items-center gap-1">
-                            <Users className="w-4 h-4 text-[#46a1bb]" />
+                            <Users className="w-4 h-4 text-[#021d49]" />
                             {brief.authors.join(", ")}
                         </span>
                     )}

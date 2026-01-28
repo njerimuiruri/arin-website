@@ -50,19 +50,19 @@ const PartnersSection = ({ partners }: { partners: any[] }) => {
 
             <div
                 className="relative bg-gradient-to-br from-white to-blue-50 rounded-3xl p-12 shadow-xl border-2 overflow-hidden"
-                style={{ borderColor: '#459db8' }}
+                style={{ borderColor: '#021d49' }}
                 onMouseEnter={() => setIsPaused(true)}
                 onMouseLeave={() => setIsPaused(false)}
             >
                 <button
                     onClick={prevSlide}
                     className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group"
-                    style={{ borderWidth: '2px', borderColor: '#459db8' }}
+                    style={{ borderWidth: '2px', borderColor: '#021d49' }}
                     aria-label="Previous partners"
                 >
                     <svg
                         className="w-6 h-6 transition-transform group-hover:-translate-x-1"
-                        style={{ color: '#459db8' }}
+                        style={{ color: '#021d49' }}
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -74,12 +74,12 @@ const PartnersSection = ({ partners }: { partners: any[] }) => {
                 <button
                     onClick={nextSlide}
                     className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group"
-                    style={{ borderWidth: '2px', borderColor: '#459db8' }}
+                    style={{ borderWidth: '2px', borderColor: '#021d49' }}
                     aria-label="Next partners"
                 >
                     <svg
                         className="w-6 h-6 transition-transform group-hover:translate-x-1"
-                        style={{ color: '#459db8' }}
+                        style={{ color: '#021d49' }}
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -103,7 +103,7 @@ const PartnersSection = ({ partners }: { partners: any[] }) => {
                                 />
                                 <div
                                     className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-10 transition-opacity duration-300"
-                                    style={{ backgroundColor: '#459db8' }}
+                                    style={{ backgroundColor: '#021d49' }}
                                 />
                             </div>
                         </div>
@@ -122,7 +122,7 @@ const PartnersSection = ({ partners }: { partners: any[] }) => {
                                 }`}
                             style={{
                                 backgroundColor: Math.floor(currentIndex / partnersPerSlide) === idx
-                                    ? '#459db8'
+                                    ? '#021d49'
                                     : '#cbd5e1'
                             }}
                             aria-label={`Go to slide ${idx + 1}`}
@@ -132,7 +132,7 @@ const PartnersSection = ({ partners }: { partners: any[] }) => {
 
                 {/* Pause Indicator */}
                 {isPaused && (
-                    <div className="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-medium text-white shadow-md" style={{ backgroundColor: '#459db8' }}>
+                    <div className="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-medium text-white shadow-md" style={{ backgroundColor: '#021d49' }}>
                         Paused
                     </div>
                 )}

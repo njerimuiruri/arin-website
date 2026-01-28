@@ -59,11 +59,11 @@ const NewslettersPage = () => {
                 <section className="max-w-350 mx-auto px-6 py-12">
                     <div className="text-center mb-8">
                         <div className="flex items-center justify-center gap-3 mb-4">
-                            <Mail className="w-12 h-12 text-[#46a1bb]" />
+                            <Mail className="w-12 h-12 text-[#021d49]" />
                         </div>
                         <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
                             ARIN{' '}
-                            <span className="bg-linear-to-r from-[#46a1bb] to-[#021d49] bg-clip-text text-transparent">
+                            <span className="bg-linear-to-r from-[#021d49] to-[#021d49] bg-clip-text text-transparent">
                                 Newsletters
                             </span>
                         </h1>
@@ -77,7 +77,7 @@ const NewslettersPage = () => {
                     <div className="max-w-4xl mx-auto mb-8">
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                             <div className="bg-white rounded-xl p-4 shadow-md border border-gray-200 text-center">
-                                <div className="text-3xl font-bold text-[#46a1bb] mb-1">{newsletters.length}</div>
+                                <div className="text-3xl font-bold text-[#021d49] mb-1">{newsletters.length}</div>
                                 <p className="text-sm text-gray-600">Newsletters</p>
                             </div>
                             <div className="bg-white rounded-xl p-4 shadow-md border border-gray-200 text-center">
@@ -85,7 +85,7 @@ const NewslettersPage = () => {
                                 <p className="text-sm text-gray-600">Recent Issues</p>
                             </div>
                             <div className="bg-white rounded-xl p-4 shadow-md border border-gray-200 text-center col-span-2 md:col-span-1">
-                                <div className="text-3xl font-bold text-[#46a1bb] mb-1">Monthly</div>
+                                <div className="text-3xl font-bold text-[#021d49] mb-1">Monthly</div>
                                 <p className="text-sm text-gray-600">Updates</p>
                             </div>
                         </div>
@@ -106,7 +106,7 @@ const NewslettersPage = () => {
                                             setSearchTerm(e.target.value);
                                             setCurrentPage(1);
                                         }}
-                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#46a1bb] focus:outline-none transition-colors"
+                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#021d49] focus:outline-none transition-colors"
                                     />
                                 </div>
 
@@ -119,7 +119,7 @@ const NewslettersPage = () => {
                                             setSelectedCategory(e.target.value);
                                             setCurrentPage(1);
                                         }}
-                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#46a1bb] focus:outline-none transition-colors appearance-none bg-white cursor-pointer"
+                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#021d49] focus:outline-none transition-colors appearance-none bg-white cursor-pointer"
                                     >
                                         {categories.map(category => (
                                             <option key={category} value={category}>{category}</option>
@@ -135,12 +135,12 @@ const NewslettersPage = () => {
                         {currentNewsletters.map((newsletter) => (
                             <div
                                 key={newsletter.id}
-                                className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-[#46a1bb] cursor-pointer group"
+                                className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-[#021d49] cursor-pointer group"
                                 onClick={() => handleNewsletterClick(newsletter.id)}
                             >
                                 <div className="md:flex">
                                     {/* Left Side - Newsletter Image */}
-                                    <div className="md:w-2/5 relative h-64 md:h-auto overflow-hidden bg-linear-to-br from-[#021d49] to-[#46a1bb]">
+                                    <div className="md:w-2/5 relative h-64 md:h-auto overflow-hidden bg-linear-to-br from-[#021d49] to-[#021d49]">
                                         {newsletter.hasImage ? (
                                             <>
                                                 <img
@@ -169,10 +169,10 @@ const NewslettersPage = () => {
                                     <div className="md:w-3/5 p-8">
                                         {/* Header */}
                                         <div className="mb-4">
-                                            <span className="inline-block px-3 py-1 bg-linear-to-r from-[#021d49] to-[#46a1bb] text-white font-bold text-xs uppercase tracking-wide rounded-full mb-3">
+                                            <span className="inline-block px-3 py-1 bg-linear-to-r from-[#021d49] to-[#021d49] text-white font-bold text-xs uppercase tracking-wide rounded-full mb-3">
                                                 {newsletter.category}
                                             </span>
-                                            <h3 className="text-2xl font-bold text-gray-900 group-hover:text-[#46a1bb] transition-colors leading-tight mb-3">
+                                            <h3 className="text-2xl font-bold text-gray-900 group-hover:text-[#021d49] transition-colors leading-tight mb-3">
                                                 {newsletter.title}
                                             </h3>
                                         </div>
@@ -180,13 +180,13 @@ const NewslettersPage = () => {
                                             <div className="flex flex-col gap-2">
                                                 {newsletter.authors && newsletter.authors.length > 0 && (
                                                     <div className="flex items-center gap-2 text-sm">
-                                                        <User className="w-4 h-4 text-[#46a1bb] shrink-0" />
+                                                        <User className="w-4 h-4 text-[#021d49] shrink-0" />
                                                         <span className="text-gray-700">{newsletter.authors.join(', ')}</span>
                                                     </div>
                                                 )}
                                                 {newsletter.datePosted && (
                                                     <div className="flex items-center gap-2 text-sm">
-                                                        <Calendar className="w-4 h-4 text-[#46a1bb] shrink-0" />
+                                                        <Calendar className="w-4 h-4 text-[#021d49] shrink-0" />
                                                         <span className="text-gray-600">{new Date(newsletter.datePosted).toLocaleDateString()}</span>
                                                     </div>
                                                 )}
@@ -198,7 +198,7 @@ const NewslettersPage = () => {
                                         <div className="flex items-center justify-end">
                                             <button
                                                 onClick={(e) => { e.stopPropagation(); handleNewsletterClick(newsletter.id); }}
-                                                className="px-6 py-3 bg-linear-to-r from-[#021d49] to-[#46a1bb] hover:shadow-xl text-white font-semibold rounded-lg shadow-md flex items-center gap-2 justify-center transition-all duration-200 whitespace-nowrap"
+                                                className="px-6 py-3 bg-linear-to-r from-[#021d49] to-[#021d49] hover:shadow-xl text-white font-semibold rounded-lg shadow-md flex items-center gap-2 justify-center transition-all duration-200 whitespace-nowrap"
                                             >
                                                 <span>View Newsletter</span>
                                                 <ArrowRight className="w-4 h-4" />
@@ -226,7 +226,7 @@ const NewslettersPage = () => {
                                     key={page}
                                     onClick={() => handlePageChange(page)}
                                     className={`px-4 py-2 rounded-lg font-medium transition-colors ${currentPage === page
-                                        ? 'bg-[#46a1bb] text-white'
+                                        ? 'bg-[#021d49] text-white'
                                         : 'border border-gray-300 hover:bg-gray-50'
                                         }`}
                                 >
@@ -256,7 +256,7 @@ const NewslettersPage = () => {
                     {/* Loading State */}
                     {loading && (
                         <div className="text-center py-12">
-                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#46a1bb] mx-auto"></div>
+                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#021d49] mx-auto"></div>
                             <p className="text-gray-500 mt-4">Loading newsletters...</p>
                         </div>
                     )}

@@ -49,7 +49,7 @@ export default function JournalArticleDetailPage() {
                 <Navbar />
                 <div className="min-h-screen flex items-center justify-center">
                     <div className="text-center">
-                        <div className="w-12 h-12 border-4 border-[#46a1bb] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                        <div className="w-12 h-12 border-4 border-[#021d49] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
                         <p className="text-gray-600">Loading article...</p>
                     </div>
                 </div>
@@ -67,7 +67,7 @@ export default function JournalArticleDetailPage() {
                         <p className="text-gray-600 mb-4">{error}</p>
                         <Link
                             href="/press/journal-articles"
-                            className="px-6 py-2 bg-[#46a1bb] text-white rounded-lg hover:bg-[#021d49]"
+                            className="px-6 py-2 bg-[#021d49] text-white rounded-lg hover:bg-[#021d49]"
                         >
                             Back to Articles
                         </Link>
@@ -87,7 +87,7 @@ export default function JournalArticleDetailPage() {
                         <p className="text-gray-600 mb-4">The journal article you're looking for doesn't exist.</p>
                         <Link
                             href="/press/journal-articles"
-                            className="px-6 py-2 bg-[#46a1bb] text-white rounded-lg hover:bg-[#021d49]"
+                            className="px-6 py-2 bg-[#021d49] text-white rounded-lg hover:bg-[#021d49]"
                         >
                             Back to Articles
                         </Link>
@@ -113,7 +113,7 @@ export default function JournalArticleDetailPage() {
                     {/* Back Button */}
                     <Link
                         href="/press/journal-articles"
-                        className="inline-flex items-center gap-2 text-[#46a1bb] hover:text-[#021d49] font-medium mb-8 transition-colors"
+                        className="inline-flex items-center gap-2 text-[#021d49] hover:text-[#021d49] font-medium mb-8 transition-colors"
                     >
                         <ArrowLeft className="w-5 h-5" />
                         Back to Journal Articles
@@ -130,7 +130,7 @@ export default function JournalArticleDetailPage() {
                             {/* Authors */}
                             <div>
                                 <h3 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                                    <Users className="w-5 h-5 text-[#46a1bb]" />
+                                    <Users className="w-5 h-5 text-[#021d49]" />
                                     Authors
                                 </h3>
                                 <p className="text-gray-900 leading-relaxed">
@@ -141,7 +141,7 @@ export default function JournalArticleDetailPage() {
                             {/* Date */}
                             <div>
                                 <h3 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                                    <Calendar className="w-5 h-5 text-[#46a1bb]" />
+                                    <Calendar className="w-5 h-5 text-[#021d49]" />
                                     Publication Date
                                 </h3>
                                 <p className="text-gray-900">
@@ -184,7 +184,7 @@ export default function JournalArticleDetailPage() {
                     {article.availableResources && article.availableResources.length > 0 && (
                         <div className="bg-white rounded-lg shadow-md border border-gray-200 p-8 mb-8">
                             <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                                <Download className="w-6 h-6 text-[#46a1bb]" />
+                                <Download className="w-6 h-6 text-[#021d49]" />
                                 Available Resources
                             </h2>
                             <div className="space-y-3">
@@ -227,7 +227,7 @@ export default function JournalArticleDetailPage() {
                     <div className="flex gap-4">
                         <Link
                             href="/press/journal-articles"
-                            className="flex-1 px-6 py-3 bg-gradient-to-r from-[#021d49] to-[#46a1bb] hover:shadow-lg text-white font-semibold rounded-lg shadow-md text-center transition-all"
+                            className="flex-1 px-6 py-3 bg-gradient-to-r from-[#021d49] to-[#021d49] hover:shadow-lg text-white font-semibold rounded-lg shadow-md text-center transition-all"
                         >
                             View All Articles
                         </Link>

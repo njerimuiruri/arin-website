@@ -46,7 +46,7 @@ const LAMAPage = () => {
             <Navbar />
 
             <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-stone-50">
-                <div className="relative bg-gradient-to-r from-[#021d49] to-[#46a1bb] overflow-hidden">
+                <div className="relative bg-gradient-to-r from-[#021d49] to-[#021d49] overflow-hidden">
                     <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLW9wYWNpdHk9IjAuMSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-20" />
 
                     <div className="relative max-w-7xl mx-auto px-6 py-16">
@@ -59,7 +59,7 @@ const LAMAPage = () => {
                                 </div>
 
                                 <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
-                                    <span className="text-[#46a1bb]">LAMA Platform</span>
+                                    <span className="text-[#021d49]">LAMA Platform</span>
                                 </h1>
 
                                 <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 leading-tight">
@@ -94,7 +94,7 @@ const LAMAPage = () => {
 
                             {/* Right Image */}
                             <div className="relative">
-                                <div className="absolute inset-0 bg-gradient-to-br from-[#46a1bb]/20 to-transparent rounded-2xl"></div>
+                                <div className="absolute inset-0 bg-gradient-to-br from-[#021d49]/20 to-transparent rounded-2xl"></div>
                                 <img
                                     src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=800&q=80"
                                     alt="Community gathering under a tree in Africa - representing locally-led adaptation"
@@ -110,15 +110,15 @@ const LAMAPage = () => {
                 </div>
 
                 {/* ARIN Platform Announcement Banner with Animation */}
-                <div className="bg-white border-b-4 border-[#46a1bb] shadow-lg relative overflow-hidden">
+                <div className="bg-white border-b-4 border-[#021d49] shadow-lg relative overflow-hidden">
                     {/* Animated background pulse */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#46a1bb]/5 via-transparent to-[#46a1bb]/5 animate-pulse"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#021d49]/5 via-transparent to-[#021d49]/5 animate-pulse"></div>
 
                     <div className="max-w-7xl mx-auto px-6 py-8 relative">
                         <div className="grid md:grid-cols-2 gap-8 items-center">
                             <div>
                                 <div className="flex items-center gap-3 mb-3">
-                                    <div className="w-12 h-12 bg-gradient-to-br from-[#46a1bb] to-[#021d49] rounded-full flex items-center justify-center animate-bounce">
+                                    <div className="w-12 h-12 bg-gradient-to-br from-[#021d49] to-[#021d49] rounded-full flex items-center justify-center animate-bounce">
                                         <Layers className="w-6 h-6 text-white" />
                                     </div>
                                     <div>
@@ -132,8 +132,8 @@ const LAMAPage = () => {
                             </div>
                             <div className="bg-gradient-to-br from-[#021d49] to-[#1a3a5c] rounded-xl p-6 text-white relative">
                                 {/* Animated corner indicator */}
-                                <div className="absolute -top-2 -right-2 w-6 h-6 bg-[#46a1bb] rounded-full animate-ping"></div>
-                                <div className="absolute -top-2 -right-2 w-6 h-6 bg-[#46a1bb] rounded-full"></div>
+                                <div className="absolute -top-2 -right-2 w-6 h-6 bg-[#021d49] rounded-full animate-ping"></div>
+                                <div className="absolute -top-2 -right-2 w-6 h-6 bg-[#021d49] rounded-full"></div>
 
                                 <h4 className="text-lg font-bold mb-4">Access the Full Platform</h4>
                                 <p className="text-white/90 text-sm mb-4">
@@ -146,7 +146,7 @@ const LAMAPage = () => {
                                         href="https://lama-phi.vercel.app/"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-2 px-6 py-3 bg-[#46a1bb] hover:bg-[#3a8ba0] text-white font-bold rounded-lg transition-all hover:scale-105 hover:shadow-xl group"
+                                        className="inline-flex items-center gap-2 px-6 py-3 bg-[#021d49] hover:bg-[#3a8ba0] text-white font-bold rounded-lg transition-all hover:scale-105 hover:shadow-xl group"
                                     >
                                         <span className="relative">
                                             Visit LAMA Platform
@@ -159,17 +159,17 @@ const LAMAPage = () => {
                                     <div className="absolute -right-12 top-1/2 -translate-y-1/2 hidden lg:block">
                                         <div className="relative">
                                             <div className="animate-bounce">
-                                                <svg className="w-10 h-10 text-[#46a1bb]" fill="currentColor" viewBox="0 0 24 24">
+                                                <svg className="w-10 h-10 text-[#021d49]" fill="currentColor" viewBox="0 0 24 24">
                                                     <path d="M13.5 2C13.5 2.44425 13.3069 2.84339 13 3.11805V5H18C19.6569 5 21 6.34315 21 8V11.5H19V8C19 7.44772 18.5523 7 18 7H13V20C13 20.5523 13.4477 21 14 21H18C18.5523 21 19 20.5523 19 20V17.5H21V20C21 21.6569 19.6569 23 18 23H14C12.3431 23 11 21.6569 11 20V3.11805C10.6931 2.84339 10.5 2.44425 10.5 2C10.5 1.17157 11.1716 0.5 12 0.5C12.8284 0.5 13.5 1.17157 13.5 2Z" />
                                                 </svg>
                                             </div>
                                             <div className="absolute top-0 left-0 animate-ping">
-                                                <svg className="w-10 h-10 text-[#46a1bb] opacity-75" fill="currentColor" viewBox="0 0 24 24">
+                                                <svg className="w-10 h-10 text-[#021d49] opacity-75" fill="currentColor" viewBox="0 0 24 24">
                                                     <path d="M13.5 2C13.5 2.44425 13.3069 2.84339 13 3.11805V5H18C19.6569 5 21 6.34315 21 8V11.5H19V8C19 7.44772 18.5523 7 18 7H13V20C13 20.5523 13.4477 21 14 21H18C18.5523 21 19 20.5523 19 20V17.5H21V20C21 21.6569 19.6569 23 18 23H14C12.3431 23 11 21.6569 11 20V3.11805C10.6931 2.84339 10.5 2.44425 10.5 2C10.5 1.17157 11.1716 0.5 12 0.5C12.8284 0.5 13.5 1.17157 13.5 2Z" />
                                                 </svg>
                                             </div>
                                         </div>
-                                        <p className="text-xs font-bold text-[#46a1bb] mt-1 animate-pulse">Click here!</p>
+                                        <p className="text-xs font-bold text-[#021d49] mt-1 animate-pulse">Click here!</p>
                                     </div>
                                 </div>
                             </div>
@@ -184,7 +184,7 @@ const LAMAPage = () => {
                         <div className="text-center mb-12">
                             <h2 className="text-4xl font-bold text-gray-900 mb-4">
                                 About Locally Led Adaptation Metrics for Africa{' '}
-                                <span className="text-[#46a1bb]">(LAMA)</span>
+                                <span className="text-[#021d49]">(LAMA)</span>
                             </h2>
                             <p className="text-xl text-gray-600 max-w-3xl mx-auto italic">
                                 Aim to develop indicators that capture the effectiveness and inclusiveness of adaptation strategies at the community level.
@@ -232,7 +232,7 @@ const LAMAPage = () => {
                     <section className="mb-16">
                         <div className="bg-gradient-to-br from-[#021d49] to-[#1a3a5c] rounded-2xl p-8 shadow-lg text-white mb-8">
                             <h2 className="text-3xl font-bold mb-4 flex items-center gap-3">
-                                <Target className="w-8 h-8 text-[#46a1bb]" />
+                                <Target className="w-8 h-8 text-[#021d49]" />
                                 Aim and Objectives
                             </h2>
                             <p className="text-white/90 leading-relaxed text-lg">
@@ -244,7 +244,7 @@ const LAMAPage = () => {
                         <div className="grid md:grid-cols-3 gap-6">
                             {objectives.map((objective, index) => (
                                 <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all">
-                                    <div className="w-12 h-12 bg-gradient-to-br from-[#46a1bb] to-[#021d49] rounded-full flex items-center justify-center text-white font-bold text-xl mb-4">
+                                    <div className="w-12 h-12 bg-gradient-to-br from-[#021d49] to-[#021d49] rounded-full flex items-center justify-center text-white font-bold text-xl mb-4">
                                         {index + 1}
                                     </div>
                                     <h3 className="text-xl font-bold text-gray-900 mb-3">{objective.title}</h3>
@@ -259,19 +259,19 @@ const LAMAPage = () => {
                         <h2 className="text-3xl font-bold text-gray-900 mb-6">Components of the LAMA Platform</h2>
                         <div className="grid md:grid-cols-2 gap-6">
                             {components.map((component, index) => (
-                                <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:border-[#46a1bb] transition-all group">
+                                <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:border-[#021d49] transition-all group">
                                     <div className="flex items-start gap-4 mb-4">
-                                        <div className="w-12 h-12 bg-gradient-to-br from-[#46a1bb] to-[#021d49] rounded-lg flex items-center justify-center text-white flex-shrink-0 group-hover:scale-110 transition-transform">
+                                        <div className="w-12 h-12 bg-gradient-to-br from-[#021d49] to-[#021d49] rounded-lg flex items-center justify-center text-white flex-shrink-0 group-hover:scale-110 transition-transform">
                                             {component.icon}
                                         </div>
-                                        <h3 className="text-xl font-bold text-gray-900 group-hover:text-[#46a1bb] transition-colors">{component.title}</h3>
+                                        <h3 className="text-xl font-bold text-gray-900 group-hover:text-[#021d49] transition-colors">{component.title}</h3>
                                     </div>
                                     <p className="text-gray-600 leading-relaxed">{component.description}</p>
                                     <a
                                         href="https://lama-phi.vercel.app/"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-1 text-[#46a1bb] hover:text-[#021d49] font-semibold mt-4 transition-colors"
+                                        className="inline-flex items-center gap-1 text-[#021d49] hover:text-[#021d49] font-semibold mt-4 transition-colors"
                                     >
                                         <span className="text-sm">Explore this component</span>
                                         <ArrowRight className="w-4 h-4" />
@@ -284,7 +284,7 @@ const LAMAPage = () => {
                     {/* CTA Section */}
                     <section className="bg-gradient-to-br from-[#021d49] via-[#1a3a5c] to-[#021d49] rounded-2xl p-12 shadow-2xl text-center">
                         <div className="max-w-3xl mx-auto">
-                            <div className="w-16 h-16 bg-[#46a1bb] rounded-full flex items-center justify-center mx-auto mb-6">
+                            <div className="w-16 h-16 bg-[#021d49] rounded-full flex items-center justify-center mx-auto mb-6">
                                 <ExternalLink className="w-8 h-8 text-white" />
                             </div>
                             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">

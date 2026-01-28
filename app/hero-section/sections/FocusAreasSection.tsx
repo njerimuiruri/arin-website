@@ -25,7 +25,7 @@ const FocusAreasSection = () => {
         <section className="max-w-7xl mx-auto px-6 py-20">
             {/* Header */}
             <div className="text-center mb-16">
-                <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold mb-6" style={{ backgroundColor: '#459db8', color: 'white' }}>
+                <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold mb-6" style={{ backgroundColor: '#021d49', color: 'white' }}>
                     <span>What We Do</span>
                 </div>
                 <h2 className="text-4xl lg:text-5xl font-bold mb-6" style={{ color: '#14234d' }}>
@@ -51,7 +51,7 @@ const FocusAreasSection = () => {
                         <div className="relative z-10">
                             <div
                                 className="w-16 h-16 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300"
-                                style={{ backgroundColor: 'rgba(69, 157, 184, 0.1)', color: '#459db8' }}
+                                style={{ backgroundColor: 'rgba(69, 157, 184, 0.1)', color: '#021d49' }}
                             >
                                 {area.icon}
                             </div>
@@ -66,7 +66,7 @@ const FocusAreasSection = () => {
                         {/* Decorative element */}
                         <div
                             className="absolute -bottom-2 -right-2 w-24 h-24 rounded-full opacity-5 group-hover:opacity-10 transition-opacity duration-300"
-                            style={{ backgroundColor: '#459db8' }}
+                            style={{ backgroundColor: '#021d49' }}
                         ></div>
                     </div>
                 ))}
@@ -77,7 +77,7 @@ const FocusAreasSection = () => {
                 <a
                     href="/about-us/focus-areas"
                     className="inline-flex items-center gap-3 px-8 py-4 rounded-full font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 text-white"
-                    style={{ backgroundColor: '#459db8' }}
+                    style={{ backgroundColor: '#021d49' }}
                 >
                     Explore Our Work
                     <ArrowRight className="w-5 h-5" />

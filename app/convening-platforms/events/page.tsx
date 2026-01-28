@@ -84,7 +84,7 @@ const EventsPage = () => {
 			<Navbar />
 			<div className="w-full bg-gradient-to-br from-slate-50 via-blue-50/30 to-white min-h-screen">
 				{/* Hero Section */}
-				<div className="bg-gradient-to-r from-[#021d49] to-[#46a1bb] text-white">
+				<div className="bg-gradient-to-r from-[#021d49] to-[#021d49] text-white">
 					<section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
 						<div className="text-center">
 							<h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
@@ -109,7 +109,7 @@ const EventsPage = () => {
 									placeholder="Search events by title or location..."
 									value={searchTerm}
 									onChange={(e) => setSearchTerm(e.target.value)}
-									className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#46a1bb] focus:border-transparent outline-none transition-all"
+									className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#021d49] focus:border-transparent outline-none transition-all"
 								/>
 							</div>
 
@@ -117,7 +117,7 @@ const EventsPage = () => {
 							<select
 								value={categoryFilter}
 								onChange={(e) => setCategoryFilter(e.target.value)}
-								className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#46a1bb] focus:border-transparent outline-none transition-all bg-white"
+								className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#021d49] focus:border-transparent outline-none transition-all bg-white"
 							>
 								<option value="All">All Categories</option>
 								<option value="Conference">Conference</option>
@@ -131,7 +131,7 @@ const EventsPage = () => {
 							<select
 								value={statusFilter}
 								onChange={(e) => setStatusFilter(e.target.value)}
-								className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#46a1bb] focus:border-transparent outline-none transition-all bg-white"
+								className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#021d49] focus:border-transparent outline-none transition-all bg-white"
 							>
 								<option value="All">All Status</option>
 								<option value="Upcoming">Upcoming</option>
@@ -140,14 +140,14 @@ const EventsPage = () => {
 						</div>
 
 						<p className="text-gray-600 text-sm">
-							Showing <span className="font-semibold text-[#46a1bb]">{filteredEvents.length}</span> event{filteredEvents.length !== 1 ? 's' : ''}
+							Showing <span className="font-semibold text-[#021d49]">{filteredEvents.length}</span> event{filteredEvents.length !== 1 ? 's' : ''}
 						</p>
 					</div>
 
 					{/* Loading State */}
 					{loading && (
 						<div className="text-center py-20">
-							<div className="animate-spin rounded-full h-16 w-16 border-4 border-[#46a1bb] border-t-transparent mx-auto"></div>
+							<div className="animate-spin rounded-full h-16 w-16 border-4 border-[#021d49] border-t-transparent mx-auto"></div>
 							<p className="text-gray-600 mt-6 text-lg font-medium">Loading events...</p>
 						</div>
 					)}
@@ -186,7 +186,7 @@ const EventsPage = () => {
 												</div>
 											)}
 											<div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-                                            
+
 											{/* Badges on Image */}
 											<div className="absolute top-3 left-3 right-3 flex justify-between items-start gap-2">
 												<span className={`${getCategoryColor(event.category)} text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg backdrop-blur-sm`}>
@@ -200,16 +200,16 @@ const EventsPage = () => {
 
 										{/* Content Section */}
 										<div className="p-6 flex-1 flex flex-col">
-											<h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-[#46a1bb] transition-colors">
+											<h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-[#021d49] transition-colors">
 												{event.title}
 											</h3>
 
 											<div className="space-y-2 mb-4">
 												<div className="flex items-center gap-2 text-sm text-gray-600">
-													<Calendar className="w-4 h-4 text-[#46a1bb] flex-shrink-0" />
+													<Calendar className="w-4 h-4 text-[#021d49] flex-shrink-0" />
 													<span className="font-medium">{formatDate(event.date)}</span>
 												</div>
-                                                
+
 												{event.time && (
 													<div className="flex items-center gap-2 text-sm text-gray-600">
 														<Clock className="w-4 h-4 text-green-600 flex-shrink-0" />
@@ -235,7 +235,7 @@ const EventsPage = () => {
 
 											{/* Read More Link */}
 											<div className="mt-auto pt-4 border-t border-gray-100">
-												<span className="text-[#46a1bb] font-semibold text-sm group-hover:gap-2 inline-flex items-center gap-1 transition-all">
+												<span className="text-[#021d49] font-semibold text-sm group-hover:gap-2 inline-flex items-center gap-1 transition-all">
 													Learn More
 													<span className="group-hover:translate-x-1 transition-transform">→</span>
 												</span>

@@ -75,7 +75,7 @@ const FocalPoints = () => {
 
                         marker.append("circle")
                             .attr("r", 10)
-                            .attr("fill", "#459db8")
+                            .attr("fill", "#021d49")
                             .attr("stroke", "#fff")
                             .attr("stroke-width", 3)
                             .style("pointer-events", "none")
@@ -105,7 +105,7 @@ const FocalPoints = () => {
                 <div className="max-w-7xl mx-auto">
                     {/* Section Header */}
                     <div className="text-center mb-12">
-                        <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-white mb-6" style={{ backgroundColor: '#459db8' }}>
+                        <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-white mb-6" style={{ backgroundColor: '#021d49' }}>
                             <Globe className="w-5 h-5" />
                             <span>Global Presence</span>
                         </div>
@@ -120,14 +120,14 @@ const FocalPoints = () => {
                     <div className="grid lg:grid-cols-2 gap-12 items-center">
                         {/* Map Section - Left */}
                         <div className="relative">
-                            <div className="absolute -top-4 -left-4 w-32 h-32 rounded-full opacity-10" style={{ backgroundColor: '#459db8' }}></div>
+                            <div className="absolute -top-4 -left-4 w-32 h-32 rounded-full opacity-10" style={{ backgroundColor: '#021d49' }}></div>
                             <div className="absolute -bottom-8 -right-8 w-40 h-40 rounded-full opacity-10" style={{ backgroundColor: '#14234d' }}></div>
 
                             <div className="bg-gradient-to-br from-slate-50 to-white rounded-2xl shadow-2xl p-8 relative overflow-hidden border border-gray-100">
                                 {!isTopoJsonLoaded ? (
                                     <div className="flex items-center justify-center h-96">
                                         <div className="text-center">
-                                            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-[#459db8] mb-4"></div>
+                                            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-[#021d49] mb-4"></div>
                                             <p className="text-gray-600">Loading map...</p>
                                         </div>
                                     </div>
@@ -146,11 +146,11 @@ const FocalPoints = () => {
                             {/* Stats */}
                             <div className="grid grid-cols-2 gap-6">
                                 <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
-                                    <div className="text-5xl font-bold mb-2" style={{ color: '#459db8' }}>3</div>
+                                    <div className="text-5xl font-bold mb-2" style={{ color: '#021d49' }}>3</div>
                                     <div className="text-sm text-gray-600 font-semibold uppercase tracking-wide">Regional Offices</div>
                                 </div>
                                 <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
-                                    <div className="text-5xl font-bold mb-2" style={{ color: '#459db8' }}>29</div>
+                                    <div className="text-5xl font-bold mb-2" style={{ color: '#021d49' }}>29</div>
                                     <div className="text-sm text-gray-600 font-semibold uppercase tracking-wide">Total Researchers</div>
                                 </div>
                             </div>
@@ -158,30 +158,30 @@ const FocalPoints = () => {
                             {/* Why Work With Us */}
                             <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
                                 <h3 className="text-2xl font-bold mb-6 flex items-center gap-3" style={{ color: '#14234d' }}>
-                                    <div className="w-1 h-8 rounded-full" style={{ backgroundColor: '#459db8' }}></div>
+                                    <div className="w-1 h-8 rounded-full" style={{ backgroundColor: '#021d49' }}></div>
                                     Why Work With Us?
                                 </h3>
                                 <div className="space-y-5">
                                     <div className="flex items-start gap-4 group">
-                                        <div className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center mt-0.5 transition-transform group-hover:scale-110" style={{ backgroundColor: '#459db8' }}>
+                                        <div className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center mt-0.5 transition-transform group-hover:scale-110" style={{ backgroundColor: '#021d49' }}>
                                             <div className="w-2 h-2 rounded-full bg-white"></div>
                                         </div>
                                         <p className="text-gray-700 leading-relaxed">Evidence-based research driving policy and practice across Africa</p>
                                     </div>
                                     <div className="flex items-start gap-4 group">
-                                        <div className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center mt-0.5 transition-transform group-hover:scale-110" style={{ backgroundColor: '#459db8' }}>
+                                        <div className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center mt-0.5 transition-transform group-hover:scale-110" style={{ backgroundColor: '#021d49' }}>
                                             <div className="w-2 h-2 rounded-full bg-white"></div>
                                         </div>
                                         <p className="text-gray-700 leading-relaxed">Multi-disciplinary teams of experts working on critical challenges</p>
                                     </div>
                                     <div className="flex items-start gap-4 group">
-                                        <div className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center mt-0.5 transition-transform group-hover:scale-110" style={{ backgroundColor: '#459db8' }}>
+                                        <div className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center mt-0.5 transition-transform group-hover:scale-110" style={{ backgroundColor: '#021d49' }}>
                                             <div className="w-2 h-2 rounded-full bg-white"></div>
                                         </div>
                                         <p className="text-gray-700 leading-relaxed">Strong partnerships with local communities and international organizations</p>
                                     </div>
                                     <div className="flex items-start gap-4 group">
-                                        <div className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center mt-0.5 transition-transform group-hover:scale-110" style={{ backgroundColor: '#459db8' }}>
+                                        <div className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center mt-0.5 transition-transform group-hover:scale-110" style={{ backgroundColor: '#021d49' }}>
                                             <div className="w-2 h-2 rounded-full bg-white"></div>
                                         </div>
                                         <p className="text-gray-700 leading-relaxed">Commitment to sustainable development and social impact</p>

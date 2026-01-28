@@ -35,12 +35,12 @@ const ConferenceDetailPage = () => {
                 });
                 if (!response.ok) throw new Error('Failed to fetch conference');
                 const data = await response.json();
-                
+
                 // Fix image URL to include backend base URL
                 if (data.image && data.image.startsWith('/uploads')) {
                     data.image = apiBaseUrl + data.image;
                 }
-                
+
                 setConference(data);
             } catch (err) {
                 console.error('Failed to fetch conference:', err);
@@ -111,7 +111,7 @@ const ConferenceDetailPage = () => {
                         {/* Meta Information */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 pb-8 border-b">
                             <div className="flex items-center gap-3">
-                                <Calendar className="text-[#46a1bb]" size={24} />
+                                <Calendar className="text-[#021d49]" size={24} />
                                 <div>
                                     <p className="text-sm text-gray-500">Date</p>
                                     <p className="font-semibold text-gray-900">{new Date(conference.date).toLocaleDateString('en-US', {
@@ -123,7 +123,7 @@ const ConferenceDetailPage = () => {
                             </div>
                             {conference.venue && (
                                 <div className="flex items-center gap-3">
-                                    <MapPin className="text-[#46a1bb]" size={24} />
+                                    <MapPin className="text-[#021d49]" size={24} />
                                     <div>
                                         <p className="text-sm text-gray-500">Venue</p>
                                         <p className="font-semibold text-gray-900">{conference.venue}</p>
@@ -148,7 +148,7 @@ const ConferenceDetailPage = () => {
                         {conference.availableResources && conference.availableResources.length > 0 && (
                             <div className="mb-8 pt-8 border-t">
                                 <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                                    <FileText className="text-[#46a1bb]" />
+                                    <FileText className="text-[#021d49]" />
                                     Available Resources
                                 </h2>
                                 <div className="space-y-3">
@@ -177,7 +177,7 @@ const ConferenceDetailPage = () => {
                         <p className="text-gray-300 mb-6">Visit our conferences page to see all upcoming and past events</p>
                         <button
                             onClick={() => router.push('/convening-platforms/conferences')}
-                            className="px-6 py-3 bg-[#46a1bb] text-white font-semibold rounded-lg hover:bg-[#3a8aa6] transition-colors"
+                            className="px-6 py-3 bg-[#021d49] text-white font-semibold rounded-lg hover:bg-[#3a8aa6] transition-colors"
                         >
                             Back to All Conferences
                         </button>

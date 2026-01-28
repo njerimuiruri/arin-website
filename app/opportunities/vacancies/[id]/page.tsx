@@ -97,7 +97,7 @@ const VacancyDetailPage = () => {
 
                         <div className="p-8 space-y-6">
                             <div className="flex flex-wrap items-center gap-4">
-                                <span className="inline-flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-[#021d49] to-[#46a1bb] text-white font-semibold rounded-full text-sm">
+                                <span className="inline-flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-[#021d49] to-[#021d49] text-white font-semibold rounded-full text-sm">
                                     <Briefcase className="w-4 h-4" /> {vacancy.employmentType}
                                 </span>
                             </div>

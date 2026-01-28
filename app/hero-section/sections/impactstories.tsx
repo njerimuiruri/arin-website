@@ -65,7 +65,7 @@ const ImpactStories = () => {
             <div className="max-w-7xl mx-auto">
                 {/* Section Header */}
                 <div className="text-center mb-16">
-                    <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold mb-6" style={{ backgroundColor: '#459db8', color: 'white' }}>
+                    <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold mb-6" style={{ backgroundColor: '#021d49', color: 'white' }}>
                         <span>Our Impact</span>
                     </div>
                     <h2 className="text-4xl lg:text-5xl font-bold mb-4" style={{ color: '#14234d' }}>
@@ -110,7 +110,7 @@ const ImpactStories = () => {
                                     </div>
                                 </div>
 
-                                <h3 className="text-xl font-bold mb-3 group-hover:text-[#459db8] transition-colors" style={{ color: '#14234d' }}>
+                                <h3 className="text-xl font-bold mb-3 group-hover:text-[#021d49] transition-colors" style={{ color: '#14234d' }}>
                                     {story.title}
                                 </h3>
 
@@ -118,7 +118,7 @@ const ImpactStories = () => {
                                     {story.excerpt}
                                 </p>
 
-                                <button className="flex items-center gap-2 font-semibold text-sm group-hover:gap-3 transition-all" style={{ color: '#459db8' }}>
+                                <button className="flex items-center gap-2 font-semibold text-sm group-hover:gap-3 transition-all" style={{ color: '#021d49' }}>
                                     Read Full Story
                                     <ArrowRight className="w-4 h-4" />
                                 </button>
@@ -129,7 +129,7 @@ const ImpactStories = () => {
 
                 {/* View More Button */}
                 <div className="text-center">
-                    <button className="inline-flex items-center gap-3 px-8 py-4 rounded-full text-white font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105" style={{ backgroundColor: '#459db8' }}>
+                    <button className="inline-flex items-center gap-3 px-8 py-4 rounded-full text-white font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105" style={{ backgroundColor: '#021d49' }}>
                         View All Impact Stories
                         <ArrowRight className="w-5 h-5" />
                     </button>

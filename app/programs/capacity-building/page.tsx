@@ -59,7 +59,7 @@ const CapacityBuildingList = ({ onProjectClick }) => {
         return (
             <div className="w-full bg-gradient-to-br from-slate-50 via-white to-stone-50 min-h-screen flex items-center justify-center">
                 <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#46a1bb] mx-auto mb-4"></div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#021d49] mx-auto mb-4"></div>
                     <p className="text-gray-600">Loading capacity building programs...</p>
                 </div>
             </div>
@@ -73,7 +73,7 @@ const CapacityBuildingList = ({ onProjectClick }) => {
                 <div className="text-center mb-8">
                     <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
                         Capacity{' '}
-                        <span className="bg-gradient-to-r from-[#46a1bb] to-[#021d49] bg-clip-text text-transparent">
+                        <span className="bg-gradient-to-r from-[#021d49] to-[#021d49] bg-clip-text text-transparent">
                             Building
                         </span>
                     </h1>
@@ -93,7 +93,7 @@ const CapacityBuildingList = ({ onProjectClick }) => {
                                     placeholder="Search capacity building programs..."
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#46a1bb] focus:outline-none transition-colors"
+                                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#021d49] focus:outline-none transition-colors"
                                 />
                             </div>
                             <div className="relative">
@@ -101,7 +101,7 @@ const CapacityBuildingList = ({ onProjectClick }) => {
                                 <select
                                     value={selectedStatus}
                                     onChange={(e) => setSelectedStatus(e.target.value)}
-                                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#46a1bb] focus:outline-none transition-colors appearance-none bg-white cursor-pointer"
+                                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#021d49] focus:outline-none transition-colors appearance-none bg-white cursor-pointer"
                                 >
                                     {statuses.map(status => (
                                         <option key={status} value={status}>{status}</option>
@@ -121,7 +121,7 @@ const CapacityBuildingList = ({ onProjectClick }) => {
                         return (
                             <div
                                 key={project._id}
-                                className="bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-[#46a1bb] cursor-pointer group"
+                                className="bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-[#021d49] cursor-pointer group"
                                 onClick={() => onProjectClick(project._id)}
                             >
                                 {/* Project Image */}
@@ -144,7 +144,7 @@ const CapacityBuildingList = ({ onProjectClick }) => {
                                 </div>
 
                                 {/* Title */}
-                                <h3 className="text-xl font-bold text-gray-900 group-hover:text-[#46a1bb] transition-colors leading-tight mb-4">
+                                <h3 className="text-xl font-bold text-gray-900 group-hover:text-[#021d49] transition-colors leading-tight mb-4">
                                     {project.title}
                                 </h3>
 
@@ -235,7 +235,7 @@ const CapacityBuildingDetail = ({ projectId, onBack }) => {
         return (
             <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-stone-50 flex items-center justify-center">
                 <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#46a1bb] mx-auto mb-4"></div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#021d49] mx-auto mb-4"></div>
                     <p className="text-gray-600">Loading project details...</p>
                 </div>
             </div>
@@ -247,7 +247,7 @@ const CapacityBuildingDetail = ({ projectId, onBack }) => {
             <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-stone-50 flex items-center justify-center">
                 <div className="text-center">
                     <p className="text-gray-600 text-lg mb-4">Project not found</p>
-                    <button onClick={onBack} className="text-[#46a1bb] hover:underline">
+                    <button onClick={onBack} className="text-[#021d49] hover:underline">
                         Back to All Programs
                     </button>
                 </div>
@@ -263,7 +263,7 @@ const CapacityBuildingDetail = ({ projectId, onBack }) => {
 
             <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-stone-50">
                 {/* Hero Section */}
-                <div className="relative h-96 bg-gradient-to-r from-[#021d49] to-[#46a1bb] overflow-hidden">
+                <div className="relative h-96 bg-gradient-to-r from-[#021d49] to-[#021d49] overflow-hidden">
                     <div className="absolute inset-0 bg-black/40" />
                     {img && (
                         <div className="absolute inset-0">
@@ -275,7 +275,7 @@ const CapacityBuildingDetail = ({ projectId, onBack }) => {
                     <div className="relative max-w-7xl mx-auto px-6 h-full flex flex-col justify-end pb-12">
                         <button
                             onClick={onBack}
-                            className="mb-6 inline-flex items-center gap-2 text-white hover:text-[#46a1bb] transition-colors group"
+                            className="mb-6 inline-flex items-center gap-2 text-white hover:text-[#021d49] transition-colors group"
                         >
                             <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
                             <span className="font-semibold">Back to All Programs</span>
@@ -317,10 +317,10 @@ const CapacityBuildingDetail = ({ projectId, onBack }) => {
                             {/* Description */}
                             <section className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
                                 <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-3">
-                                    <BookOpen className="w-6 h-6 text-[#46a1bb]" />
+                                    <BookOpen className="w-6 h-6 text-[#021d49]" />
                                     About This Initiative
                                 </h2>
-                                <div 
+                                <div
                                     className="prose prose-slate max-w-none text-gray-700 leading-relaxed"
                                     dangerouslySetInnerHTML={{ __html: project.description || '' }}
                                 />
@@ -330,13 +330,13 @@ const CapacityBuildingDetail = ({ projectId, onBack }) => {
                             {project.objectives && project.objectives.length > 0 && (
                                 <section className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
                                     <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                                        <Target className="w-6 h-6 text-[#46a1bb]" />
+                                        <Target className="w-6 h-6 text-[#021d49]" />
                                         Key Objectives
                                     </h2>
                                     <div className="space-y-4">
                                         {project.objectives.map((objective, index) => (
                                             <div key={index} className="flex gap-4 group">
-                                                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-[#46a1bb] to-[#021d49] flex items-center justify-center text-white font-bold text-sm">
+                                                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-[#021d49] to-[#021d49] flex items-center justify-center text-white font-bold text-sm">
                                                     {index + 1}
                                                 </div>
                                                 <p className="text-gray-700 leading-relaxed pt-1 group-hover:text-gray-900 transition-colors">
@@ -352,7 +352,7 @@ const CapacityBuildingDetail = ({ projectId, onBack }) => {
                             {project.outcomes && project.outcomes.length > 0 && (
                                 <section className="bg-gradient-to-br from-[#021d49] to-[#1a3a5c] rounded-2xl p-8 shadow-lg text-white">
                                     <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
-                                        <Award className="w-6 h-6 text-[#46a1bb]" />
+                                        <Award className="w-6 h-6 text-[#021d49]" />
                                         Outcomes & Impact
                                     </h2>
                                     <div className="grid md:grid-cols-2 gap-4">
@@ -374,7 +374,7 @@ const CapacityBuildingDetail = ({ projectId, onBack }) => {
                             <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
                                 <h3 className="text-lg font-bold text-gray-900 mb-4">Quick Actions</h3>
                                 <div className="space-y-3">
-                                    <button className="w-full px-4 py-3 bg-gradient-to-r from-[#46a1bb] to-[#3a8ba0] text-white font-semibold rounded-lg hover:shadow-lg transition-all flex items-center justify-center gap-2">
+                                    <button className="w-full px-4 py-3 bg-gradient-to-r from-[#021d49] to-[#3a8ba0] text-white font-semibold rounded-lg hover:shadow-lg transition-all flex items-center justify-center gap-2">
                                         <Download className="w-4 h-4" />
                                         Download Resources
                                     </button>
@@ -389,7 +389,7 @@ const CapacityBuildingDetail = ({ projectId, onBack }) => {
                             {project.partners && project.partners.length > 0 && (
                                 <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
                                     <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                                        <Users className="w-5 h-5 text-[#46a1bb]" />
+                                        <Users className="w-5 h-5 text-[#021d49]" />
                                         Implementation Partners
                                     </h3>
                                     <div className="space-y-2">
@@ -418,7 +418,7 @@ const CapacityBuildingDetail = ({ projectId, onBack }) => {
                                                     rel="noopener noreferrer"
                                                     className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer group"
                                                 >
-                                                    <Download className="w-5 h-5 text-[#46a1bb] flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                                                    <Download className="w-5 h-5 text-[#021d49] flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
                                                     <div className="flex-1 min-w-0">
                                                         <p className="font-semibold text-sm text-gray-900 truncate">{fileName}</p>
                                                         <p className="text-xs text-gray-600">PDF</p>
@@ -431,7 +431,7 @@ const CapacityBuildingDetail = ({ projectId, onBack }) => {
                             )}
 
                             {/* Contact CTA */}
-                            <div className="bg-gradient-to-br from-[#46a1bb] to-[#3a8ba0] rounded-2xl p-6 shadow-lg text-white">
+                            <div className="bg-gradient-to-br from-[#021d49] to-[#3a8ba0] rounded-2xl p-6 shadow-lg text-white">
                                 <h3 className="text-lg font-bold mb-2">Get Involved</h3>
                                 <p className="text-white/90 text-sm mb-4">
                                     Interested in participating or learning more about this initiative?

@@ -64,7 +64,7 @@ const JournalArticlesPage = () => {
                 <Navbar />
                 <div className="min-h-screen flex items-center justify-center">
                     <div className="text-center">
-                        <FileText className="w-16 h-16 text-[#46a1bb] mx-auto mb-4 animate-pulse" />
+                        <FileText className="w-16 h-16 text-[#021d49] mx-auto mb-4 animate-pulse" />
                         <p className="text-gray-600">Loading journal articles...</p>
                     </div>
                 </div>
@@ -83,7 +83,7 @@ const JournalArticlesPage = () => {
                         <p className="text-gray-600 text-sm">{error}</p>
                         <button
                             onClick={loadArticles}
-                            className="mt-4 px-6 py-2 bg-[#46a1bb] text-white rounded-lg hover:bg-[#021d49]"
+                            className="mt-4 px-6 py-2 bg-[#021d49] text-white rounded-lg hover:bg-[#021d49]"
                         >
                             Retry
                         </button>
@@ -101,11 +101,11 @@ const JournalArticlesPage = () => {
                 <section className="max-w-[1400px] mx-auto px-6 py-12">
                     <div className="text-center mb-8">
                         <div className="flex items-center justify-center gap-3 mb-4">
-                            <FileText className="w-12 h-12 text-[#46a1bb]" />
+                            <FileText className="w-12 h-12 text-[#021d49]" />
                         </div>
                         <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
                             Journal{' '}
-                            <span className="bg-gradient-to-r from-[#46a1bb] to-[#021d49] bg-clip-text text-transparent">
+                            <span className="bg-gradient-to-r from-[#021d49] to-[#021d49] bg-clip-text text-transparent">
                                 Articles
                             </span>
                         </h1>
@@ -119,7 +119,7 @@ const JournalArticlesPage = () => {
                     <div className="max-w-4xl mx-auto mb-8">
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                             <div className="bg-white rounded-xl p-4 shadow-md border border-gray-200 text-center">
-                                <div className="text-3xl font-bold text-[#46a1bb] mb-1">{articles.length}</div>
+                                <div className="text-3xl font-bold text-[#021d49] mb-1">{articles.length}</div>
                                 <p className="text-sm text-gray-600">Published Articles</p>
                             </div>
                             <div className="bg-white rounded-xl p-4 shadow-md border border-gray-200 text-center">
@@ -127,7 +127,7 @@ const JournalArticlesPage = () => {
                                 <p className="text-sm text-gray-600">Recent Publications</p>
                             </div>
                             <div className="bg-white rounded-xl p-4 shadow-md border border-gray-200 text-center col-span-2 md:col-span-1">
-                                <div className="text-3xl font-bold text-[#46a1bb] mb-1">Multiple</div>
+                                <div className="text-3xl font-bold text-[#021d49] mb-1">Multiple</div>
                                 <p className="text-sm text-gray-600">Contributing Authors</p>
                             </div>
                         </div>
@@ -148,7 +148,7 @@ const JournalArticlesPage = () => {
                                             setSearchTerm(e.target.value);
                                             setCurrentPage(1);
                                         }}
-                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#46a1bb] focus:outline-none transition-colors"
+                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#021d49] focus:outline-none transition-colors"
                                     />
                                 </div>
 
@@ -161,7 +161,7 @@ const JournalArticlesPage = () => {
                                             setSelectedCategory(e.target.value);
                                             setCurrentPage(1);
                                         }}
-                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#46a1bb] focus:outline-none transition-colors appearance-none bg-white cursor-pointer"
+                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#021d49] focus:outline-none transition-colors appearance-none bg-white cursor-pointer"
                                     >
                                         {categories.map(category => (
                                             <option key={category} value={category}>{category}</option>
@@ -185,11 +185,11 @@ const JournalArticlesPage = () => {
                             return (
                                 <div
                                     key={article._id || article.id}
-                                    className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-[#46a1bb] cursor-pointer group flex flex-col"
+                                    className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-[#021d49] cursor-pointer group flex flex-col"
                                     onClick={() => handleArticleClick(article._id || article.id)}
                                 >
                                     {/* Article Image */}
-                                    <div className="relative h-48 overflow-hidden bg-gradient-to-br from-[#021d49] to-[#46a1bb]">
+                                    <div className="relative h-48 overflow-hidden bg-gradient-to-br from-[#021d49] to-[#021d49]">
                                         {article.coverImage ? (
                                             <>
                                                 <img
@@ -217,25 +217,25 @@ const JournalArticlesPage = () => {
                                     {/* Content */}
                                     <div className="p-6 flex flex-col flex-grow">
                                         {/* Category */}
-                                        <span className="inline-block px-3 py-1 bg-gradient-to-r from-[#021d49] to-[#46a1bb] text-white font-bold text-xs uppercase tracking-wide rounded-full mb-3 self-start">
+                                        <span className="inline-block px-3 py-1 bg-gradient-to-r from-[#021d49] to-[#021d49] text-white font-bold text-xs uppercase tracking-wide rounded-full mb-3 self-start">
                                             {article.category || 'Article'}
                                         </span>
 
                                         {/* Title */}
-                                        <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#46a1bb] transition-colors leading-tight mb-3 line-clamp-3">
+                                        <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#021d49] transition-colors leading-tight mb-3 line-clamp-3">
                                             {article.title}
                                         </h3>
 
                                         {/* Date */}
                                         <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
-                                            <Calendar className="w-4 h-4 text-[#46a1bb]" />
+                                            <Calendar className="w-4 h-4 text-[#021d49]" />
                                             <span>{dateDisplay}</span>
                                         </div>
 
                                         {/* Authors */}
                                         <div className="mb-4 bg-gray-50 rounded-lg p-3 flex-grow">
                                             <div className="flex items-start gap-2">
-                                                <Users className="w-4 h-4 text-[#46a1bb] flex-shrink-0 mt-0.5" />
+                                                <Users className="w-4 h-4 text-[#021d49] flex-shrink-0 mt-0.5" />
                                                 <div className="flex-1">
                                                     <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1">Authors</p>
                                                     <p className="text-xs text-gray-700 leading-relaxed line-clamp-3">
@@ -256,7 +256,7 @@ const JournalArticlesPage = () => {
                                         {/* Button */}
                                         <button
                                             onClick={(e) => { e.stopPropagation(); handleArticleClick(article._id || article.id); }}
-                                            className="mt-auto w-full px-4 py-3 bg-gradient-to-r from-[#021d49] to-[#46a1bb] hover:shadow-xl text-white font-semibold rounded-lg shadow-md flex items-center gap-2 justify-center transition-all duration-200"
+                                            className="mt-auto w-full px-4 py-3 bg-gradient-to-r from-[#021d49] to-[#021d49] hover:shadow-xl text-white font-semibold rounded-lg shadow-md flex items-center gap-2 justify-center transition-all duration-200"
                                         >
                                             <span>read more</span>
                                             <ArrowRight className="w-4 h-4" />
@@ -282,7 +282,7 @@ const JournalArticlesPage = () => {
                             <button
                                 onClick={() => handlePageChange(currentPage - 1)}
                                 disabled={currentPage === 1}
-                                className={`p-2 rounded-lg ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-[#46a1bb] hover:text-white border border-gray-300'} transition-all duration-200`}
+                                className={`p-2 rounded-lg ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-[#021d49] hover:text-white border border-gray-300'} transition-all duration-200`}
                             >
                                 <ChevronLeft className="w-5 h-5" />
                             </button>
@@ -292,7 +292,7 @@ const JournalArticlesPage = () => {
                                     key={index + 1}
                                     onClick={() => handlePageChange(index + 1)}
                                     className={`px-4 py-2 rounded-lg font-semibold transition-all duration-200 ${currentPage === index + 1
-                                        ? 'bg-gradient-to-r from-[#021d49] to-[#46a1bb] text-white shadow-md'
+                                        ? 'bg-gradient-to-r from-[#021d49] to-[#021d49] text-white shadow-md'
                                         : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
                                         }`}
                                 >
@@ -303,7 +303,7 @@ const JournalArticlesPage = () => {
                             <button
                                 onClick={() => handlePageChange(currentPage + 1)}
                                 disabled={currentPage === totalPages}
-                                className={`p-2 rounded-lg ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-[#46a1bb] hover:text-white border border-gray-300'} transition-all duration-200`}
+                                className={`p-2 rounded-lg ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-[#021d49] hover:text-white border border-gray-300'} transition-all duration-200`}
                             >
                                 <ChevronRight className="w-5 h-5" />
                             </button>
@@ -317,17 +317,17 @@ const JournalArticlesPage = () => {
                         <h2 className="text-3xl font-bold mb-6 text-center">Why Explore ARIN Journal Articles?</h2>
                         <div className="grid md:grid-cols-3 gap-8 mb-8">
                             <div className="text-center">
-                                <FileText className="w-10 h-10 text-[#46a1bb] mx-auto mb-4" />
+                                <FileText className="w-10 h-10 text-[#021d49] mx-auto mb-4" />
                                 <h3 className="text-xl font-bold mb-2">Peer-Reviewed Research</h3>
                                 <p className="text-gray-300 text-sm">Access rigorous, peer-reviewed studies on critical African issues</p>
                             </div>
                             <div className="text-center">
-                                <Users className="w-10 h-10 text-[#46a1bb] mx-auto mb-4" />
+                                <Users className="w-10 h-10 text-[#021d49] mx-auto mb-4" />
                                 <h3 className="text-xl font-bold mb-2">Expert Scholarship</h3>
                                 <p className="text-gray-300 text-sm">Learn from leading academics and researchers across the continent</p>
                             </div>
                             <div className="text-center">
-                                <Calendar className="w-10 h-10 text-[#46a1bb] mx-auto mb-4" />
+                                <Calendar className="w-10 h-10 text-[#021d49] mx-auto mb-4" />
                                 <h3 className="text-xl font-bold mb-2">Latest Findings</h3>
                                 <p className="text-gray-300 text-sm">Stay current with the most recent research and scientific discoveries</p>
                             </div>

@@ -8,9 +8,9 @@ const ARINFocusAreasPage = () => {
         {
             title: "Sustainable Development",
             icon: Globe,
-            color: "from-[#46a1bb] to-[#021d49]",
+            color: "from-[#021d49] to-[#021d49]",
             gradient: "from-white to-blue-50",
-            border: "border-[#46a1bb]/30 hover:border-[#46a1bb]",
+            border: "border-[#021d49]/30 hover:border-[#021d49]",
             category: "Africa Sustainability Hub"
         },
         {
@@ -65,7 +65,7 @@ const ARINFocusAreasPage = () => {
                 <section className="max-w-[1600px] mx-auto px-6 py-20">
                     <div className="text-center mb-16">
                         <div className="inline-flex items-center gap-2 px-5 py-3 bg-white rounded-full shadow-md border border-stone-200 mb-8">
-                            <span className="text-[#46a1bb] text-xl">★</span>
+                            <span className="text-[#021d49] text-xl">★</span>
                             <span className="text-sm text-gray-700 font-semibold">
                                 Thematic Disciplines
                             </span>
@@ -73,7 +73,7 @@ const ARINFocusAreasPage = () => {
 
                         <h1 className="text-5xl lg:text-7xl font-bold text-gray-900 leading-tight mb-8">
                             Focus{' '}
-                            <span className="bg-gradient-to-r from-[#46a1bb] to-[#021d49] bg-clip-text text-transparent">Areas</span>
+                            <span className="bg-gradient-to-r from-[#021d49] to-[#021d49] bg-clip-text text-transparent">Areas</span>
                         </h1>
 
                         <p className="text-xl text-gray-600 leading-relaxed max-w-4xl mx-auto">
@@ -106,7 +106,7 @@ const ARINFocusAreasPage = () => {
                 <section className="max-w-[1600px] mx-auto px-6 pb-20">
                     <div className="bg-gradient-to-br from-[#021d49] via-gray-900 to-[#021d49] rounded-3xl p-12 lg:p-16 text-white shadow-2xl">
                         <div className="flex items-start gap-6 mb-8">
-                            <div className="w-20 h-20 bg-gradient-to-br from-[#46a1bb] to-[#021d49] rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                            <div className="w-20 h-20 bg-gradient-to-br from-[#021d49] to-[#021d49] rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
                                 <Globe className="w-10 h-10 text-white" />
                             </div>
                             <div>
@@ -491,7 +491,7 @@ const ARINFocusAreasPage = () => {
 
                 {/* Call to Action */}
                 <section className="max-w-[1600px] mx-auto px-6 pb-20">
-                    <div className="bg-gradient-to-br from-[#021d49] via-[#46a1bb] to-[#021d49] rounded-3xl p-12 lg:p-16 text-center text-white shadow-2xl">
+                    <div className="bg-gradient-to-br from-[#021d49] via-[#021d49] to-[#021d49] rounded-3xl p-12 lg:p-16 text-center text-white shadow-2xl">
                         <h2 className="text-4xl lg:text-5xl font-bold mb-6">
                             Join Us in Shaping Africa's Future
                         </h2>

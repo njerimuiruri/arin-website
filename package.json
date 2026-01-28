@@ -9,10 +9,14 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@nestjs/platform-express": "^11.1.12",
+    "axios": "^1.13.4",
     "class-variance-authority": "^0.7.1",
+    "cloudinary": "^2.9.0",
     "clsx": "^2.1.1",
     "d3": "^7.9.0",
     "lucide-react": "^0.562.0",
+    "multer": "^2.0.2",
     "next": "16.1.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
@@ -20,6 +24,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/axios": "^0.14.4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

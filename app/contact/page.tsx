@@ -63,7 +63,7 @@ const ContactPage = () => {
                     <div className="text-center mb-12">
                         <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
                             Get in{' '}
-                            <span className="bg-gradient-to-r from-[#46a1bb] to-[#021d49] bg-clip-text text-transparent">
+                            <span className="bg-gradient-to-r from-[#021d49] to-[#021d49] bg-clip-text text-transparent">
                                 Touch
                             </span>
                         </h1>
@@ -78,7 +78,7 @@ const ContactPage = () => {
                             {/* Who We Are */}
                             <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
                                 <div className="flex items-center gap-3 mb-4">
-                                    <Users className="w-6 h-6 text-[#46a1bb]" />
+                                    <Users className="w-6 h-6 text-[#021d49]" />
                                     <h2 className="text-2xl font-bold text-gray-900">Who We Are</h2>
                                 </div>
                                 <p className="text-gray-600 leading-relaxed">
@@ -89,12 +89,12 @@ const ContactPage = () => {
                             {/* Our Location */}
                             <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
                                 <div className="flex items-center gap-3 mb-4">
-                                    <Building2 className="w-6 h-6 text-[#46a1bb]" />
+                                    <Building2 className="w-6 h-6 text-[#021d49]" />
                                     <h2 className="text-2xl font-bold text-gray-900">Our Location</h2>
                                 </div>
                                 <div className="space-y-4">
                                     <div className="flex items-start gap-3">
-                                        <MapPin className="w-5 h-5 text-[#46a1bb] flex-shrink-0 mt-1" />
+                                        <MapPin className="w-5 h-5 text-[#021d49] flex-shrink-0 mt-1" />
                                         <div>
                                             <p className="text-gray-700 leading-relaxed">
                                                 Africa Research & Impact Network, ACK Gardens House, 1st Floor, Bishop Road, 1St Ngong Ave, Upperhill, Nairobi.
@@ -111,16 +111,16 @@ const ContactPage = () => {
                             <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
                                 <h2 className="text-2xl font-bold text-gray-900 mb-4">Contact Details</h2>
                                 <div className="space-y-4">
-                                    <a href="tel:+254746130873" className="flex items-center gap-3 text-gray-700 hover:text-[#46a1bb] transition-colors group">
-                                        <div className="w-10 h-10 rounded-full bg-[#46a1bb]/10 flex items-center justify-center group-hover:bg-[#46a1bb]/20 transition-colors">
-                                            <Phone className="w-5 h-5 text-[#46a1bb]" />
+                                    <a href="tel:+254746130873" className="flex items-center gap-3 text-gray-700 hover:text-[#021d49] transition-colors group">
+                                        <div className="w-10 h-10 rounded-full bg-[#021d49]/10 flex items-center justify-center group-hover:bg-[#021d49]/20 transition-colors">
+                                            <Phone className="w-5 h-5 text-[#021d49]" />
                                         </div>
                                         <span className="font-medium">+254746130873</span>
                                     </a>
 
-                                    <a href="mailto:info@arin-africa.org" className="flex items-center gap-3 text-gray-700 hover:text-[#46a1bb] transition-colors group">
-                                        <div className="w-10 h-10 rounded-full bg-[#46a1bb]/10 flex items-center justify-center group-hover:bg-[#46a1bb]/20 transition-colors">
-                                            <Mail className="w-5 h-5 text-[#46a1bb]" />
+                                    <a href="mailto:info@arin-africa.org" className="flex items-center gap-3 text-gray-700 hover:text-[#021d49] transition-colors group">
+                                        <div className="w-10 h-10 rounded-full bg-[#021d49]/10 flex items-center justify-center group-hover:bg-[#021d49]/20 transition-colors">
+                                            <Mail className="w-5 h-5 text-[#021d49]" />
                                         </div>
                                         <span className="font-medium">info@arin-africa.org</span>
                                     </a>
@@ -135,28 +135,28 @@ const ContactPage = () => {
                                         href="https://twitter.com/arin_africa"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="w-12 h-12 rounded-full bg-[#46a1bb]/10 flex items-center justify-center hover:bg-[#46a1bb] hover:text-white transition-all duration-300 group"
+                                        className="w-12 h-12 rounded-full bg-[#021d49]/10 flex items-center justify-center hover:bg-[#021d49] hover:text-white transition-all duration-300 group"
                                         aria-label="Follow us on X (Twitter)"
                                     >
-                                        <Twitter className="w-5 h-5 text-[#46a1bb] group-hover:text-white" />
+                                        <Twitter className="w-5 h-5 text-[#021d49] group-hover:text-white" />
                                     </a>
                                     <a
                                         href="https://facebook.com/arin_africa"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="w-12 h-12 rounded-full bg-[#46a1bb]/10 flex items-center justify-center hover:bg-[#1877F2] hover:text-white transition-all duration-300 group"
+                                        className="w-12 h-12 rounded-full bg-[#021d49]/10 flex items-center justify-center hover:bg-[#1877F2] hover:text-white transition-all duration-300 group"
                                         aria-label="Follow us on Facebook"
                                     >
-                                        <Facebook className="w-5 h-5 text-[#46a1bb] group-hover:text-white" />
+                                        <Facebook className="w-5 h-5 text-[#021d49] group-hover:text-white" />
                                     </a>
                                     <a
                                         href="https://instagram.com/arin_africa"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="w-12 h-12 rounded-full bg-[#46a1bb]/10 flex items-center justify-center hover:bg-gradient-to-br hover:from-purple-600 hover:to-pink-500 hover:text-white transition-all duration-300 group"
+                                        className="w-12 h-12 rounded-full bg-[#021d49]/10 flex items-center justify-center hover:bg-gradient-to-br hover:from-purple-600 hover:to-pink-500 hover:text-white transition-all duration-300 group"
                                         aria-label="Follow us on Instagram"
                                     >
-                                        <Instagram className="w-5 h-5 text-[#46a1bb] group-hover:text-white" />
+                                        <Instagram className="w-5 h-5 text-[#021d49] group-hover:text-white" />
                                     </a>
                                 </div>
                                 <div className="mt-4 space-y-2 text-sm text-gray-600">
@@ -196,7 +196,7 @@ const ContactPage = () => {
                                             value={formData.name}
                                             onChange={handleChange}
                                             required
-                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-[#46a1bb] focus:ring-2 focus:ring-[#46a1bb]/20 focus:outline-none transition-colors"
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-[#021d49] focus:ring-2 focus:ring-[#021d49]/20 focus:outline-none transition-colors"
                                             placeholder="John Doe"
                                         />
                                     </div>
@@ -214,7 +214,7 @@ const ContactPage = () => {
                                                 value={formData.email}
                                                 onChange={handleChange}
                                                 required
-                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-[#46a1bb] focus:ring-2 focus:ring-[#46a1bb]/20 focus:outline-none transition-colors"
+                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-[#021d49] focus:ring-2 focus:ring-[#021d49]/20 focus:outline-none transition-colors"
                                                 placeholder="john@example.com"
                                             />
                                         </div>
@@ -229,7 +229,7 @@ const ContactPage = () => {
                                                 name="phone"
                                                 value={formData.phone}
                                                 onChange={handleChange}
-                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-[#46a1bb] focus:ring-2 focus:ring-[#46a1bb]/20 focus:outline-none transition-colors"
+                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-[#021d49] focus:ring-2 focus:ring-[#021d49]/20 focus:outline-none transition-colors"
                                                 placeholder="+254 700 000000"
                                             />
                                         </div>
@@ -247,7 +247,7 @@ const ContactPage = () => {
                                             value={formData.subject}
                                             onChange={handleChange}
                                             required
-                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-[#46a1bb] focus:ring-2 focus:ring-[#46a1bb]/20 focus:outline-none transition-colors"
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-[#021d49] focus:ring-2 focus:ring-[#021d49]/20 focus:outline-none transition-colors"
                                             placeholder="How can we help you?"
                                         />
                                     </div>
@@ -264,7 +264,7 @@ const ContactPage = () => {
                                             onChange={handleChange}
                                             required
                                             rows="6"
-                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-[#46a1bb] focus:ring-2 focus:ring-[#46a1bb]/20 focus:outline-none transition-colors resize-none"
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-[#021d49] focus:ring-2 focus:ring-[#021d49]/20 focus:outline-none transition-colors resize-none"
                                             placeholder="Tell us more about your inquiry..."
                                         ></textarea>
                                     </div>
@@ -273,7 +273,7 @@ const ContactPage = () => {
                                     <button
                                         type="submit"
                                         disabled={isSubmitting}
-                                        className="w-full px-6 py-4 bg-gradient-to-r from-[#021d49] to-[#46a1bb] text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="w-full px-6 py-4 bg-gradient-to-r from-[#021d49] to-[#021d49] text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         {isSubmitting ? (
                                             <>

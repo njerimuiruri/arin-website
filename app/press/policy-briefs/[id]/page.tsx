@@ -34,7 +34,7 @@ const PolicyBriefViewPage = () => {
             <div className="w-full bg-gradient-to-br from-slate-50 via-white to-stone-50 min-h-screen">
                 <section className="max-w-3xl mx-auto px-6 py-12">
                     <button
-                        className="mb-6 flex items-center gap-2 text-[#46a1bb] hover:underline"
+                        className="mb-6 flex items-center gap-2 text-[#021d49] hover:underline"
                         onClick={() => window.history.back()}
                     >
                         <ArrowLeft className="w-5 h-5" /> Back
@@ -62,16 +62,16 @@ const PolicyBriefViewPage = () => {
                                         className="w-full h-64 object-cover rounded-xl mb-4"
                                     />
                                 ) : (
-                                    <div className="w-full h-64 flex items-center justify-center bg-gradient-to-br from-[#021d49] to-[#46a1bb] rounded-xl">
+                                    <div className="w-full h-64 flex items-center justify-center bg-gradient-to-br from-[#021d49] to-[#021d49] rounded-xl">
                                         <Lightbulb className="w-16 h-16 text-white/30" />
                                     </div>
                                 )}
-                                <span className="inline-block px-3 py-1 bg-gradient-to-r from-[#021d49] to-[#46a1bb] text-white font-bold text-xs uppercase tracking-wide rounded-full mb-3">
+                                <span className="inline-block px-3 py-1 bg-gradient-to-r from-[#021d49] to-[#021d49] text-white font-bold text-xs uppercase tracking-wide rounded-full mb-3">
                                     {brief.category}
                                 </span>
                                 <h1 className="text-3xl font-bold text-gray-900 mb-2">{brief.title}</h1>
                                 <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
-                                    <Calendar className="w-4 h-4 text-[#46a1bb]" />
+                                    <Calendar className="w-4 h-4 text-[#021d49]" />
                                     <span>{brief.datePosted ? new Date(brief.datePosted).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : ''}</span>
                                 </div>
                             </div>
@@ -95,7 +95,7 @@ const PolicyBriefViewPage = () => {
                                                     href={url}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="text-[#46a1bb] hover:underline flex items-center gap-2"
+                                                    className="text-[#021d49] hover:underline flex items-center gap-2"
                                                 >
                                                     <FileText className="w-4 h-4" /> {url.split('/').pop()}
                                                 </a>

@@ -12,9 +12,9 @@ const FeaturesSection = () => (
             </p>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="group bg-white rounded-3xl p-10 shadow-xl hover:shadow-2xl transition-all duration-500 border border-stone-200 hover:border-[#46a1bb] hover:-translate-y-2">
-                <div className="w-20 h-20 bg-gradient-to-br from-[#46a1bb]/20 to-[#021d49]/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
-                    <TrendingUp className="w-10 h-10 text-[#46a1bb]" />
+            <div className="group bg-white rounded-3xl p-10 shadow-xl hover:shadow-2xl transition-all duration-500 border border-stone-200 hover:border-[#021d49] hover:-translate-y-2">
+                <div className="w-20 h-20 bg-gradient-to-br from-[#021d49]/20 to-[#021d49]/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
+                    <TrendingUp className="w-10 h-10 text-[#021d49]" />
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">
                     Share Research Trends

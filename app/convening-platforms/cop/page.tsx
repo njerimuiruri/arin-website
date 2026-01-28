@@ -83,11 +83,11 @@ const COPPage = () => {
                 <section className="max-w-[1600px] mx-auto px-6 py-12">
                     <div className="text-center mb-8">
                         <div className="flex items-center justify-center gap-3 mb-4">
-                            <Globe className="w-12 h-12 text-[#46a1bb]" />
+                            <Globe className="w-12 h-12 text-[#021d49]" />
                         </div>
                         <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
                             Conference of the{' '}
-                            <span className="bg-gradient-to-r from-[#46a1bb] to-[#021d49] bg-clip-text text-transparent">
+                            <span className="bg-gradient-to-r from-[#021d49] to-[#021d49] bg-clip-text text-transparent">
                                 Parties (COP)
                             </span>
                         </h1>
@@ -109,7 +109,7 @@ const COPPage = () => {
                                         placeholder="Search COP content..."
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
-                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#46a1bb] focus:outline-none transition-colors"
+                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#021d49] focus:outline-none transition-colors"
                                     />
                                 </div>
 
@@ -119,7 +119,7 @@ const COPPage = () => {
                                     <select
                                         value={selectedYear}
                                         onChange={(e) => setSelectedYear(e.target.value)}
-                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#46a1bb] focus:outline-none transition-colors appearance-none bg-white cursor-pointer"
+                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#021d49] focus:outline-none transition-colors appearance-none bg-white cursor-pointer"
                                     >
                                         {years.map(year => (
                                             <option key={year} value={year}>{year}</option>
@@ -135,7 +135,7 @@ const COPPage = () => {
                         {filteredCops.map((cop) => (
                             <div
                                 key={cop._id}
-                                className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-[#46a1bb] cursor-pointer group"
+                                className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-[#021d49] cursor-pointer group"
                                 onClick={() => handleCopClick(cop._id)}
                             >
                                 {/* Image */}
@@ -147,7 +147,7 @@ const COPPage = () => {
                                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                                         />
                                     ) : (
-                                        <div className="w-full h-full bg-gradient-to-br from-[#021d49] to-[#46a1bb] flex items-center justify-center">
+                                        <div className="w-full h-full bg-gradient-to-br from-[#021d49] to-[#021d49] flex items-center justify-center">
                                             <Globe className="w-16 h-16 text-white/50" />
                                         </div>
                                     )}
@@ -162,14 +162,14 @@ const COPPage = () => {
 
                                 <div className="p-6">
                                     {/* Title */}
-                                    <h3 className="text-xl font-bold text-gray-900 group-hover:text-[#46a1bb] transition-colors leading-tight mb-3 line-clamp-3">
+                                    <h3 className="text-xl font-bold text-gray-900 group-hover:text-[#021d49] transition-colors leading-tight mb-3 line-clamp-3">
                                         {cop.title}
                                     </h3>
 
                                     {/* Date */}
                                     <div className="space-y-2 mb-3">
                                         <div className="flex items-center gap-2 text-sm text-gray-600">
-                                            <Calendar className="w-4 h-4 text-[#46a1bb]" />
+                                            <Calendar className="w-4 h-4 text-[#021d49]" />
                                             <span>{new Date(cop.date).toLocaleDateString()}</span>
                                         </div>
                                     </div>
@@ -182,7 +182,7 @@ const COPPage = () => {
                                     {/* Read More Button */}
                                     <button
                                         onClick={(e) => { e.stopPropagation(); handleCopClick(cop._id); }}
-                                        className="w-full px-5 py-2.5 bg-gradient-to-r from-[#021d49] to-[#46a1bb] text-white font-semibold rounded-lg shadow-md flex items-center gap-2 justify-center hover:shadow-lg transition-all duration-200"
+                                        className="w-full px-5 py-2.5 bg-gradient-to-r from-[#021d49] to-[#021d49] text-white font-semibold rounded-lg shadow-md flex items-center gap-2 justify-center hover:shadow-lg transition-all duration-200"
                                     >
                                         <span>View Details</span>
                                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

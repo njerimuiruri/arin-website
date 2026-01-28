@@ -14,9 +14,9 @@ interface HtmlRendererProps {
 // Simple HTML Renderer Component with proper styling
 const HtmlRenderer: React.FC<HtmlRendererProps> = ({ content }) => {
     const cleanedContent = cleanHtmlContent(content);
-    
+
     return (
-        <div 
+        <div
             className="html-content"
             style={{
                 fontSize: '16px',
@@ -75,7 +75,7 @@ const AnnualReportDetailPage = () => {
                 <Navbar />
                 <div className="w-full bg-gradient-to-br from-slate-50 via-white to-stone-50 min-h-screen flex items-center justify-center">
                     <div className="flex flex-col items-center gap-3">
-                        <Loader className="w-8 h-8 text-[#46a1bb] animate-spin" />
+                        <Loader className="w-8 h-8 text-[#021d49] animate-spin" />
                         <p className="text-gray-600">Loading annual report...</p>
                     </div>
                 </div>
@@ -89,8 +89,8 @@ const AnnualReportDetailPage = () => {
                 <Navbar />
                 <div className="w-full bg-gradient-to-br from-slate-50 via-white to-stone-50 min-h-screen">
                     <div className="max-w-6xl mx-auto px-6 py-12">
-                        <button 
-                            onClick={() => router.back()} 
+                        <button
+                            onClick={() => router.back()}
                             className="flex items-center gap-2 mb-6 text-gray-600 hover:text-gray-800 transition-colors"
                         >
                             <ArrowLeft size={20} /> Back
@@ -110,8 +110,8 @@ const AnnualReportDetailPage = () => {
             <div className="w-full bg-gradient-to-br from-slate-50 via-white to-stone-50 min-h-screen">
                 <div className="max-w-6xl mx-auto px-6 py-12">
                     {/* Back Button */}
-                    <button 
-                        onClick={() => router.back()} 
+                    <button
+                        onClick={() => router.back()}
                         className="flex items-center gap-2 mb-8 text-gray-600 hover:text-gray-800 transition-colors"
                     >
                         <ArrowLeft size={20} /> Back to Annual Reports
@@ -138,7 +138,7 @@ const AnnualReportDetailPage = () => {
                             {/* Header */}
                             <div className="mb-8">
                                 <div className="flex items-center gap-4 mb-4">
-                                    <span className="px-4 py-2 bg-gradient-to-r from-[#021d49] to-[#46a1bb] text-white font-bold rounded-lg">
+                                    <span className="px-4 py-2 bg-gradient-to-r from-[#021d49] to-[#021d49] text-white font-bold rounded-lg">
                                         {report.year}
                                     </span>
                                     {report.category && (
@@ -147,7 +147,7 @@ const AnnualReportDetailPage = () => {
                                         </span>
                                     )}
                                 </div>
-                                
+
                                 <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
                                     {report.title}
                                 </h1>
@@ -155,7 +155,7 @@ const AnnualReportDetailPage = () => {
                                 {/* Meta Information */}
                                 <div className="flex items-center gap-6 text-gray-600 border-t border-b border-gray-200 py-4">
                                     <div className="flex items-center gap-2">
-                                        <Calendar className="w-5 h-5 text-[#46a1bb]" />
+                                        <Calendar className="w-5 h-5 text-[#021d49]" />
                                         <span>
                                             {new Date(report.date).toLocaleDateString('en-US', {
                                                 year: 'numeric',
@@ -183,7 +183,7 @@ const AnnualReportDetailPage = () => {
                             {report.availableResources && report.availableResources.length > 0 && (
                                 <div className="mt-12 pt-8 border-t border-gray-200">
                                     <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                                        <FileText className="w-6 h-6 text-[#46a1bb]" />
+                                        <FileText className="w-6 h-6 text-[#021d49]" />
                                         Available Resources
                                     </h2>
                                     <div className="space-y-3">
@@ -191,9 +191,9 @@ const AnnualReportDetailPage = () => {
                                             <button
                                                 key={index}
                                                 onClick={() => handleDownloadPDF(resource, `${report.title}-resource-${index + 1}`)}
-                                                className="w-full flex items-center gap-3 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-[#46a1bb] rounded-lg hover:shadow-md transition-all duration-200 group"
+                                                className="w-full flex items-center gap-3 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-[#021d49] rounded-lg hover:shadow-md transition-all duration-200 group"
                                             >
-                                                <Download className="w-5 h-5 text-[#46a1bb] group-hover:scale-110 transition-transform" />
+                                                <Download className="w-5 h-5 text-[#021d49] group-hover:scale-110 transition-transform" />
                                                 <span className="flex-1 text-left">
                                                     <span className="text-gray-800 font-semibold">{report.title} Resource</span>
                                                     <span className="text-sm text-gray-600 block">Click to download PDF</span>

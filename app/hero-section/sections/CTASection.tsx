@@ -13,7 +13,7 @@ const CTASection = () => (
             <div className="flex flex-wrap gap-6 justify-center">
                 <a
                     href="/join"
-                    className="inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-[#46a1bb] to-[#021d49] text-white font-bold text-lg rounded-xl hover:from-[#3a8da5] hover:to-[#011536] transition-all duration-300 shadow-2xl hover:scale-105"
+                    className="inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-[#021d49] to-[#021d49] text-white font-bold text-lg rounded-xl hover:from-[#3a8da5] hover:to-[#011536] transition-all duration-300 shadow-2xl hover:scale-105"
                 >
                     Become a Member
                     <ArrowRight className="w-6 h-6" />
