@@ -140,7 +140,7 @@ const TechnicalReportsPage = () => {
                                 <div className="md:flex">
                                     {/* Left Side - Report Image */}
                                     <div className="md:w-2/5 relative h-64 md:h-auto overflow-hidden bg-gradient-to-br from-[#021d49] to-[#021d49]">
-                                        {report.hasImage ? (
+                                        {report.image ? (
                                             <>
                                                 <img
                                                     src={report.image}

@@ -30,7 +30,7 @@ const ConferenceDetailPage = () => {
             if (!id) return;
             try {
                 const apiBaseUrl = (typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_API_BASE_URL : '') || 'http://localhost:5001';
-                const response = await fetch(`${apiBaseUrl}/conferences/${id}`, {
+                const response = await fetch(`${apiBaseUrl}/api/conferences/${id}`, {
                     headers: { 'Content-Type': 'application/json' },
                 });
                 if (!response.ok) throw new Error('Failed to fetch conference');

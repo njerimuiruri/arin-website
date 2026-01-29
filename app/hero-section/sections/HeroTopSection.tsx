@@ -1,15 +1,45 @@
 "use client";
 import { ArrowRight, Play, Pause, Calendar, MapPin, Users, ChevronLeft, ChevronRight, FileText, Download, Eye, Clock, Tag, Newspaper, BookOpen, PenTool, Sparkles } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
+import { getEvents, Event as ArinEvent } from "@/services/eventsService";
+import { technicalReportsService, TechnicalReport } from "@/services/technicalReportsService";
+import { policyBriefsService, PolicyBrief } from "@/services/policyBriefsService";
+import { getNewsBriefs } from "@/services/newsBriefsService";
+import { getResearchProjects } from "@/services/researchProjectService";
+
+interface NewsBrief {
+    _id?: string;
+    title: string;
+    description?: string;
+    authors?: string[];
+    image?: string;
+    datePosted?: string;
+    availableResources?: string[];
+    year?: number;
+    createdAt?: string;
+    date?: string;
+}
+
+interface ResearchProject {
+    _id?: string;
+    title: string;
+    description?: string;
+    image?: string;
+    datePosted?: string;
+    createdAt?: string;
+    date?: string;
+}
+
+interface EventWithFlag extends ArinEvent {
+    isUpcoming: boolean;
+}
 
 const HeroTopSection = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
     const [isTransitioning, setIsTransitioning] = useState(false);
-    const [activeTab, setActiveTab] = useState('event');
-    const [currentDoc, setCurrentDoc] = useState(0);
-    const videoRef = useRef(null);
-    const autoSlideTimerRef = useRef(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const autoSlideTimerRef = useRef<NodeJS.Timeout | null>(null);
 
     const mediaContent = [
         {
@@ -58,46 +88,12 @@ const HeroTopSection = () => {
         }
     ];
 
-    const upcomingEvent = {
-        title: "Annual African Research Summit 2026",
-        date: "March 15-17, 2026",
-        location: "Nairobi, Kenya",
-        attendees: "500+",
-        description: "Join leading researchers from across Africa for three days of knowledge sharing and collaboration"
-    };
-
-    const latestDocuments = [
-        {
-            category: "Technical Report",
-            title: "AI in African Healthcare: Opportunities and Challenges",
-            image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&q=80",
-            author: "Dr. Amina Okafor",
-            date: "Jan 10, 2026",
-            downloads: "234",
-            pages: "45 pages",
-            tag: "Healthcare"
-        },
-        {
-            category: "Policy Brief",
-            title: "Sustainable Agriculture Policy Framework for East Africa",
-            image: "https://images.unsplash.com/photo-1625246333195-78d9c38ad649?w=400&q=80",
-            author: "Prof. James Mwangi",
-            date: "Jan 8, 2026",
-            downloads: "189",
-            pages: "12 pages",
-            tag: "Agriculture"
-        },
-        {
-            category: "News Brief",
-            title: "Breakthrough in Renewable Energy Research at ARIN Conference",
-            image: "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400&q=80",
-            author: "Dr. Sarah Nkomo",
-            date: "Jan 5, 2026",
-            downloads: "412",
-            pages: "8 pages",
-            tag: "Energy"
-        }
-    ];
+    const [upcomingEvent, setUpcomingEvent] = useState<EventWithFlag | null>(null);
+    const [latestDocument, setLatestDocument] = useState<any | null>(null);
+    const [latestTechnicalReport, setLatestTechnicalReport] = useState<TechnicalReport | null>(null);
+    const [latestPolicyBrief, setLatestPolicyBrief] = useState<PolicyBrief | null>(null);
+    const [latestNewsBrief, setLatestNewsBrief] = useState<NewsBrief | null>(null);
+    const [latestResearchProject, setLatestResearchProject] = useState<ResearchProject | null>(null);
 
     // Auto-slide functionality
     useEffect(() => {
@@ -115,7 +111,7 @@ const HeroTopSection = () => {
                 nextSlide();
             };
             videoElement.addEventListener('ended', handleVideoEnd);
-            videoElement.play().catch(err => console.log("Autoplay prevented:", err));
+            videoElement.play().catch((err: any) => console.log("Autoplay prevented:", err));
 
             return () => {
                 videoElement.removeEventListener('ended', handleVideoEnd);
@@ -134,6 +130,82 @@ const HeroTopSection = () => {
         };
     }, [currentSlide, isPaused]);
 
+    // Fetch latest content on mount
+    useEffect(() => {
+        async function fetchLatest() {
+            const events = await getEvents();
+            if (Array.isArray(events) && events.length > 0) {
+                const now = new Date();
+                const upcoming = events.filter(e => new Date(e.date) >= now);
+                if (upcoming.length > 0) {
+                    const next = upcoming.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0];
+                    setUpcomingEvent({ ...next, isUpcoming: true });
+                } else {
+                    const past = events.filter(e => new Date(e.date) < now);
+                    if (past.length > 0) {
+                        const last = past.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
+                        setUpcomingEvent({ ...last, isUpcoming: false });
+                    } else {
+                        setUpcomingEvent(null);
+                    }
+                }
+            } else {
+                setUpcomingEvent(null);
+            }
+
+            const [techReports, policyBriefs, newsBriefs, researchProjects] = await Promise.all([
+                technicalReportsService.getAll(),
+                policyBriefsService.getAll(),
+                getNewsBriefs(),
+                getResearchProjects()
+            ]);
+
+            // Set individual latest items
+            if (Array.isArray(techReports) && techReports.length > 0) {
+                techReports.sort((a, b) => new Date(b.datePosted || 0).getTime() - new Date(a.datePosted || 0).getTime());
+                setLatestTechnicalReport(techReports[0]);
+            } else {
+                setLatestTechnicalReport(null);
+            }
+
+            if (Array.isArray(policyBriefs) && policyBriefs.length > 0) {
+                policyBriefs.sort((a, b) => new Date(b.datePosted || 0).getTime() - new Date(a.datePosted || 0).getTime());
+                setLatestPolicyBrief(policyBriefs[0]);
+            } else {
+                setLatestPolicyBrief(null);
+            }
+
+            if (Array.isArray(newsBriefs) && newsBriefs.length > 0) {
+                newsBriefs.sort((a, b) => new Date(b.datePosted || b.createdAt || b.date || 0).getTime() - new Date(a.datePosted || a.createdAt || a.date || 0).getTime());
+                setLatestNewsBrief(newsBriefs[0]);
+            } else {
+                setLatestNewsBrief(null);
+            }
+
+            if (Array.isArray(researchProjects) && researchProjects.length > 0) {
+                researchProjects.sort((a, b) => new Date(b.datePosted || b.createdAt || b.date || 0).getTime() - new Date(a.datePosted || a.createdAt || a.date || 0).getTime());
+                setLatestResearchProject(researchProjects[0]);
+            } else {
+                setLatestResearchProject(null);
+            }
+
+            // Set combined latest document
+            const allDocs = [];
+            if (Array.isArray(techReports)) allDocs.push(...techReports.map(d => ({ ...d, docType: 'Technical Report' })));
+            if (Array.isArray(policyBriefs)) allDocs.push(...policyBriefs.map(d => ({ ...d, docType: 'Policy Brief' })));
+            if (Array.isArray(newsBriefs)) allDocs.push(...newsBriefs.map(d => ({ ...d, docType: 'News Brief' })));
+            if (Array.isArray(researchProjects)) allDocs.push(...researchProjects.map(d => ({ ...d, docType: 'Research Project' })));
+
+            if (allDocs.length > 0) {
+                allDocs.sort((a, b) => new Date(b.datePosted || b.createdAt || b.date || 0).getTime() - new Date(a.datePosted || a.createdAt || a.date || 0).getTime());
+                setLatestDocument(allDocs[0]);
+            } else {
+                setLatestDocument(null);
+            }
+        }
+        fetchLatest();
+    }, []);
+
     const nextSlide = () => {
         setIsTransitioning(true);
         setTimeout(() => {
@@ -150,7 +222,7 @@ const HeroTopSection = () => {
         }, 300);
     };
 
-    const goToSlide = (index) => {
+    const goToSlide = (index: number) => {
         if (index === currentSlide) return;
         setIsTransitioning(true);
         setTimeout(() => {
@@ -159,7 +231,7 @@ const HeroTopSection = () => {
         }, 300);
     };
 
-    const renderCarouselMedia = (media, index) => {
+    const renderCarouselMedia = (media: any, index: number) => {
         if (media.type === "youtube") {
             return (
                 <iframe
@@ -194,97 +266,8 @@ const HeroTopSection = () => {
         }
     };
 
-    const nextDoc = () => {
-        setCurrentDoc((prev) => (prev + 1) % latestDocuments.length);
-    };
-
-    const prevDoc = () => {
-        setCurrentDoc((prev) => (prev - 1 + latestDocuments.length) % latestDocuments.length);
-    };
-
     return (
         <>
-            <style jsx>{`
-                @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700&display=swap');
-                
-                * {
-                    font-family: 'DM Sans', sans-serif;
-                }
-                
-                h1, h2, h3 {
-                    font-family: 'Playfair Display', serif;
-                }
-
-                @keyframes slideUp {
-                    from { opacity: 0; transform: translateY(40px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-                
-                @keyframes fadeIn {
-                    from { opacity: 0; }
-                    to { opacity: 1; }
-                }
-                
-                @keyframes scaleIn {
-                    from { opacity: 0; transform: scale(0.95); }
-                    to { opacity: 1; transform: scale(1); }
-                }
-                
-                @keyframes float {
-                    0%, 100% { transform: translateY(0px); }
-                    50% { transform: translateY(-15px); }
-                }
-                
-                @keyframes shimmer {
-                    0% { background-position: -1000px 0; }
-                    100% { background-position: 1000px 0; }
-                }
-                
-                .animate-slideUp { animation: slideUp 0.8s ease-out forwards; }
-                .animate-fadeIn { animation: fadeIn 0.6s ease-out forwards; }
-                .animate-scaleIn { animation: scaleIn 0.7s ease-out forwards; }
-                .animate-float { animation: float 3s ease-in-out infinite; }
-                
-                .delay-100 { animation-delay: 0.1s; opacity: 0; }
-                .delay-200 { animation-delay: 0.2s; opacity: 0; }
-                .delay-300 { animation-delay: 0.3s; opacity: 0; }
-                .delay-400 { animation-delay: 0.4s; opacity: 0; }
-                .delay-500 { animation-delay: 0.5s; opacity: 0; }
-                
-                .carousel-slide {
-                    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-                }
-                
-                .carousel-slide.transitioning {
-                    opacity: 0;
-                    transform: scale(1.05);
-                }
-                
-                .gradient-text {
-                    background: linear-gradient(135deg, #021d49 0%, #0a4d8f 100%);
-                    -webkit-background-clip: text;
-                    -webkit-text-fill-color: transparent;
-                    background-clip: text;
-                }
-                
-                .glass-effect {
-                    background: rgba(255, 255, 255, 0.95);
-                    backdrop-filter: blur(10px);
-                    -webkit-backdrop-filter: blur(10px);
-                }
-                
-                .shimmer-effect {
-                    background: linear-gradient(
-                        90deg,
-                        rgba(255, 255, 255, 0) 0%,
-                        rgba(255, 255, 255, 0.3) 50%,
-                        rgba(255, 255, 255, 0) 100%
-                    );
-                    background-size: 1000px 100%;
-                    animation: shimmer 3s infinite;
-                }
-            `}</style>
-
             {/* HERO CAROUSEL SECTION - FULL WIDTH AT TOP */}
             <div className="relative w-full bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
                 {/* Main Carousel */}
@@ -466,152 +449,106 @@ const HeroTopSection = () => {
                         <div className="bg-gradient-to-br from-[#021d49] via-[#032a5f] to-[#021d49] rounded-3xl p-8 shadow-2xl animate-scaleIn delay-400">
                             <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-white text-sm font-semibold mb-6">
                                 <Calendar className="w-4 h-4" />
-                                Upcoming Event
+                                {upcomingEvent
+                                    ? (upcomingEvent.isUpcoming ? 'Upcoming Event' : 'Most Recent Past Event')
+                                    : 'No Event'}
                             </div>
-
-                            <h3 className="text-3xl font-bold text-white mb-4 leading-tight">
-                                {upcomingEvent.title}
-                            </h3>
-
-                            <p className="text-white/80 mb-6">
-                                {upcomingEvent.description}
-                            </p>
-
-                            <div className="space-y-4 mb-8">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                                        <Calendar className="w-6 h-6 text-white" />
+                            {upcomingEvent ? (
+                                <>
+                                    <h3 className="text-3xl font-bold text-white mb-4 leading-tight">
+                                        {upcomingEvent.title}
+                                    </h3>
+                                    <p className="text-white/80 mb-6">
+                                        {upcomingEvent.description}
+                                    </p>
+                                    <div className="space-y-4 mb-8">
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                                                <Calendar className="w-6 h-6 text-white" />
+                                            </div>
+                                            <div>
+                                                <div className="text-xs text-white/70">Date</div>
+                                                <div className="text-white font-semibold">{upcomingEvent.date}</div>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                                                <MapPin className="w-6 h-6 text-white" />
+                                            </div>
+                                            <div>
+                                                <div className="text-xs text-white/70">Location</div>
+                                                <div className="text-white font-semibold">{upcomingEvent.location}</div>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                                                <Users className="w-6 h-6 text-white" />
+                                            </div>
+                                            <div>
+                                                <div className="text-xs text-white/70">Expected Attendees</div>
+                                                <div className="text-white font-semibold">{upcomingEvent.attendees || 'N/A'} Researchers</div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <div className="text-xs text-white/70">Date</div>
-                                        <div className="text-white font-semibold">{upcomingEvent.date}</div>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                                        <MapPin className="w-6 h-6 text-white" />
-                                    </div>
-                                    <div>
-                                        <div className="text-xs text-white/70">Location</div>
-                                        <div className="text-white font-semibold">{upcomingEvent.location}</div>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                                        <Users className="w-6 h-6 text-white" />
-                                    </div>
-                                    <div>
-                                        <div className="text-xs text-white/70">Expected Attendees</div>
-                                        <div className="text-white font-semibold">{upcomingEvent.attendees} Researchers</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <button className="w-full py-4 bg-white hover:bg-gray-100 text-[#021d49] font-bold rounded-xl transition-all hover:shadow-xl group">
-                                <span className="flex items-center justify-center gap-2">
-                                    Register Now
-                                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                                </span>
-                            </button>
+                                    <button className="w-full py-4 bg-white hover:bg-gray-100 text-[#021d49] font-bold rounded-xl transition-all hover:shadow-xl group">
+                                        <span className="flex items-center justify-center gap-2">
+                                            {upcomingEvent.isUpcoming ? 'Register Now' : 'View Details'}
+                                            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                        </span>
+                                    </button>
+                                </>
+                            ) : (
+                                <div className="text-white text-lg font-semibold">No event upcoming or past found.</div>
+                            )}
                         </div>
 
                         {/* Latest Document Card */}
                         <div className="bg-white rounded-3xl shadow-2xl overflow-hidden animate-scaleIn delay-500">
-                            <div className="relative h-64 overflow-hidden group">
-                                <img
-                                    src={latestDocuments[currentDoc].image}
-                                    alt={latestDocuments[currentDoc].title}
-                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
-
-                                <div className="absolute top-6 left-6">
-                                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#021d49] backdrop-blur-sm rounded-full text-white text-sm font-semibold">
-                                        <FileText className="w-4 h-4" />
-                                        {latestDocuments[currentDoc].category}
-                                    </div>
-                                </div>
-
-                                <div className="absolute top-6 right-6">
-                                    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/90 backdrop-blur-sm rounded-full text-[#021d49] text-xs font-semibold">
-                                        <Tag className="w-3 h-3" />
-                                        {latestDocuments[currentDoc].tag}
-                                    </div>
-                                </div>
-
-                                <button
-                                    onClick={prevDoc}
-                                    className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-all"
-                                >
-                                    <ChevronLeft className="w-5 h-5 text-[#021d49]" />
-                                </button>
-                                <button
-                                    onClick={nextDoc}
-                                    className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-all"
-                                >
-                                    <ChevronRight className="w-5 h-5 text-[#021d49]" />
-                                </button>
-                            </div>
-
-                            <div className="p-8">
-                                <h3 className="text-2xl font-bold text-[#021d49] mb-4 leading-tight min-h-[4rem]">
-                                    {latestDocuments[currentDoc].title}
-                                </h3>
-
-                                <div className="space-y-3 mb-6">
-                                    <div className="flex items-center gap-3 text-sm text-gray-600">
-                                        <div className="w-10 h-10 bg-gradient-to-br from-[#021d49] to-[#0a4d8f] rounded-full flex items-center justify-center text-white font-bold">
-                                            {latestDocuments[currentDoc].author.split(' ')[1][0]}
-                                        </div>
-                                        <span className="font-semibold">{latestDocuments[currentDoc].author}</span>
-                                    </div>
-
-                                    <div className="flex items-center justify-between text-sm text-gray-500">
-                                        <div className="flex items-center gap-2">
-                                            <Clock className="w-4 h-4" />
-                                            {latestDocuments[currentDoc].date}
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <FileText className="w-4 h-4" />
-                                            {latestDocuments[currentDoc].pages}
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <Download className="w-4 h-4" />
-                                            {latestDocuments[currentDoc].downloads}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="flex justify-center gap-2 mb-6">
-                                    {latestDocuments.map((_, index) => (
-                                        <button
-                                            key={index}
-                                            onClick={() => setCurrentDoc(index)}
-                                            className={`h-2 rounded-full transition-all ${currentDoc === index
-                                                ? 'bg-[#021d49] w-8'
-                                                : 'bg-gray-300 w-2 hover:bg-gray-400'
-                                                }`}
+                            {latestDocument ? (
+                                <>
+                                    <div className="relative h-64 overflow-hidden group">
+                                        <img
+                                            src={latestDocument.image || "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&q=80"}
+                                            alt={latestDocument.title}
+                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                         />
-                                    ))}
-                                </div>
-
-                                <div className="flex gap-3">
-                                    <button className="flex-1 py-3 bg-gradient-to-r from-[#021d49] to-[#0a4d8f] hover:from-[#021d49]/90 hover:to-[#0a4d8f]/90 text-white font-semibold rounded-xl transition-all hover:shadow-lg">
-                                        <span className="flex items-center justify-center gap-2">
-                                            <Eye className="w-4 h-4" />
-                                            View
-                                        </span>
-                                    </button>
-                                    <button className="flex-1 py-3 bg-white hover:bg-gray-50 text-[#021d49] font-semibold rounded-xl border-2 border-gray-200 hover:border-[#021d49] transition-all">
-                                        <span className="flex items-center justify-center gap-2">
-                                            <Download className="w-4 h-4" />
-                                            Download
-                                        </span>
-                                    </button>
-                                </div>
-                            </div>
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+                                        <div className="absolute top-6 left-6">
+                                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#021d49] backdrop-blur-sm rounded-full text-white text-sm font-semibold">
+                                                <FileText className="w-4 h-4" />
+                                                {latestDocument.docType}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="p-8">
+                                        <h3 className="text-2xl font-bold text-[#021d49] mb-4 leading-tight min-h-16">
+                                            {latestDocument.title}
+                                        </h3>
+                                        <div className="space-y-3 mb-6">
+                                            <div className="flex items-center gap-3 text-sm text-gray-600">
+                                                <span className="font-semibold">{latestDocument.authors ? latestDocument.authors.join(', ') : latestDocument.author || ''}</span>
+                                            </div>
+                                            <div className="flex items-center justify-between text-sm text-gray-500">
+                                                <div className="flex items-center gap-2">
+                                                    <Clock className="w-4 h-4" />
+                                                    {latestDocument.datePosted || latestDocument.createdAt || latestDocument.date || ''}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-3">
+                                            <a
+                                                href={`/${latestDocument.docType.replace(/ /g, '-').toLowerCase()}s/${latestDocument._id}`}
+                                                className="flex-1 py-3 bg-gradient-to-r from-[#021d49] to-[#0a4d8f] hover:from-[#021d49]/90 hover:to-[#0a4d8f]/90 text-white font-semibold rounded-xl transition-all hover:shadow-lg flex items-center justify-center gap-2"
+                                            >
+                                                <Eye className="w-4 h-4" />
+                                                View
+                                            </a>
+                                        </div>
+                                    </div>
+                                </>
+                            ) : (
+                                <div className="p-8 text-center text-gray-400 text-lg font-semibold">No document found.</div>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -670,125 +607,156 @@ const HeroTopSection = () => {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                        {/* Latest News */}
+                        {/* Latest News Brief */}
                         <div>
                             <div className="flex items-center justify-between mb-6">
-                                <h3 className="text-xl font-bold text-[#021d49]">Latest News</h3>
-                                <a href="/news" className="text-xs text-[#021d49] hover:text-[#0a4d8f] font-semibold flex items-center gap-1 group">
+                                <h3 className="text-xl font-bold text-[#021d49]">Latest News Brief</h3>
+                                <a href="/news-briefs" className="text-xs text-[#021d49] hover:text-[#0a4d8f] font-semibold flex items-center gap-1 group">
                                     VIEW ALL
                                     <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                                 </a>
                             </div>
-                            <a href="/news/g20-debt" className="block bg-white shadow-xl hover:shadow-2xl transition-all rounded-2xl overflow-hidden border border-gray-100 hover:border-[#021d49] group">
-                                <div className="relative h-48 overflow-hidden">
-                                    <img
-                                        src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&q=80"
-                                        alt="The G20 has Failed on Debt"
-                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            {latestNewsBrief ? (
+                                <div className="block bg-white shadow-xl hover:shadow-2xl transition-all rounded-2xl overflow-hidden border border-gray-100 hover:border-[#021d49] group">
+                                    <div className="relative h-48 overflow-hidden">
+                                        <img
+                                            src={latestNewsBrief.coverImage || latestNewsBrief.image || "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400&q=80"}
+                                            alt={latestNewsBrief.title}
+                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                            onError={e => { e.currentTarget.src = "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400&q=80"; }}
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                    </div>
+                                    <div className="p-5">
+                                        <h4 className="text-base font-bold text-[#021d49] mb-2 line-clamp-2 group-hover:text-[#0a4d8f] transition-colors leading-tight">
+                                            {latestNewsBrief.title}
+                                        </h4>
+                                        <p className="text-xs text-gray-500 mb-1">
+                                            {latestNewsBrief.description ? latestNewsBrief.description.replace(/<[^>]+>/g, '').split(' ').slice(0, 10).join(' ') + (latestNewsBrief.description.replace(/<[^>]+>/g, '').split(' ').length > 10 ? '...' : '') : ''}
+                                        </p>
+                                        <p className="text-xs text-gray-500 mb-1">
+                                            {latestNewsBrief.datePosted ? new Date(latestNewsBrief.datePosted).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}
+                                        </p>
+                                        <a href={`/news-briefs/${latestNewsBrief._id}`} className="mt-2 inline-block text-xs text-[#0a4d8f] font-semibold underline hover:text-[#021d49]">
+                                            Read More
+                                        </a>
+                                    </div>
                                 </div>
-                                <div className="p-5">
-                                    <h4 className="text-base font-bold text-[#021d49] mb-2 line-clamp-2 group-hover:text-[#0a4d8f] transition-colors leading-tight">
-                                        The G20 has Failed on Debt. Time to Look to the UN
-                                    </h4>
-                                    <p className="text-xs text-gray-500">Jan 14, 2026</p>
-                                </div>
-                            </a>
+                            ) : <div className="text-gray-400">No news brief found.</div>}
                         </div>
 
-                        {/* Press Releases */}
+                        {/* Latest Technical Report */}
                         <div>
                             <div className="flex items-center justify-between mb-6">
-                                <h3 className="text-xl font-bold text-[#021d49]">Press Releases</h3>
-                                <a href="/press-releases" className="text-xs text-[#021d49] hover:text-[#0a4d8f] font-semibold flex items-center gap-1 group">
+                                <h3 className="text-xl font-bold text-[#021d49]">Technical Report</h3>
+                                <a href="/technical-reports" className="text-xs text-[#021d49] hover:text-[#0a4d8f] font-semibold flex items-center gap-1 group">
                                     VIEW ALL
                                     <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                                 </a>
                             </div>
-                            <a href="/press/ethiopian-debt" className="block bg-white shadow-xl hover:shadow-2xl transition-all rounded-2xl overflow-hidden border border-gray-100 hover:border-[#021d49] group">
-                                <div className="relative h-48 overflow-hidden">
-                                    <img
-                                        src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=600&q=80"
-                                        alt="Bondholders seeking massive profits"
-                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            {latestTechnicalReport ? (
+                                <div className="block bg-white shadow-xl hover:shadow-2xl transition-all rounded-2xl overflow-hidden border border-gray-100 hover:border-[#021d49] group">
+                                    <div className="relative h-48 overflow-hidden">
+                                        <img
+                                            src={latestTechnicalReport.image || "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&q=80"}
+                                            alt={latestTechnicalReport.title}
+                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                            onError={e => { e.currentTarget.src = "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&q=80"; }}
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                    </div>
+                                    <div className="p-5">
+                                        <h4 className="text-base font-bold text-[#021d49] mb-2 line-clamp-2 group-hover:text-[#0a4d8f] transition-colors leading-tight">
+                                            {latestTechnicalReport.title}
+                                        </h4>
+                                        <p className="text-xs text-gray-500 mb-1">
+                                            {latestTechnicalReport.description ? latestTechnicalReport.description.replace(/<[^>]+>/g, '').split(' ').slice(0, 10).join(' ') + (latestTechnicalReport.description.replace(/<[^>]+>/g, '').split(' ').length > 10 ? '...' : '') : ''}
+                                        </p>
+                                        <p className="text-xs text-gray-500 mb-1">
+                                            {latestTechnicalReport.datePosted ? new Date(latestTechnicalReport.datePosted).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}
+                                        </p>
+                                        <a href={`/technical-reports/${latestTechnicalReport._id}`} className="mt-2 inline-block text-xs text-[#0a4d8f] font-semibold underline hover:text-[#021d49]">
+                                            Read More
+                                        </a>
+                                    </div>
                                 </div>
-                                <div className="p-5">
-                                    <h4 className="text-base font-bold text-[#021d49] mb-2 line-clamp-2 group-hover:text-[#0a4d8f] transition-colors leading-tight">
-                                        Bondholders seeking massive profits from Ethiopian 'debt relief'
-                                    </h4>
-                                    <p className="text-xs text-gray-500">Jan 13, 2026</p>
-                                </div>
-                            </a>
+                            ) : <div className="text-gray-400">No technical report found.</div>}
                         </div>
 
-                        {/* Events */}
+                        {/* Latest Policy Brief */}
                         <div>
                             <div className="flex items-center justify-between mb-6">
-                                <h3 className="text-xl font-bold text-[#021d49]">Events</h3>
-                                <a href="/events" className="text-xs text-[#021d49] hover:text-[#0a4d8f] font-semibold flex items-center gap-1 group">
+                                <h3 className="text-xl font-bold text-[#021d49]">Policy Brief</h3>
+                                <a href="/policy-briefs" className="text-xs text-[#021d49] hover:text-[#0a4d8f] font-semibold flex items-center gap-1 group">
                                     VIEW ALL
                                     <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                                 </a>
                             </div>
-                            <a href="/events/g20-webinar" className="block bg-white shadow-xl hover:shadow-2xl transition-all rounded-2xl overflow-hidden border border-gray-100 hover:border-[#021d49] group">
-                                <div className="relative h-48 overflow-hidden bg-gradient-to-br from-amber-600 to-orange-700">
-                                    <div className="absolute inset-0 flex items-center justify-center p-6">
-                                        <div className="text-center">
-                                            <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/20 backdrop-blur-sm text-white text-xs font-semibold mb-3 rounded-full">
-                                                <Play className="w-3 h-3" fill="currentColor" />
-                                                Webinar
-                                            </div>
-                                            <h4 className="text-white font-bold text-lg leading-tight">
-                                                G20 Common Framework & Africa's Debt Crisis
-                                            </h4>
-                                            <p className="text-white/80 text-sm mt-2">Still fit for purpose?</p>
-                                        </div>
+                            {latestPolicyBrief ? (
+                                <div className="block bg-white shadow-xl hover:shadow-2xl transition-all rounded-2xl overflow-hidden border border-gray-100 hover:border-[#021d49] group">
+                                    <div className="relative h-48 overflow-hidden">
+                                        <img
+                                            src={latestPolicyBrief.image || "https://images.unsplash.com/photo-1625246333195-78d9c38ad649?w=400&q=80"}
+                                            alt={latestPolicyBrief.title}
+                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                            onError={e => { e.currentTarget.src = "https://images.unsplash.com/photo-1625246333195-78d9c38ad649?w=400&q=80"; }}
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                    </div>
+                                    <div className="p-5">
+                                        <h4 className="text-base font-bold text-[#021d49] mb-2 line-clamp-2 group-hover:text-[#0a4d8f] transition-colors leading-tight">
+                                            {latestPolicyBrief.title}
+                                        </h4>
+                                        <p className="text-xs text-gray-500 mb-1">
+                                            {latestPolicyBrief.description ? latestPolicyBrief.description.replace(/<[^>]+>/g, '').split(' ').slice(0, 10).join(' ') + (latestPolicyBrief.description.replace(/<[^>]+>/g, '').split(' ').length > 10 ? '...' : '') : ''}
+                                        </p>
+                                        <p className="text-xs text-gray-500 mb-1">
+                                            {latestPolicyBrief.datePosted ? new Date(latestPolicyBrief.datePosted).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}
+                                        </p>
+                                        <a href={`/policy-briefs/${latestPolicyBrief._id}`} className="mt-2 inline-block text-xs text-[#0a4d8f] font-semibold underline hover:text-[#021d49]">
+                                            Read More
+                                        </a>
                                     </div>
                                 </div>
-                                <div className="p-5">
-                                    <div className="flex items-center gap-2 text-xs text-gray-600 mb-2">
-                                        <Calendar className="w-3 h-3" />
-                                        <span>Feb 20, 2026</span>
-                                    </div>
-                                    <div className="flex items-center gap-2 text-xs text-gray-600">
-                                        <Users className="w-3 h-3" />
-                                        <span>300+ Expected</span>
-                                    </div>
-                                </div>
-                            </a>
+                            ) : <div className="text-gray-400">No policy brief found.</div>}
                         </div>
 
-                        {/* Stories of Change */}
+                        {/* Latest Research Project */}
                         <div>
                             <div className="flex items-center justify-between mb-6">
-                                <h3 className="text-xl font-bold text-[#021d49]">Stories of Change</h3>
-                                <a href="/stories" className="text-xs text-[#021d49] hover:text-[#0a4d8f] font-semibold flex items-center gap-1 group">
+                                <h3 className="text-xl font-bold text-[#021d49]">Research Project</h3>
+                                <a href="/research-projects" className="text-xs text-[#021d49] hover:text-[#0a4d8f] font-semibold flex items-center gap-1 group">
                                     VIEW ALL
                                     <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                                 </a>
                             </div>
-                            <a href="/stories/debt-justice" className="block bg-white shadow-xl hover:shadow-2xl transition-all rounded-2xl overflow-hidden border border-gray-100 hover:border-[#021d49] group">
-                                <div className="relative h-48 overflow-hidden">
-                                    <img
-                                        src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&q=80"
-                                        alt="Stories of Change"
-                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                    />
-                                    <div className="absolute top-4 right-4">
-                                        <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-[#021d49] text-xs font-semibold rounded-full">Impact Story</span>
+                            {latestResearchProject ? (
+                                <div className="block bg-white shadow-xl hover:shadow-2xl transition-all rounded-2xl overflow-hidden border border-gray-100 hover:border-[#021d49] group">
+                                    <div className="relative h-48 overflow-hidden">
+                                        <img
+                                            src={latestResearchProject.image || "https://images.unsplash.com/photo-1464983953574-0892a716854b?w=400&q=80"}
+                                            alt={latestResearchProject.title}
+                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                            onError={e => { e.currentTarget.src = "https://images.unsplash.com/photo-1464983953574-0892a716854b?w=400&q=80"; }}
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                                     </div>
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                    <div className="p-5">
+                                        <h4 className="text-base font-bold text-[#021d49] mb-2 line-clamp-2 group-hover:text-[#0a4d8f] transition-colors leading-tight">
+                                            {latestResearchProject.title}
+                                        </h4>
+                                        <p className="text-xs text-gray-500 mb-1">
+                                            {latestResearchProject.description ? latestResearchProject.description.replace(/<[^>]+>/g, '').split(' ').slice(0, 10).join(' ') + (latestResearchProject.description.replace(/<[^>]+>/g, '').split(' ').length > 10 ? '...' : '') : ''}
+                                        </p>
+                                        <p className="text-xs text-gray-500 mb-1">
+                                            {latestResearchProject.datePosted ? new Date(latestResearchProject.datePosted).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}
+                                        </p>
+                                        <a href={`/research-projects/${latestResearchProject._id}`} className="mt-2 inline-block text-xs text-[#0a4d8f] font-semibold underline hover:text-[#021d49]">
+                                            Read More
+                                        </a>
+                                    </div>
                                 </div>
-                                <div className="p-5">
-                                    <h4 className="text-base font-bold text-[#021d49] mb-2 line-clamp-2 group-hover:text-[#0a4d8f] transition-colors leading-tight">
-                                        We are galvanising a critical mass of Africans to advocate for debt justice
-                                    </h4>
-                                    <p className="text-xs text-gray-500">Jan 15, 2026</p>
-                                </div>
-                            </a>
+                            ) : <div className="text-gray-400">No research project found.</div>}
                         </div>
                     </div>
                 </div>
