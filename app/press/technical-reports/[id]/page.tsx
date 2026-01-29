@@ -72,10 +72,10 @@ export default function TechnicalReportDetailPage() {
                         <img
                             src={report.image}
                             alt={report.title}
-                            className="w-full h-full object-cover object-center opacity-40"
+                            className="w-full h-full object-cover object-center"
                         />
-                        {/* Strong Dark Overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/60"></div>
+                        {/* Balanced Overlay - Shows image better */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30"></div>
 
                         {/* Content Overlay - Centered */}
                         <div className="absolute inset-0 flex items-center justify-center p-6 md:p-12">
@@ -88,26 +88,26 @@ export default function TechnicalReportDetailPage() {
                                 </div>
 
                                 {/* Title */}
-                                <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight drop-shadow-2xl">
+                                <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight drop-shadow-[0_4px_20px_rgba(0,0,0,0.9)] [text-shadow:_2px_2px_8px_rgb(0_0_0_/_90%)]">
                                     {report.title}
                                 </h1>
 
                                 {/* Meta Information */}
                                 <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 text-white">
                                     {(report.authors && report.authors.length > 0) && (
-                                        <div className="flex items-center gap-2 bg-white/20 backdrop-blur-md px-5 py-2.5 rounded-lg shadow-lg">
+                                        <div className="flex items-center gap-2 bg-black/40 backdrop-blur-md px-5 py-2.5 rounded-lg shadow-lg border border-white/20">
                                             <User className="w-5 h-5" />
                                             <span className="font-semibold">{report.authors.join(", ")}</span>
                                         </div>
                                     )}
                                     {report.datePosted && (
-                                        <div className="flex items-center gap-2 bg-white/20 backdrop-blur-md px-5 py-2.5 rounded-lg shadow-lg">
+                                        <div className="flex items-center gap-2 bg-black/40 backdrop-blur-md px-5 py-2.5 rounded-lg shadow-lg border border-white/20">
                                             <Calendar className="w-5 h-5" />
                                             <span className="font-semibold">{new Date(report.datePosted).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                                         </div>
                                     )}
                                     {report.postedBy && (
-                                        <div className="flex items-center gap-2 bg-white/20 backdrop-blur-md px-5 py-2.5 rounded-lg shadow-lg">
+                                        <div className="flex items-center gap-2 bg-black/40 backdrop-blur-md px-5 py-2.5 rounded-lg shadow-lg border border-white/20">
                                             <User className="w-5 h-5" />
                                             <span className="font-semibold">Posted by {report.postedBy}</span>
                                         </div>

@@ -1,16 +1,19 @@
+"use client";
 import { FileText, Calendar, ArrowRight, User } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
 import Link from "next/link";
 import { workingPaperSeriesService } from '@/services/workingPaperSeriesService';
+import React, { useState, useEffect } from 'react';
 
-export default async function WorkingPapersPage() {
-    let papers = [];
-    try {
-        papers = await workingPaperSeriesService.getAll();
-    } catch (e) {
-        // fallback to empty
-    }
-
+export default function WorkingPapersPage() {
+    const [papers, setPapers] = useState<any[]>([]);
+    const [expanded, setExpanded] = useState<{ [key: string]: boolean }>({});
+    useEffect(() => {
+        workingPaperSeriesService.getAll().then(setPapers).catch(() => setPapers([]));
+    }, []);
+    const handleToggle = (id: string) => {
+        setExpanded(prev => ({ ...prev, [id]: !prev[id] }));
+    };
     return (
         <>
             <Navbar />
@@ -92,7 +95,27 @@ export default async function WorkingPapersPage() {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="mb-4 flex-grow prose max-w-none" dangerouslySetInnerHTML={{ __html: paper.description || '<em>No description provided.</em>' }} />
+                                    <div className="mb-4 flex-grow prose max-w-none">
+                                        {paper.description ? (() => {
+                                            const plain = paper.description.replace(/<[^>]+>/g, '');
+                                            const words = plain.split(/\s+/);
+                                            const isLong = words.length > 40;
+                                            const showAll = expanded[paper._id];
+                                            const displayText = showAll ? plain : words.slice(0, 40).join(' ') + (isLong ? '...' : '');
+                                            return <>
+                                                {displayText}
+                                                {isLong && (
+                                                    <button
+                                                        type="button"
+                                                        className="ml-2 text-blue-600 underline text-xs focus:outline-none"
+                                                        onClick={e => { e.preventDefault(); handleToggle(paper._id); }}
+                                                    >
+                                                        {showAll ? 'View Less' : 'View More'}
+                                                    </button>
+                                                )}
+                                            </>;
+                                        })() : <em>No description provided.</em>}
+                                    </div>
                                     {paper.availableResources && paper.availableResources.length > 0 && (
                                         <div className="mb-2">
                                             <span className="font-semibold text-xs text-gray-700">Resources:</span>

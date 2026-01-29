@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:5001/books";
+const BASE_URL = "http://localhost:5001/api/books";
 
 export async function getBooks() {
   const res = await fetch(BASE_URL, { cache: 'no-store' });

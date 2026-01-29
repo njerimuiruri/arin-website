@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { getBook } from "@/services/booksService";
-import { ArrowLeft, Calendar, Users, Download } from "lucide-react";
+import { ArrowLeft, Calendar, Users, Download, BookOpen } from "lucide-react";
 import Navbar from "@/app/navbar/Navbar";
 
 interface Book {
@@ -47,10 +47,10 @@ export default function BookDetailPage() {
         return (
             <>
                 <Navbar />
-                <div className="min-h-screen flex items-center justify-center">
+                <div className="min-h-screen flex items-center justify-center bg-white">
                     <div className="text-center">
-                        <div className="w-12 h-12 border-4 border-[#021d49] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                        <p className="text-gray-600">Loading book...</p>
+                        <div className="w-16 h-16 border-4 border-[#021d49] border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
+                        <p className="text-gray-600 text-lg">Loading...</p>
                     </div>
                 </div>
             </>
@@ -61,14 +61,15 @@ export default function BookDetailPage() {
         return (
             <>
                 <Navbar />
-                <div className="min-h-screen flex items-center justify-center">
-                    <div className="text-center">
-                        <h2 className="text-2xl font-bold text-red-600 mb-2">Error</h2>
-                        <p className="text-gray-600 mb-4">{error}</p>
+                <div className="min-h-screen flex items-center justify-center bg-white">
+                    <div className="text-center max-w-lg mx-auto px-8">
+                        <h2 className="text-3xl font-bold text-gray-900 mb-4">Error</h2>
+                        <p className="text-gray-600 text-lg mb-8">{error}</p>
                         <Link
                             href="/press/books"
-                            className="px-6 py-2 bg-[#021d49] text-white rounded-lg hover:bg-[#021d49]"
+                            className="inline-flex items-center gap-2 px-8 py-4 bg-[#021d49] text-white rounded-lg hover:bg-[#032a5e] transition-colors"
                         >
+                            <ArrowLeft className="w-5 h-5" />
                             Back to Books
                         </Link>
                     </div>
@@ -81,14 +82,17 @@ export default function BookDetailPage() {
         return (
             <>
                 <Navbar />
-                <div className="min-h-screen flex items-center justify-center">
-                    <div className="text-center">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-2">Book Not Found</h2>
-                        <p className="text-gray-600 mb-4">The book you're looking for doesn't exist.</p>
+                <div className="min-h-screen flex items-center justify-center bg-white">
+                    <div className="text-center max-w-lg mx-auto px-8">
+                        <h2 className="text-3xl font-bold text-gray-900 mb-4">Book Not Found</h2>
+                        <p className="text-gray-600 text-lg mb-8">
+                            The book you're looking for doesn't exist.
+                        </p>
                         <Link
                             href="/press/books"
-                            className="px-6 py-2 bg-[#021d49] text-white rounded-lg hover:bg-[#021d49]"
+                            className="inline-flex items-center gap-2 px-8 py-4 bg-[#021d49] text-white rounded-lg hover:bg-[#032a5e] transition-colors"
                         >
+                            <ArrowLeft className="w-5 h-5" />
                             Back to Books
                         </Link>
                     </div>
@@ -102,49 +106,81 @@ export default function BookDetailPage() {
         : "Unknown Author";
 
     const dateDisplay = book.datePosted
-        ? new Date(book.datePosted).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+        ? new Date(book.datePosted).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        })
         : 'Date not available';
 
     return (
         <>
             <Navbar />
-            <div className="w-full bg-gradient-to-br from-slate-50 via-white to-stone-50 min-h-screen">
-                <div className="max-w-4xl mx-auto px-6 py-12">
+
+            <div className="bg-white min-h-screen">
+                <div className="max-w-6xl mx-auto px-6 lg:px-12 py-12">
+
                     {/* Back Button */}
                     <Link
                         href="/press/books"
-                        className="inline-flex items-center gap-2 text-[#021d49] hover:text-[#021d49] font-medium mb-8 transition-colors"
+                        className="inline-flex items-center gap-2 text-gray-700 hover:text-[#021d49] font-medium mb-12 transition-colors group"
                     >
-                        <ArrowLeft className="w-5 h-5" />
-                        Back to Books
+                        <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+                        Back to All Books
                     </Link>
 
-                    {/* Book Header */}
-                    <div className="mb-8">
-                        <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
-                            {book.title}
-                        </h1>
+                    {/* Book Layout */}
+                    <div className="grid lg:grid-cols-5 gap-16 mb-20">
 
-                        {/* Metadata Card */}
-                        <div className="bg-white rounded-xl p-6 shadow-md border border-gray-200 space-y-4">
+                        {/* Book Cover - Left Side */}
+                        <div className="lg:col-span-2">
+                            {book.image ? (
+                                <div className="sticky top-8">
+                                    <img
+                                        src={book.image.startsWith('http') ? book.image : `http://localhost:5001${book.image}`}
+                                        alt={book.title}
+                                        className="w-full h-auto rounded-lg shadow-xl"
+                                    />
+                                </div>
+                            ) : (
+                                <div className="w-full aspect-[2/3] bg-gray-100 rounded-lg flex items-center justify-center">
+                                    <BookOpen className="w-20 h-20 text-gray-300" />
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Book Details - Right Side */}
+                        <div className="lg:col-span-3 space-y-10">
+
+                            {/* Title */}
+                            <div className="border-b border-gray-200 pb-8">
+                                <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+                                    {book.title}
+                                </h1>
+                            </div>
+
                             {/* Authors */}
                             <div>
-                                <h3 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                                    <Users className="w-5 h-5 text-[#021d49]" />
-                                    Authors
-                                </h3>
-                                <p className="text-gray-900 leading-relaxed">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <Users className="w-6 h-6 text-[#021d49]" />
+                                    <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">
+                                        Authors
+                                    </h2>
+                                </div>
+                                <p className="text-xl text-gray-900 font-medium">
                                     {authorsDisplay}
                                 </p>
                             </div>
 
-                            {/* Date */}
+                            {/* Publication Date */}
                             <div>
-                                <h3 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                                    <Calendar className="w-5 h-5 text-[#021d49]" />
-                                    Publication Date
-                                </h3>
-                                <p className="text-gray-900">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <Calendar className="w-6 h-6 text-[#021d49]" />
+                                    <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">
+                                        Published
+                                    </h2>
+                                </div>
+                                <p className="text-xl text-gray-900 font-medium">
                                     {dateDisplay}
                                 </p>
                             </div>
@@ -152,43 +188,46 @@ export default function BookDetailPage() {
                             {/* Year */}
                             {book.year && (
                                 <div>
-                                    <h3 className="text-sm font-semibold text-gray-700 mb-2">Year</h3>
-                                    <p className="text-gray-900">{book.year}</p>
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <BookOpen className="w-6 h-6 text-[#021d49]" />
+                                        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">
+                                            Year
+                                        </h2>
+                                    </div>
+                                    <p className="text-xl text-gray-900 font-medium">
+                                        {book.year}
+                                    </p>
                                 </div>
                             )}
                         </div>
                     </div>
 
-                    {/* Cover Image */}
-                    {book.image && (
-                        <div className="mb-8">
-                            <img
-                                src={book.image.startsWith('http') ? book.image : `http://localhost:5001${book.image}`}
-                                alt={book.title}
-                                className="w-full h-96 object-cover rounded-lg shadow-lg border border-gray-200"
-                            />
-                        </div>
-                    )}
-
-                    {/* Book Content */}
-                    <div className="bg-white rounded-lg shadow-md border border-gray-200 p-8 mb-8">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-4">Description</h2>
-                        <div className="prose prose-lg max-w-none">
-                            <div
-                                className="text-gray-700 leading-relaxed"
-                                dangerouslySetInnerHTML={{ __html: book.description }}
-                            />
-                        </div>
+                    {/* Description Section */}
+                    <div className="mb-20">
+                        <h2 className="text-3xl font-bold text-gray-900 mb-8">
+                            About This Book
+                        </h2>
+                        <div
+                            className="prose prose-lg max-w-none text-gray-700"
+                            dangerouslySetInnerHTML={{ __html: book.description }}
+                            style={{
+                                fontSize: '1.125rem',
+                                lineHeight: '1.875rem',
+                            }}
+                        />
                     </div>
 
-                    {/* Available Resources */}
+                    {/* Download Resources Section */}
                     {book.availableResources && book.availableResources.length > 0 && (
-                        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-8 mb-8">
-                            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                                <Download className="w-6 h-6 text-[#021d49]" />
-                                Available Resources
-                            </h2>
-                            <div className="space-y-3">
+                        <div className="mb-20">
+                            <div className="flex items-center gap-3 mb-8">
+                                <Download className="w-7 h-7 text-[#021d49]" />
+                                <h2 className="text-3xl font-bold text-gray-900">
+                                    Download Resources
+                                </h2>
+                            </div>
+
+                            <div className="space-y-4">
                                 {book.availableResources.map((url, index) => {
                                     const fileName = url.split('/').pop() || `Resource ${index + 1}`;
                                     const downloadUrl = url.startsWith('http') ? url : `http://localhost:5001${url}`;
@@ -199,24 +238,24 @@ export default function BookDetailPage() {
                                             href={downloadUrl}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex items-center gap-4 p-4 bg-gradient-to-r from-green-50 to-emerald-50 hover:from-green-100 hover:to-emerald-100 rounded-lg border border-green-200 transition-all group"
+                                            className="group flex items-center justify-between p-6 border-2 border-gray-200 hover:border-[#021d49] rounded-lg transition-all hover:shadow-lg"
                                         >
-                                            <div className="flex-shrink-0">
-                                                <div className="flex items-center justify-center w-12 h-12 bg-green-600 rounded-lg">
-                                                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                            <div className="flex items-center gap-5">
+                                                <div className="flex items-center justify-center w-14 h-14 bg-gray-100 group-hover:bg-[#021d49] rounded-lg transition-colors">
+                                                    <svg className="w-7 h-7 text-gray-600 group-hover:text-white transition-colors" fill="currentColor" viewBox="0 0 20 20">
                                                         <path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" />
                                                     </svg>
                                                 </div>
+                                                <div>
+                                                    <p className="font-semibold text-gray-900 text-lg mb-1 group-hover:text-[#021d49] transition-colors">
+                                                        {fileName}
+                                                    </p>
+                                                    <p className="text-sm text-gray-500">
+                                                        PDF Document
+                                                    </p>
+                                                </div>
                                             </div>
-                                            <div className="flex-grow">
-                                                <p className="font-semibold text-gray-900 group-hover:text-green-600">
-                                                    {fileName}
-                                                </p>
-                                                <p className="text-sm text-gray-600">PDF Document</p>
-                                            </div>
-                                            <svg className="w-5 h-5 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 16v-4m0 0V8m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
+                                            <Download className="w-6 h-6 text-gray-400 group-hover:text-[#021d49] transition-colors" />
                                         </a>
                                     );
                                 })}
@@ -224,12 +263,13 @@ export default function BookDetailPage() {
                         </div>
                     )}
 
-                    {/* Navigate Section */}
-                    <div className="flex gap-4">
+                    {/* Bottom Navigation */}
+                    <div className="pt-8 border-t border-gray-200">
                         <Link
                             href="/press/books"
-                            className="flex-1 px-6 py-3 bg-gradient-to-r from-[#021d49] to-[#021d49] hover:shadow-lg text-white font-semibold rounded-lg shadow-md text-center transition-all"
+                            className="inline-flex items-center gap-3 px-8 py-4 bg-[#021d49] hover:bg-[#032a5e] text-white font-semibold rounded-lg transition-all group"
                         >
+                            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
                             View All Books
                         </Link>
                     </div>
