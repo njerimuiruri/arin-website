@@ -11,27 +11,27 @@ const FocalPoints = () => {
     const focalPoints = [
         {
             id: 1,
-            name: "Nairobi",
-            country: "Kenya",
-            description: "Regional Headquarters",
-            team: "15 Researchers",
-            coordinates: [36.8219, -1.2921]
+            name: "Southern Africa",
+            fullName: "Regional Focal Point – Southern Africa",
+            coordinates: [28.0473, -26.2041] // Johannesburg area
         },
         {
             id: 2,
-            name: "Lagos",
-            country: "Nigeria",
-            description: "West Africa Office",
-            team: "8 Researchers",
-            coordinates: [3.3792, 6.5244]
+            name: "East Africa",
+            fullName: "Regional Focal Point - East Africa",
+            coordinates: [36.8219, -1.2921] // Nairobi area
         },
         {
             id: 3,
-            name: "Cairo",
-            country: "Egypt",
-            description: "North Africa Hub",
-            team: "6 Researchers",
-            coordinates: [31.2357, 30.0444]
+            name: "Francophone West",
+            fullName: "Focal point for Francophone",
+            coordinates: [-1.5208, 12.3714] // Ouagadougou/West Africa
+        },
+        {
+            id: 4,
+            name: "Francophone Central",
+            fullName: "Francophone Focal Point",
+            coordinates: [15.2663, -4.0383] // Central Africa region
         }
     ];
 
@@ -45,8 +45,8 @@ const FocalPoints = () => {
         svg.selectAll("*").remove();
 
         const projection = d3.geoMercator()
-            .scale(130)
-            .center([0, 20])
+            .scale(400)
+            .center([20, 0])
             .translate([width / 2, height / 2]);
 
         const path = d3.geoPath().projection(projection);
@@ -82,14 +82,14 @@ const FocalPoints = () => {
                             .style("filter", "drop-shadow(0 2px 4px rgba(0,0,0,0.2))");
 
                         marker.append("text")
-                            .attr("y", 28)
+                            .attr("y", 25)
                             .attr("text-anchor", "middle")
                             .style("font-family", "system-ui")
-                            .style("font-size", "13px")
+                            .style("font-size", "12px")
                             .style("font-weight", "600")
                             .style("fill", "#14234d")
                             .style("pointer-events", "none")
-                            .text(point.country);
+                            .text(point.name);
                     }
                 });
             });
@@ -144,47 +144,41 @@ const FocalPoints = () => {
                         {/* Content Section - Right */}
                         <div className="space-y-8">
                             {/* Stats */}
-                            <div className="grid grid-cols-2 gap-6">
-                                <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
-                                    <div className="text-5xl font-bold mb-2" style={{ color: '#021d49' }}>3</div>
-                                    <div className="text-sm text-gray-600 font-semibold uppercase tracking-wide">Regional Offices</div>
-                                </div>
-                                <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
-                                    <div className="text-5xl font-bold mb-2" style={{ color: '#021d49' }}>29</div>
-                                    <div className="text-sm text-gray-600 font-semibold uppercase tracking-wide">Total Researchers</div>
-                                </div>
+                            <div className="bg-white p-10 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
+                                <div className="text-6xl font-bold mb-3" style={{ color: '#021d49' }}>4</div>
+                                <div className="text-base text-gray-600 font-semibold uppercase tracking-wide">Regional Focal Points</div>
                             </div>
 
                             {/* Why Work With Us */}
-                            <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
-                                <h3 className="text-2xl font-bold mb-6 flex items-center gap-3" style={{ color: '#14234d' }}>
+                            <div className="bg-white rounded-2xl shadow-lg p-10 border border-gray-100">
+                                <h3 className="text-2xl font-bold mb-8 flex items-center gap-3" style={{ color: '#14234d' }}>
                                     <div className="w-1 h-8 rounded-full" style={{ backgroundColor: '#021d49' }}></div>
                                     Why Work With Us?
                                 </h3>
-                                <div className="space-y-5">
-                                    <div className="flex items-start gap-4 group">
-                                        <div className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center mt-0.5 transition-transform group-hover:scale-110" style={{ backgroundColor: '#021d49' }}>
-                                            <div className="w-2 h-2 rounded-full bg-white"></div>
+                                <div className="space-y-6">
+                                    <div className="flex items-start gap-4">
+                                        <div className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center mt-0.5" style={{ backgroundColor: '#021d49' }}>
+                                            <div className="w-3 h-3 rounded-full bg-white"></div>
                                         </div>
-                                        <p className="text-gray-700 leading-relaxed">Evidence-based research driving policy and practice across Africa</p>
+                                        <p className="text-gray-700 leading-relaxed pt-2">Evidence-based research driving policy and practice across Africa</p>
                                     </div>
-                                    <div className="flex items-start gap-4 group">
-                                        <div className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center mt-0.5 transition-transform group-hover:scale-110" style={{ backgroundColor: '#021d49' }}>
-                                            <div className="w-2 h-2 rounded-full bg-white"></div>
+                                    <div className="flex items-start gap-4">
+                                        <div className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center mt-0.5" style={{ backgroundColor: '#021d49' }}>
+                                            <div className="w-3 h-3 rounded-full bg-white"></div>
                                         </div>
-                                        <p className="text-gray-700 leading-relaxed">Multi-disciplinary teams of experts working on critical challenges</p>
+                                        <p className="text-gray-700 leading-relaxed pt-2">Multi-disciplinary teams of experts working on critical challenges</p>
                                     </div>
-                                    <div className="flex items-start gap-4 group">
-                                        <div className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center mt-0.5 transition-transform group-hover:scale-110" style={{ backgroundColor: '#021d49' }}>
-                                            <div className="w-2 h-2 rounded-full bg-white"></div>
+                                    <div className="flex items-start gap-4">
+                                        <div className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center mt-0.5" style={{ backgroundColor: '#021d49' }}>
+                                            <div className="w-3 h-3 rounded-full bg-white"></div>
                                         </div>
-                                        <p className="text-gray-700 leading-relaxed">Strong partnerships with local communities and international organizations</p>
+                                        <p className="text-gray-700 leading-relaxed pt-2">Strong partnerships with local communities and international organizations</p>
                                     </div>
-                                    <div className="flex items-start gap-4 group">
-                                        <div className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center mt-0.5 transition-transform group-hover:scale-110" style={{ backgroundColor: '#021d49' }}>
-                                            <div className="w-2 h-2 rounded-full bg-white"></div>
+                                    <div className="flex items-start gap-4">
+                                        <div className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center mt-0.5" style={{ backgroundColor: '#021d49' }}>
+                                            <div className="w-3 h-3 rounded-full bg-white"></div>
                                         </div>
-                                        <p className="text-gray-700 leading-relaxed">Commitment to sustainable development and social impact</p>
+                                        <p className="text-gray-700 leading-relaxed pt-2">Commitment to sustainable development and social impact</p>
                                     </div>
                                 </div>
                             </div>

@@ -153,6 +153,16 @@ const HeroTopSection = () => {
                 setUpcomingEvent(null);
             }
 
+            // Add policyDialoguesService if available
+            let policyDialogues = [];
+            if (typeof policyDialoguesService !== 'undefined' && policyDialoguesService.getAll) {
+                try {
+                    policyDialogues = await policyDialoguesService.getAll();
+                } catch (e) {
+                    policyDialogues = [];
+                }
+            }
+
             const [techReports, policyBriefs, newsBriefs, researchProjects] = await Promise.all([
                 technicalReportsService.getAll(),
                 policyBriefsService.getAll(),
@@ -160,34 +170,28 @@ const HeroTopSection = () => {
                 getResearchProjects()
             ]);
 
-            // Set individual latest items
-            if (Array.isArray(techReports) && techReports.length > 0) {
-                techReports.sort((a, b) => new Date(b.datePosted || 0).getTime() - new Date(a.datePosted || 0).getTime());
-                setLatestTechnicalReport(techReports[0]);
-            } else {
-                setLatestTechnicalReport(null);
+            // Sort arrays by date descending (latest first)
+            if (Array.isArray(techReports)) {
+                techReports.sort((a, b) => new Date(b.datePosted || b.createdAt || b.date || 0).getTime() - new Date(a.datePosted || a.createdAt || a.date || 0).getTime());
             }
-
-            if (Array.isArray(policyBriefs) && policyBriefs.length > 0) {
-                policyBriefs.sort((a, b) => new Date(b.datePosted || 0).getTime() - new Date(a.datePosted || 0).getTime());
-                setLatestPolicyBrief(policyBriefs[0]);
-            } else {
-                setLatestPolicyBrief(null);
+            if (Array.isArray(policyBriefs)) {
+                policyBriefs.sort((a, b) => new Date(b.datePosted || b.createdAt || b.date || 0).getTime() - new Date(a.datePosted || a.createdAt || a.date || 0).getTime());
             }
-
-            if (Array.isArray(newsBriefs) && newsBriefs.length > 0) {
-                newsBriefs.sort((a, b) => new Date(b.datePosted || b.createdAt || b.date || 0).getTime() - new Date(a.datePosted || a.createdAt || a.date || 0).getTime());
-                setLatestNewsBrief(newsBriefs[0]);
-            } else {
-                setLatestNewsBrief(null);
-            }
-
-            if (Array.isArray(researchProjects) && researchProjects.length > 0) {
+            if (Array.isArray(researchProjects)) {
                 researchProjects.sort((a, b) => new Date(b.datePosted || b.createdAt || b.date || 0).getTime() - new Date(a.datePosted || a.createdAt || a.date || 0).getTime());
-                setLatestResearchProject(researchProjects[0]);
-            } else {
-                setLatestResearchProject(null);
             }
+            if (Array.isArray(policyDialogues)) {
+                policyDialogues.sort((a, b) => new Date(b.datePosted || b.createdAt || b.date || 0).getTime() - new Date(a.datePosted || a.createdAt || a.date || 0).getTime());
+            }
+            if (Array.isArray(newsBriefs)) {
+                newsBriefs.sort((a, b) => new Date(b.datePosted || b.createdAt || b.date || 0).getTime() - new Date(a.datePosted || a.createdAt || a.date || 0).getTime());
+            }
+
+            // Set individual latest items
+            setLatestTechnicalReport(Array.isArray(techReports) && techReports.length > 0 ? techReports[0] : null);
+            setLatestPolicyBrief(Array.isArray(policyBriefs) && policyBriefs.length > 0 ? policyBriefs[0] : null);
+            setLatestNewsBrief(Array.isArray(newsBriefs) && newsBriefs.length > 0 ? newsBriefs[0] : null);
+            setLatestResearchProject(Array.isArray(researchProjects) && researchProjects.length > 0 ? researchProjects[0] : null);
 
             // Set combined latest document
             const allDocs = [];
@@ -195,6 +199,7 @@ const HeroTopSection = () => {
             if (Array.isArray(policyBriefs)) allDocs.push(...policyBriefs.map(d => ({ ...d, docType: 'Policy Brief' })));
             if (Array.isArray(newsBriefs)) allDocs.push(...newsBriefs.map(d => ({ ...d, docType: 'News Brief' })));
             if (Array.isArray(researchProjects)) allDocs.push(...researchProjects.map(d => ({ ...d, docType: 'Research Project' })));
+            if (Array.isArray(policyDialogues)) allDocs.push(...policyDialogues.map(d => ({ ...d, docType: 'Policy Dialogue' })));
 
             if (allDocs.length > 0) {
                 allDocs.sort((a, b) => new Date(b.datePosted || b.createdAt || b.date || 0).getTime() - new Date(a.datePosted || a.createdAt || a.date || 0).getTime());
@@ -459,7 +464,7 @@ const HeroTopSection = () => {
                                         {upcomingEvent.title}
                                     </h3>
                                     <p className="text-white/80 mb-6">
-                                        {upcomingEvent.description}
+                                        {upcomingEvent.description ? upcomingEvent.description.replace(/<[^>]+>/g, '') : ''}
                                     </p>
                                     <div className="space-y-4 mb-8">
                                         <div className="flex items-center gap-4">
@@ -468,7 +473,9 @@ const HeroTopSection = () => {
                                             </div>
                                             <div>
                                                 <div className="text-xs text-white/70">Date</div>
-                                                <div className="text-white font-semibold">{upcomingEvent.date}</div>
+                                                <div className="text-white font-semibold">
+                                                    {upcomingEvent.date ? new Date(upcomingEvent.date).toLocaleString(undefined, { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'N/A'}
+                                                </div>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-4">
@@ -531,8 +538,13 @@ const HeroTopSection = () => {
                                             <div className="flex items-center justify-between text-sm text-gray-500">
                                                 <div className="flex items-center gap-2">
                                                     <Clock className="w-4 h-4" />
-                                                    {latestDocument.datePosted || latestDocument.createdAt || latestDocument.date || ''}
+                                                    {(latestDocument.datePosted || latestDocument.createdAt || latestDocument.date) ?
+                                                        new Date(latestDocument.datePosted || latestDocument.createdAt || latestDocument.date).toLocaleString(undefined, { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+                                                        : ''}
                                                 </div>
+                                            </div>
+                                            <div className="text-gray-700">
+                                                {latestDocument.description ? latestDocument.description.replace(/<[^>]+>/g, '') : ''}
                                             </div>
                                         </div>
                                         <div className="flex gap-3">

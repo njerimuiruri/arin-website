@@ -44,7 +44,8 @@ const ImpactStoriesPage = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    const handleStoryClick = (storyId: string) => {
+    const handleStoryClick = (storyId: string | undefined) => {
+        if (!storyId) return;
         router.push(`/press/impact-stories/${storyId}`);
     };
 
@@ -77,11 +78,28 @@ const ImpactStoriesPage = () => {
                                 <p className="text-sm text-gray-600">Impact Stories</p>
                             </div>
                             <div className="bg-white rounded-xl p-4 shadow-md border border-gray-200 text-center">
-                                <div className="text-3xl font-bold text-green-600 mb-1">5,000+</div>
+                                <div className="text-3xl font-bold text-green-600 mb-1">
+                                    {(() => {
+                                        // Sum up all beneficiaries if available, else show '-'
+                                        const total = stories.reduce((acc, s) => {
+                                            // Accept numbers or strings like '5,000+' or '1000'
+                                            if (typeof s.beneficiaries === 'number') return acc + s.beneficiaries;
+                                            if (typeof s.beneficiaries === 'string') {
+                                                // Remove non-digits, parse as int
+                                                const num = parseInt(s.beneficiaries.replace(/[^\d]/g, ''));
+                                                if (!isNaN(num)) return acc + num;
+                                            }
+                                            return acc;
+                                        }, 0);
+                                        return total > 0 ? total.toLocaleString() : '-';
+                                    })()}
+                                </div>
                                 <p className="text-sm text-gray-600">Lives Impacted</p>
                             </div>
                             <div className="bg-white rounded-xl p-4 shadow-md border border-gray-200 text-center col-span-2 md:col-span-1">
-                                <div className="text-3xl font-bold text-[#021d49] mb-1">{categories.length - 1}</div>
+                                <div className="text-3xl font-bold text-[#021d49] mb-1">{
+                                    Array.from(new Set(stories.map(s => s.category).filter(Boolean))).length
+                                }</div>
                                 <p className="text-sm text-gray-600">Focus Areas</p>
                             </div>
                         </div>
@@ -125,11 +143,11 @@ const ImpactStoriesPage = () => {
 
                     {/* Stories List - Horizontal Card Layout */}
                     <div className="space-y-6 max-w-6xl mx-auto">
-                        {currentStories.map((story) => (
+                        {currentStories.map((story: any, idx: number) => (
                             <div
-                                key={story.id}
+                                key={story._id || story.id || idx}
                                 className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-[#021d49] cursor-pointer group"
-                                onClick={() => handleStoryClick(story.id)}
+                                onClick={() => handleStoryClick(story._id || story.id)}
                             >
                                 <div className="md:flex">
                                     {/* Left Side - Image */}
@@ -165,29 +183,29 @@ const ImpactStoriesPage = () => {
                                         {/* Metadata */}
                                         <div className="grid grid-cols-2 gap-3 mb-4 bg-gray-50 rounded-lg p-4">
                                             <div className="flex items-center gap-2 text-sm">
-                                                <MapPin className="w-4 h-4 text-[#021d49] flex-shrink-0" />
+                                                <MapPin className="w-4 h-4 text-[#021d49] shrink-0" />
                                                 <span className="text-gray-700 font-medium">{story.location}</span>
                                             </div>
                                             <div className="flex items-center gap-2 text-sm">
-                                                <Calendar className="w-4 h-4 text-[#021d49] flex-shrink-0" />
+                                                <Calendar className="w-4 h-4 text-[#021d49] shrink-0" />
                                                 <span className="text-gray-600">{story.date ? (new Date(story.date)).toLocaleDateString() : <span className="italic text-gray-400">No date</span>}</span>
                                             </div>
                                             <div className="flex items-center gap-2 text-sm col-span-2">
-                                                <Users className="w-4 h-4 text-[#021d49] flex-shrink-0" />
+                                                <Users className="w-4 h-4 text-[#021d49] shrink-0" />
                                                 <span className="text-gray-700 font-medium">{story.beneficiaries}</span>
                                             </div>
                                         </div>
 
                                         {/* Excerpt */}
                                         <p className="text-sm text-gray-600 leading-relaxed mb-4">
-                                            {story.excerpt}
+                                            {story.excerpt || (story.description ? story.description.replace(/<[^>]+>/g, '').split(' ').slice(0, 30).join(' ') + (story.description.split(' ').length > 30 ? '...' : '') : '')}
                                         </p>
 
                                         {/* Impact Points */}
                                         <div className="mb-4">
                                             <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Key Impact:</h4>
                                             <div className="flex flex-wrap gap-2">
-                                                {Array.isArray(story.impact) && story.impact.map((item, index) => (
+                                                {Array.isArray(story.impact) && story.impact.map((item: any, index: number) => (
                                                     <span
                                                         key={index}
                                                         className="px-3 py-1 bg-green-50 text-green-700 text-xs font-semibold rounded-full border border-green-200"
@@ -201,7 +219,7 @@ const ImpactStoriesPage = () => {
                                         {/* Button */}
                                         <div className="flex items-center justify-end">
                                             <button
-                                                onClick={(e) => { e.stopPropagation(); handleStoryClick(story.id); }}
+                                                onClick={(e) => { e.stopPropagation(); handleStoryClick(story._id || story.id); }}
                                                 className="px-6 py-3 bg-gradient-to-r from-[#021d49] to-[#021d49] hover:shadow-xl text-white font-semibold rounded-lg shadow-md flex items-center gap-2 justify-center transition-all duration-200 whitespace-nowrap"
                                             >
                                                 <span>Read Full Story</span>

@@ -90,24 +90,33 @@ const Navbar = () => {
     };
 
     return (
-        <nav className="w-full sticky top-0 z-50 backdrop-blur-lg bg-white/95 border-b border-gray-200">
+        <nav className="w-full sticky top-0 z-50 backdrop-blur-xl bg-white/98 border-b border-gray-100 shadow-sm">
             <div className="max-w-[1600px] mx-auto px-6">
-                <div className="flex items-center justify-between h-16">
-                    {/* Logo */}
-                    <a href="/" className="flex items-center">
-                        <Image
-                            src="/Arin.png"
-                            alt="ARIN Logo"
-                            width={120}
-                            height={48}
-                            priority
-                            className="object-contain"
-                        />
+                <div className="flex items-center justify-between py-4">
+                    {/* Logo with Organization Name */}
+                    <a href="/" className="flex flex-col items-start gap-2.5 group transition-transform hover:scale-[1.02] duration-300">
+                        <div className="relative">
+                            <Image
+                                src="/Arin.png"
+                                alt="ARIN Logo"
+                                width={150}
+                                height={60}
+                                priority
+                                className="object-contain drop-shadow-sm"
+                                quality={100}
+                                style={{ imageRendering: 'crisp-edges' }}
+                            />
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="text-[#021d49] font-bold text-[13px] tracking-[0.12em] uppercase leading-tight group-hover:text-blue-700 transition-colors">
+                                Africa Research & Impact Network
+                            </span>
+                        </div>
                     </a>
 
                     {/* Navigation Menu */}
-                    <div className="hidden lg:flex items-center flex-1 justify-center">
-                        <ul className="flex items-center gap-8">
+                    <div className="hidden lg:flex items-center flex-1 justify-center ml-8">
+                        <ul className="flex items-center gap-7">
                             {menuItems.map((item, index) => (
                                 <li
                                     key={index}
@@ -116,39 +125,56 @@ const Navbar = () => {
                                     onMouseLeave={() => setActiveMenu(null)}
                                 >
                                     <button
-                                        className={`flex items-center gap-1 text-[15px] font-medium transition-colors py-2 ${isActive(item.href)
-                                            ? 'text-[#021d49]'
-                                            : 'text-[#021d49] hover:text-[#021d49]'
+                                        className={`flex items-center gap-1 text-[15px] font-medium transition-all duration-200 py-2 ${isActive(item.href)
+                                            ? 'text-[#021d49] font-semibold'
+                                            : 'text-gray-700 hover:text-[#021d49]'
                                             }`}
                                     >
                                         {item.name}
                                         {item.submenu && (
                                             <ChevronDown
-                                                className={`w-4 h-4 transition-transform duration-200 ${activeMenu === index ? 'rotate-180' : ''
+                                                className={`w-4 h-4 transition-transform duration-300 ${activeMenu === index ? 'rotate-180' : ''
                                                     }`}
                                             />
                                         )}
                                     </button>
 
+                                    {/* Elegant underline indicator */}
+                                    <div
+                                        className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-[#021d49] to-blue-600 transition-all duration-300 ${isActive(item.href) ? 'w-full' : 'w-0 group-hover:w-full'
+                                            }`}
+                                    />
+
                                     {/* Dropdown Menu */}
                                     {item.submenu && activeMenu === index && (
-                                        <div className={`absolute top-full pt-4 min-w-[600px] ${index >= menuItems.length - 2 ? 'right-0' : 'left-0'
-                                            }`}>
-                                            <div className="backdrop-blur-xl bg-white/98 rounded-xl shadow-2xl border border-gray-100 py-8 px-10">
-                                                <div className={`grid gap-3 ${item.submenu.length > 10 ? 'grid-cols-3' :
-                                                    item.submenu.length > 4 ? 'grid-cols-2' :
-                                                        'grid-cols-1'
-                                                    }`}>
+                                        <div
+                                            className={`absolute top-full pt-6 min-w-[600px] ${index >= menuItems.length - 2 ? 'right-0' : 'left-0'
+                                                }`}
+                                        >
+                                            <div className="backdrop-blur-2xl bg-white/98 rounded-2xl shadow-2xl border border-gray-100 py-6 px-8 animate-fadeIn">
+                                                <div
+                                                    className={`grid gap-2 ${item.submenu.length > 10
+                                                        ? 'grid-cols-3'
+                                                        : item.submenu.length > 4
+                                                            ? 'grid-cols-2'
+                                                            : 'grid-cols-1'
+                                                        }`}
+                                                >
                                                     {item.submenu.map((subItem, subIndex) => (
                                                         <a
                                                             key={subIndex}
                                                             href={subItem.href}
-                                                            className={`block px-5 py-3 text-[15px] transition-all rounded-lg whitespace-nowrap ${pathname === subItem.href
-                                                                ? 'bg-[#021d49] text-white font-medium'
-                                                                : 'text-[#021d49] hover:bg-[#021d49]/10 hover:text-[#021d49] font-normal'
+                                                            className={`block px-4 py-3 text-[14px] transition-all duration-200 rounded-xl whitespace-nowrap group/item ${pathname === subItem.href
+                                                                ? 'bg-gradient-to-r from-[#021d49] to-blue-700 text-white font-medium shadow-md'
+                                                                : 'text-gray-700 hover:bg-gradient-to-r hover:from-gray-50 hover:to-blue-50 hover:text-[#021d49] font-normal'
                                                                 }`}
                                                         >
-                                                            {subItem.name}
+                                                            <span className="flex items-center gap-2">
+                                                                {pathname !== subItem.href && (
+                                                                    <span className="w-0 h-0.5 bg-[#021d49] transition-all duration-300 group-hover/item:w-2" />
+                                                                )}
+                                                                {subItem.name}
+                                                            </span>
                                                         </a>
                                                     ))}
                                                 </div>
@@ -159,16 +185,20 @@ const Navbar = () => {
                             ))}
 
                             {/* Contact Us Link */}
-                            <li>
+                            <li className="relative group">
                                 <a
                                     href="/contact"
-                                    className={`text-[15px] font-medium transition-colors ${pathname === '/contact'
-                                        ? 'text-[#021d49]'
-                                        : 'text-[#021d49] hover:text-[#021d49]'
+                                    className={`text-[15px] font-medium transition-all duration-200 py-2 block ${pathname === '/contact'
+                                        ? 'text-[#021d49] font-semibold'
+                                        : 'text-gray-700 hover:text-[#021d49]'
                                         }`}
                                 >
                                     Contact Us
                                 </a>
+                                <div
+                                    className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-[#021d49] to-blue-600 transition-all duration-300 ${pathname === '/contact' ? 'w-full' : 'w-0 group-hover:w-full'
+                                        }`}
+                                />
                             </li>
                         </ul>
                     </div>
@@ -177,22 +207,33 @@ const Navbar = () => {
                     <div className="hidden lg:block">
                         <a
                             href="/join"
-                            className="px-6 py-2.5 bg-[#021d49] hover:bg-[#021d49] text-white font-medium text-[15px] rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
+                            className="group relative px-6 py-2.5 bg-gradient-to-r from-[#021d49] to-blue-700 hover:from-[#021d49] hover:to-blue-800 text-white font-medium text-[15px] rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl overflow-hidden"
                         >
-                            Join Us
+                            <span className="relative z-10">Join Us</span>
+                            <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-[#021d49] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         </a>
                     </div>
 
                     {/* Mobile Menu Button */}
                     <button
-                        className="lg:hidden p-2 text-[#021d49]"
+                        className="lg:hidden p-2 text-[#021d49] hover:bg-gray-100 rounded-lg transition-colors"
                         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                     >
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             {mobileMenuOpen ? (
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
                             ) : (
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M4 6h16M4 12h16M4 18h16"
+                                />
                             )}
                         </svg>
                     </button>
@@ -200,32 +241,38 @@ const Navbar = () => {
 
                 {/* Mobile Menu */}
                 {mobileMenuOpen && (
-                    <div className="lg:hidden border-t border-gray-200 bg-white">
-                        <div className="px-4 py-4 space-y-2 max-h-[calc(100vh-4rem)] overflow-y-auto">
+                    <div className="lg:hidden border-t border-gray-100 bg-white/95 backdrop-blur-xl animate-fadeIn">
+                        <div className="px-4 py-4 space-y-2 max-h-[calc(100vh-6rem)] overflow-y-auto">
                             {menuItems.map((item, index) => (
                                 <div key={index}>
                                     {item.submenu ? (
                                         <>
                                             <button
-                                                onClick={() => setMobileSubmenuOpen(mobileSubmenuOpen === index ? null : index)}
-                                                className={`w-full flex items-center justify-between px-4 py-3 text-[15px] font-medium rounded-lg transition-colors ${isActive(item.href) ? 'text-[#021d49] bg-[#021d49]/10' : 'text-[#021d49] hover:bg-gray-50'
+                                                onClick={() =>
+                                                    setMobileSubmenuOpen(
+                                                        mobileSubmenuOpen === index ? null : index
+                                                    )
+                                                }
+                                                className={`w-full flex items-center justify-between px-4 py-3 text-[15px] font-medium rounded-xl transition-all duration-200 ${isActive(item.href)
+                                                    ? 'text-[#021d49] bg-gradient-to-r from-blue-50 to-gray-50'
+                                                    : 'text-gray-700 hover:bg-gray-50'
                                                     }`}
                                             >
                                                 {item.name}
                                                 <ChevronDown
-                                                    className={`w-4 h-4 transition-transform duration-200 ${mobileSubmenuOpen === index ? 'rotate-180' : ''
+                                                    className={`w-4 h-4 transition-transform duration-300 ${mobileSubmenuOpen === index ? 'rotate-180' : ''
                                                         }`}
                                                 />
                                             </button>
                                             {mobileSubmenuOpen === index && (
-                                                <div className="ml-4 mt-2 space-y-1">
+                                                <div className="ml-4 mt-2 space-y-1 animate-fadeIn">
                                                     {item.submenu.map((subItem, subIndex) => (
                                                         <a
                                                             key={subIndex}
                                                             href={subItem.href}
-                                                            className={`block px-4 py-2.5 text-[14px] rounded-lg transition-colors ${pathname === subItem.href
-                                                                ? 'bg-[#021d49] text-white font-medium'
-                                                                : 'text-[#021d49] hover:bg-[#021d49]/10 hover:text-[#021d49]'
+                                                            className={`block px-4 py-2.5 text-[14px] rounded-lg transition-all duration-200 ${pathname === subItem.href
+                                                                ? 'bg-gradient-to-r from-[#021d49] to-blue-700 text-white font-medium shadow-md'
+                                                                : 'text-gray-600 hover:bg-gray-50 hover:text-[#021d49]'
                                                                 }`}
                                                         >
                                                             {subItem.name}
@@ -237,7 +284,9 @@ const Navbar = () => {
                                     ) : (
                                         <a
                                             href={item.href}
-                                            className={`block px-4 py-3 text-[15px] font-medium rounded-lg transition-colors ${pathname === item.href ? 'text-[#021d49] bg-[#021d49]/10' : 'text-[#021d49] hover:bg-gray-50'
+                                            className={`block px-4 py-3 text-[15px] font-medium rounded-xl transition-all duration-200 ${pathname === item.href
+                                                ? 'text-[#021d49] bg-gradient-to-r from-blue-50 to-gray-50'
+                                                : 'text-gray-700 hover:bg-gray-50'
                                                 }`}
                                         >
                                             {item.name}
@@ -249,7 +298,9 @@ const Navbar = () => {
                             {/* Mobile Contact Us */}
                             <a
                                 href="/contact"
-                                className={`block px-4 py-3 text-[15px] font-medium rounded-lg transition-colors ${pathname === '/contact' ? 'text-[#021d49] bg-[#021d49]/10' : 'text-[#021d49] hover:bg-gray-50'
+                                className={`block px-4 py-3 text-[15px] font-medium rounded-xl transition-all duration-200 ${pathname === '/contact'
+                                    ? 'text-[#021d49] bg-gradient-to-r from-blue-50 to-gray-50'
+                                    : 'text-gray-700 hover:bg-gray-50'
                                     }`}
                             >
                                 Contact Us
@@ -258,7 +309,7 @@ const Navbar = () => {
                             {/* Mobile CTA Button */}
                             <a
                                 href="/join"
-                                className="block text-center px-6 py-3 bg-[#021d49] hover:bg-[#021d49] text-white font-medium text-[15px] rounded-lg transition-all duration-300 shadow-md mt-4"
+                                className="block text-center px-6 py-3 bg-gradient-to-r from-[#021d49] to-blue-700 hover:from-[#021d49] hover:to-blue-800 text-white font-medium text-[15px] rounded-xl transition-all duration-300 shadow-lg mt-4"
                             >
                                 Join Us
                             </a>
@@ -266,6 +317,22 @@ const Navbar = () => {
                     </div>
                 )}
             </div>
+
+            <style jsx>{`
+                @keyframes fadeIn {
+                    from {
+                        opacity: 0;
+                        transform: translateY(-10px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+                .animate-fadeIn {
+                    animation: fadeIn 0.3s ease-out forwards;
+                }
+            `}</style>
         </nav>
     );
 };

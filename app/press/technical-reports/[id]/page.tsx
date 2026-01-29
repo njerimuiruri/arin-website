@@ -215,25 +215,34 @@ export default function TechnicalReportDetailPage() {
                                             </div>
 
                                             <div className="space-y-3">
-                                                {report.availableResources.map((url, idx) => (
-                                                    <a
-                                                        key={idx}
-                                                        href={url}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="flex items-center justify-between gap-3 p-4 bg-gradient-to-r from-gray-50 to-blue-50/50 hover:from-[#021d49] hover:to-[#032a5e] border border-gray-200 hover:border-[#021d49] rounded-xl transition-all duration-300 group"
-                                                    >
-                                                        <div className="flex items-center gap-3 flex-1 min-w-0">
-                                                            <div className="bg-white p-2 rounded-lg shadow-sm group-hover:bg-white/20 transition-colors">
-                                                                <Download className="w-4 h-4 text-[#021d49] group-hover:text-white transition-colors" />
+                                                {report.availableResources.map((url, idx) => {
+                                                    let downloadUrl = url;
+                                                    // If Cloudinary, force download
+                                                    if (typeof url === 'string' && url.includes('cloudinary.com')) {
+                                                        if (!url.includes('?dl=1')) {
+                                                            downloadUrl = url + (url.includes('?') ? '&dl=1' : '?dl=1');
+                                                        }
+                                                    }
+                                                    return (
+                                                        <a
+                                                            key={idx}
+                                                            href={downloadUrl}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="flex items-center justify-between gap-3 p-4 bg-gradient-to-r from-gray-50 to-blue-50/50 hover:from-[#021d49] hover:to-[#032a5e] border border-gray-200 hover:border-[#021d49] rounded-xl transition-all duration-300 group"
+                                                        >
+                                                            <div className="flex items-center gap-3 flex-1 min-w-0">
+                                                                <div className="bg-white p-2 rounded-lg shadow-sm group-hover:bg-white/20 transition-colors">
+                                                                    <Download className="w-4 h-4 text-[#021d49] group-hover:text-white transition-colors" />
+                                                                </div>
+                                                                <span className="text-sm font-semibold text-gray-700 group-hover:text-white transition-colors truncate">
+                                                                    Resource {idx + 1}
+                                                                </span>
                                                             </div>
-                                                            <span className="text-sm font-semibold text-gray-700 group-hover:text-white transition-colors truncate">
-                                                                Resource {idx + 1}
-                                                            </span>
-                                                        </div>
-                                                        <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors shrink-0" />
-                                                    </a>
-                                                ))}
+                                                            <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors shrink-0" />
+                                                        </a>
+                                                    );
+                                                })}
                                             </div>
                                         </div>
                                     )}

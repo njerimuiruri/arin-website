@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Navbar from "@/app/navbar/Navbar";
 import { getCapacityProject } from "@/services/capacityBuildingService";
+import Footer from "@/app/footer/Footer";
 
 const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -208,6 +209,7 @@ const CapacityBuildingDetailPage = () => {
                     </div>
                 </div>
             </div>
+            <Footer />
         </>
     );
 };

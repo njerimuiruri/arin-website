@@ -4,6 +4,7 @@ import { ArrowRight, Calendar, FileText, Search, Filter, X } from 'lucide-react'
 import Navbar from '@/app/navbar/Navbar';
 import { getResearchProjects } from '@/services/researchProjectService';
 import { useRouter } from 'next/navigation';
+import Footer from '@/app/footer/Footer';
 
 const ResearchProjectsPage = () => {
     const router = useRouter();
@@ -296,6 +297,7 @@ const ResearchProjectsPage = () => {
                     )}
                 </section>
             </div>
+            <Footer />
         </>
     );
 };
