@@ -46,6 +46,10 @@ const ResearchProjectsPage = () => {
             text.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesCategory = selectedCategory === 'All' || project.category === selectedCategory;
         return matchesSearch && matchesCategory;
+    }).sort((a, b) => {
+        const dateA = a.date ? new Date(a.date).getTime() : 0;
+        const dateB = b.date ? new Date(b.date).getTime() : 0;
+        return dateB - dateA;
     });
 
     const handleProjectClick = (projectId: string) => {
