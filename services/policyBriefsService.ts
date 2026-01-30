@@ -1,5 +1,5 @@
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001/api/policy-briefs";
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.demo.arin-africa.org/api/policy-briefs";
 
 export interface PolicyBrief {
   _id?: string;

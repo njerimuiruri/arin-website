@@ -28,7 +28,7 @@ export default async function WorkingPaperDetailPage({ params }: { params: { id:
                             )}
                         </div>
                         {paper.image && (
-                            <img src={paper.image.startsWith('http') ? paper.image : `http://localhost:5001${paper.image}`} alt={paper.title} className="w-full max-h-96 object-cover rounded-xl mb-6" />
+                            <img src={paper.image.startsWith('http') ? paper.image : `https://api.demo.arin-africa.org${paper.image}`} alt={paper.title} className="w-full max-h-96 object-cover rounded-xl mb-6" />
                         )}
                     </div>
                     <article className="prose max-w-none mb-8" dangerouslySetInnerHTML={{ __html: paper.description || '<em>No description provided.</em>' }} />
@@ -38,7 +38,7 @@ export default async function WorkingPaperDetailPage({ params }: { params: { id:
                             <ul className="list-disc ml-6">
                                 {paper.availableResources.map((url: string, idx: number) => (
                                     <li key={idx}>
-                                        <a href={url.startsWith('http') ? url : `http://localhost:5001${url}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">Resource {idx + 1}</a>
+                                        <a href={url.startsWith('http') ? url : `https://api.demo.arin-africa.org${url}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">Resource {idx + 1}</a>
                                     </li>
                                 ))}
                             </ul>

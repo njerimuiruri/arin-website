@@ -60,7 +60,7 @@ export default function WorkingPapersPage() {
                                     {paper.image ? (
                                         <>
                                             <img
-                                                src={paper.image.startsWith('http') ? paper.image : `http://localhost:5001${paper.image}`}
+                                                src={paper.image.startsWith('http') ? paper.image : `https://api.demo.arin-africa.org${paper.image}`}
                                                 alt={paper.title}
                                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                             />
@@ -122,7 +122,7 @@ export default function WorkingPapersPage() {
                                             <ul className="list-disc ml-4">
                                                 {paper.availableResources.map((url, idx) => (
                                                     <li key={idx}>
-                                                        <a href={url.startsWith('http') ? url : `http://localhost:5001${url}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline text-xs">Resource {idx + 1}</a>
+                                                        <a href={url.startsWith('http') ? url : `https://api.demo.arin-africa.org${url}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline text-xs">Resource {idx + 1}</a>
                                                     </li>
                                                 ))}
                                             </ul>

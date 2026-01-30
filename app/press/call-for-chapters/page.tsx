@@ -23,7 +23,7 @@ const CallForBooksPage = () => {
             setLoading(true);
             setError(null);
             try {
-                const res = await fetch("http://localhost:5001/api/call-for-books");
+                const res = await fetch("https://api.demo.arin-africa.org/api/call-for-books");
                 if (!res.ok) throw new Error("Failed to fetch calls");
                 const data = await res.json();
                 setCalls(data);

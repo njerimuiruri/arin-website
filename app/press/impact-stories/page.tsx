@@ -154,7 +154,7 @@ const ImpactStoriesPage = () => {
                                     <div className="md:w-2/5 relative h-64 md:h-auto overflow-hidden">
                                         {story.image ? (
                                             <img
-                                                src={story.image.startsWith('http') ? story.image : `http://localhost:5001${story.image}`}
+                                                src={story.image.startsWith('http') ? story.image : `https://api.demo.arin-africa.org${story.image}`}
                                                 alt={story.title}
                                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                             />

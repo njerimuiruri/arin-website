@@ -123,7 +123,7 @@ export default function JournalArticleDetailPage() {
                 {article.coverImage && (
                     <div className="relative w-full h-96 bg-gradient-to-br from-slate-900 to-slate-700 overflow-hidden">
                         <img
-                            src={article.coverImage.startsWith('http') ? article.coverImage : `http://localhost:5001${article.coverImage}`}
+                            src={article.coverImage.startsWith('http') ? article.coverImage : `https://api.demo.arin-africa.org${article.coverImage}`}
                             alt={article.title}
                             className="w-full h-full object-cover opacity-40"
                         />
@@ -294,7 +294,7 @@ export default function JournalArticleDetailPage() {
                             <div className="grid gap-4">
                                 {article.availableResources.map((url, index) => {
                                     const fileName = url.split('/').pop() || `Resource ${index + 1}`;
-                                    const downloadUrl = url.startsWith('http') ? url : `http://localhost:5001${url}`;
+                                    const downloadUrl = url.startsWith('http') ? url : `https://api.demo.arin-africa.org${url}`;
 
                                     return (
                                         <a

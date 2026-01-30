@@ -25,7 +25,7 @@ const CsrDetailPage = () => {
 
     const fetchCsr = async (csrId: string) => {
         try {
-            const apiBaseUrl = (typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_API_BASE_URL : '') || 'http://localhost:5001';
+            const apiBaseUrl = (typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_API_BASE_URL : '') || 'https://api.demo.arin-africa.org';
             const response = await fetch(`${apiBaseUrl}/api/csr/${csrId}`);
             if (!response.ok) throw new Error('Failed to fetch CSR activity');
             const data = await response.json();

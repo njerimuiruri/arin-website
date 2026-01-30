@@ -47,7 +47,7 @@ const CapacityBuildingList = () => {
     const buildImageUrl = (imagePath: string | undefined) => {
         if (!imagePath) return null;
         if (imagePath.startsWith('http')) return imagePath;
-        return `http://localhost:5001${imagePath}`;
+        return `https://api.demo.arin-africa.org${imagePath}`;
     };
 
     const extractTextFromHtml = (html: string, maxLength: number = 150) => {

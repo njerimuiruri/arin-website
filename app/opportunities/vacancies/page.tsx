@@ -27,7 +27,7 @@ const VacanciesPage = () => {
 
     const fetchVacancies = async () => {
         try {
-            const apiBaseUrl = (typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_API_BASE_URL : '') || 'http://localhost:5001';
+            const apiBaseUrl = (typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_API_BASE_URL : '') || 'https://api.demo.arin-africa.org';
             const response = await fetch(apiBaseUrl + '/api/vacancies', {
                 headers: { 'Content-Type': 'application/json' },
             });

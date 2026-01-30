@@ -63,7 +63,7 @@ const ImpactStories = () => {
                             {/* Image */}
                             <div className="relative h-56 overflow-hidden">
                                 <img
-                                    src={story.image?.startsWith('http') ? story.image : story.image ? `http://localhost:5001${story.image}` : '/api/placeholder/600/400'}
+                                    src={story.image?.startsWith('http') ? story.image : story.image ? `https://api.demo.arin-africa.org${story.image}` : '/api/placeholder/600/400'}
                                     alt={story.title}
                                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                 />

@@ -193,7 +193,7 @@ const JournalArticlesPage = () => {
                                         {article.coverImage ? (
                                             <>
                                                 <img
-                                                    src={article.coverImage.startsWith('http') ? article.coverImage : `http://localhost:5001${article.coverImage}`}
+                                                    src={article.coverImage.startsWith('http') ? article.coverImage : `https://api.demo.arin-africa.org${article.coverImage}`}
                                                     alt={article.title}
                                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                                 />

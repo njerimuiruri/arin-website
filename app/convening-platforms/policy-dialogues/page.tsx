@@ -38,7 +38,7 @@ const PolicyDialoguesPage = () => {
 
     const buildImageUrl = (path: string) => {
         if (!path) return '';
-        return path.startsWith('http') ? path : `http://localhost:5001${path}`;
+        return path.startsWith('http') ? path : `https://api.demo.arin-africa.org${path}`;
     };
 
     const filteredDialogues = dialogues

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.demo.arin-africa.org';
 
 export const getPhotosVideos = async () => {
   const { data } = await axios.get(`${API_URL}/photos-videos`);

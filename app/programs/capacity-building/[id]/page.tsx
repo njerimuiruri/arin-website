@@ -16,12 +16,12 @@ const formatDate = (dateString) => {
 const buildImageUrl = (imagePath) => {
     if (!imagePath) return null;
     if (imagePath.startsWith("http")) return imagePath;
-    return `http://localhost:5001${imagePath}`;
+    return `https://api.demo.arin-africa.org${imagePath}`;
 };
 
 const buildResourceUrl = (resourcePath) => {
     if (resourcePath.startsWith("http")) return resourcePath;
-    return `http://localhost:5001${resourcePath}`;
+    return `https://api.demo.arin-africa.org${resourcePath}`;
 };
 
 const extractTextFromHtml = (html, maxLength = 150) => {

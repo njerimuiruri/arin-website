@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:5001/api/news-briefs";
+const BASE_URL = "https://api.demo.arin-africa.org/api/news-briefs";
 
 export async function getNewsBriefs() {
   try {

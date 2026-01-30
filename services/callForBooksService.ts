@@ -1,6 +1,6 @@
 // services/callForBooksService.ts
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001/api/call-for-books";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.demo.arin-africa.org/api/call-for-books";
 
 export async function getAllCalls() {
     const res = await fetch(API_URL);

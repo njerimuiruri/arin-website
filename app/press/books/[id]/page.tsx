@@ -137,7 +137,7 @@ export default function BookDetailPage() {
                             {book.image ? (
                                 <div className="sticky top-8">
                                     <img
-                                        src={book.image.startsWith('http') ? book.image : `http://localhost:5001${book.image}`}
+                                        src={book.image.startsWith('http') ? book.image : `https://api.demo.arin-africa.org${book.image}`}
                                         alt={book.title}
                                         className="w-full h-auto rounded-lg shadow-xl"
                                     />
@@ -230,7 +230,7 @@ export default function BookDetailPage() {
                             <div className="space-y-4">
                                 {book.availableResources.map((url, index) => {
                                     const fileName = url.split('/').pop() || `Resource ${index + 1}`;
-                                    const downloadUrl = url.startsWith('http') ? url : `http://localhost:5001${url}`;
+                                    const downloadUrl = url.startsWith('http') ? url : `https://api.demo.arin-africa.org${url}`;
 
                                     return (
                                         <a

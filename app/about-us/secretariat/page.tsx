@@ -97,7 +97,7 @@ const SecretariatPage = () => {
                                     {/* Image - Compact height */}
                                     <div className="relative aspect-[3/4] overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
                                         <img
-                                            src={member.image && member.image.startsWith('http') ? member.image : member.image ? `http://localhost:5001${member.image}` : 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop'}
+                                            src={member.image && member.image.startsWith('http') ? member.image : member.image ? `https://api.demo.arin-africa.org${member.image}` : 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop'}
                                             alt={`${member.firstName} ${member.lastName}`}
                                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                             onError={e => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop'; }}
@@ -149,7 +149,7 @@ const SecretariatPage = () => {
                                     <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
                                         <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden shadow-xl flex-shrink-0 ring-4 ring-white/30">
                                             <img
-                                                src={selectedMember.image && selectedMember.image.startsWith('http') ? selectedMember.image : selectedMember.image ? `http://localhost:5001${selectedMember.image}` : 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop'}
+                                                src={selectedMember.image && selectedMember.image.startsWith('http') ? selectedMember.image : selectedMember.image ? `https://api.demo.arin-africa.org${selectedMember.image}` : 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop'}
                                                 alt={`${selectedMember.firstName} ${selectedMember.lastName}`}
                                                 className="w-full h-full object-cover"
                                                 onError={e => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop'; }}
