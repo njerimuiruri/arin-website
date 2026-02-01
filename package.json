@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+     "build": "cross-env NEXT_DISABLE_TURBOPACK=1 next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -23,6 +23,7 @@
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
+    "@next/swc": "^15.5.11",
     "@tailwindcss/postcss": "^4",
     "@types/axios": "^0.14.4",
     "@types/node": "^20",
