@@ -3,7 +3,22 @@
 import { ArrowRight } from "lucide-react";
 import React from "react";
 
-const LatestPostsSection = ({ latestPosts }: { latestPosts: any[] | undefined }) => {
+interface Post {
+    _id?: string;
+    id?: string;
+    image: string;
+    title: string;
+    category: string;
+    excerpt: string;
+    date: string;
+    slug?: string;
+}
+
+interface LatestPostsSectionProps {
+    latestPosts?: Post[];
+}
+
+const LatestPostsSection = ({ latestPosts }: LatestPostsSectionProps) => {
     if (!latestPosts || !Array.isArray(latestPosts) || latestPosts.length === 0) {
         return null;
     }
@@ -15,18 +30,33 @@ const LatestPostsSection = ({ latestPosts }: { latestPosts: any[] | undefined })
                     <h2 className="text-4xl font-bold text-gray-900 mb-2">Latest Posts</h2>
                     <p className="text-gray-600 text-lg">Stay updated with our recent publications and insights</p>
                 </div>
-                <a href="/press/blog" className="hidden md:inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-[#021d49] to-[#021d49] text-white font-bold rounded-xl hover:from-[#3a8da5] hover:to-[#011536] transition-all shadow-lg">
+                <a
+                    href="/press/blog"
+                    className="hidden md:inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-[#021d49] to-[#021d49] text-white font-bold rounded-xl hover:from-[#3a8da5] hover:to-[#011536] transition-all shadow-lg"
+                    aria-label="View all blog posts"
+                >
                     View All Posts
                     <ArrowRight className="w-5 h-5" />
                 </a>
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {latestPosts?.map((post, index) => (
-                    <article key={index} className="group bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 border-2 border-stone-200 hover:border-[#021d49] hover:-translate-y-2">
+                {latestPosts.map((post, index) => (
+                    <article
+                        key={post._id || post.id || index}
+                        className="group bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 border-2 border-stone-200 hover:border-[#021d49] hover:-translate-y-2"
+                    >
                         <div className="relative h-56 overflow-hidden">
-                            <img src={post.image} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                            <img
+                                src={post.image || '/placeholder-image.jpg'}
+                                alt={post.title || 'Blog post image'}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                onError={(e) => {
+                                    const target = e.target as HTMLImageElement;
+                                    target.src = '/placeholder-image.jpg';
+                                }}
+                            />
                             <div className="absolute top-4 left-4 bg-gradient-to-r from-[#021d49]/90 to-[#021d49]/90 text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg">
-                                {post.category}
+                                {post.category || 'Uncategorized'}
                             </div>
                         </div>
                         <div className="p-8">
@@ -37,8 +67,14 @@ const LatestPostsSection = ({ latestPosts }: { latestPosts: any[] | undefined })
                                 {post.excerpt}
                             </p>
                             <div className="flex items-center justify-between">
-                                <span className="text-xs text-gray-500 font-semibold">{post.date}</span>
-                                <a href="#" className="inline-flex items-center gap-2 text-[#021d49] font-bold hover:gap-4 transition-all">
+                                <span className="text-xs text-gray-500 font-semibold">
+                                    {post.date || 'No date'}
+                                </span>
+                                <a
+                                    href={post.slug ? `/press/blog/${post.slug}` : '#'}
+                                    className="inline-flex items-center gap-2 text-[#021d49] font-bold hover:gap-4 transition-all"
+                                    aria-label={`Read more about ${post.title}`}
+                                >
                                     Read More <ArrowRight className="w-4 h-4" />
                                 </a>
                             </div>

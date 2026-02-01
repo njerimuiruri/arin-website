@@ -8,6 +8,15 @@ export async function fetchWithTimeout(resource: RequestInfo, options: any = {})
     return response;
   } catch (e) {
     clearTimeout(id);
-    throw e;
+    const error = e instanceof Error ? e : new Error('Unknown error occurred');
+    
+    // Provide more detailed error information
+    if (error.name === 'AbortError') {
+      throw new Error(`Request timeout after ${timeout}ms to ${resource}`);
+    }
+    
+    // Log the error for debugging
+    console.error(`Fetch error for ${resource}:`, error.message);
+    throw error;
   }
 }
