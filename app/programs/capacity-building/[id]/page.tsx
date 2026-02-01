@@ -5,7 +5,24 @@ import Navbar from "@/app/navbar/Navbar";
 import { getCapacityProject } from "@/services/capacityBuildingService";
 import Footer from "@/app/footer/Footer";
 
-const formatDate = (dateString) => {
+
+type CapacityProject = {
+    _id?: string;
+    title: string;
+    description: string;
+    image?: string;
+    date?: string;
+    status?: string;
+    location?: string;
+    year?: number;
+    objectives?: string[];
+    outcomes?: string[];
+    partners?: string[];
+    projectTeam?: string[];
+    availableResources?: string[];
+};
+
+const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
         year: "numeric",
         month: "long",
@@ -13,18 +30,18 @@ const formatDate = (dateString) => {
     });
 };
 
-const buildImageUrl = (imagePath) => {
+const buildImageUrl = (imagePath?: string) => {
     if (!imagePath) return null;
     if (imagePath.startsWith("http")) return imagePath;
     return `https://api.demo.arin-africa.org${imagePath}`;
 };
 
-const buildResourceUrl = (resourcePath) => {
+const buildResourceUrl = (resourcePath: string) => {
     if (resourcePath.startsWith("http")) return resourcePath;
     return `https://api.demo.arin-africa.org${resourcePath}`;
 };
 
-const extractTextFromHtml = (html, maxLength = 150) => {
+const extractTextFromHtml = (html: string, maxLength = 150) => {
     if (!html) return "";
     if (typeof window === "undefined") return html;
     const div = document.createElement("div");
@@ -33,16 +50,18 @@ const extractTextFromHtml = (html, maxLength = 150) => {
     return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
 };
 
+
 const CapacityBuildingDetailPage = () => {
-    const params = useParams();
+    const params = useParams<{ id: string }>();
     const router = useRouter();
     const id = params.id;
-    const [project, setProject] = useState(null);
+    const [project, setProject] = useState<CapacityProject | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         async function fetchProject() {
             try {
+                if (!id) return;
                 const data = await getCapacityProject(id);
                 setProject(data);
             } catch (error) {

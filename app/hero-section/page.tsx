@@ -1,4 +1,9 @@
-"use client";
+import { Suspense } from "react";
+import { dynamic } from "next/dynamic";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 3600;
+
 import HeroTopSection from "./sections/HeroTopSection";
 import FeaturesSection from "./sections/FeaturesSection";
 import FocusAreasSection from "./sections/FocusAreasSection";
@@ -10,6 +15,13 @@ import PartnersSection from "./sections/PartnersSection";
 import CTASection from "./sections/CTASection";
 import AfricaPresenceMap from "./sections/AfricaPresenceMap";
 import ImpactStories from "./sections/impactstories";
+
+import { getEvents } from "@/services/eventsService";
+import { technicalReportsService } from "@/services/technicalReportsService";
+import { policyBriefsService } from "@/services/policyBriefsService";
+import { getNewsBriefs } from "@/services/newsBriefsService";
+import { getResearchProjects } from "@/services/researchProjectService";
+import { getPolicyDialogues } from "@/services/policyDialoguesService";
 
 const latestPosts = [
     {
@@ -100,10 +112,29 @@ const latestProjects = [
     }
 ];
 
-const HeroSection = () => {
+export default async function HeroSection() {
+    // Fetch all data on the server
+    const [events, techReports, policyBriefs, newsBriefs, researchProjects, policyDialogues] = await Promise.allSettled([
+        getEvents(),
+        technicalReportsService.getAll().catch(() => []),
+        policyBriefsService.getAll().catch(() => []),
+        getNewsBriefs().catch(() => []),
+        getResearchProjects().catch(() => []),
+        getPolicyDialogues ? getPolicyDialogues().catch(() => []) : Promise.resolve([])
+    ]).then(results =>
+        results.map(r => r.status === 'fulfilled' ? r.value : [])
+    );
+
     return (
         <div className="w-full bg-gradient-to-br from-slate-50 via-white to-stone-50">
-            <HeroTopSection />
+            <HeroTopSection
+                events={events}
+                techReports={techReports}
+                policyBriefs={policyBriefs}
+                newsBriefs={newsBriefs}
+                researchProjects={researchProjects}
+                policyDialogues={policyDialogues}
+            />
             <FeaturesSection />
             <FocusAreasSection />
             <MissionAreasSection />
@@ -113,10 +144,7 @@ const HeroSection = () => {
             {/* <LatestProjectsSection latestProjects={latestProjects} /> */}
             <ImpactStories />
             <PartnersSection partners={partners} />
-
             <CTASection />
         </div>
     );
-};
-
-export default HeroSection;
+}

@@ -5,12 +5,22 @@ import { useRouter } from 'next/navigation';
 import { getNewsBriefs } from '@/services/newsBriefsService';
 import Navbar from '@/app/navbar/Navbar';
 
+interface NewsBrief {
+    _id?: string;
+    title?: string;
+    description?: string;
+    authors?: string[];
+    category?: string;
+    image?: string;
+    datePosted?: string;
+}
+
 const NewsBriefsPage = () => {
-    const [newsBriefs, setNewsBriefs] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState('All');
-    const [currentPage, setCurrentPage] = useState(1);
+    const [newsBriefs, setNewsBriefs] = useState<NewsBrief[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [searchTerm, setSearchTerm] = useState<string>('');
+    const [selectedCategory, setSelectedCategory] = useState<string>('All');
+    const [currentPage, setCurrentPage] = useState<number>(1);
     const briefsPerPage = 6;
     const router = useRouter();
 
@@ -32,10 +42,10 @@ const NewsBriefsPage = () => {
         return html.replace(/<[^>]+>/g, '');
     }
 
-    const filteredBriefs = newsBriefs.filter(brief => {
+    const filteredBriefs = newsBriefs.filter((brief: NewsBrief) => {
         const title = (brief.title || '').toLowerCase();
         const description = stripHtml(brief.description || '').toLowerCase();
-        const authors = (brief.authors || []).join(', ').toLowerCase();
+        const authors = Array.isArray(brief.authors) ? brief.authors.join(', ').toLowerCase() : '';
         const matchesSearch = title.includes(searchTerm.toLowerCase()) ||
             description.includes(searchTerm.toLowerCase()) ||
             authors.includes(searchTerm.toLowerCase());
@@ -49,13 +59,15 @@ const NewsBriefsPage = () => {
     const currentBriefs = filteredBriefs.slice(indexOfFirstBrief, indexOfLastBrief);
     const totalPages = Math.ceil(filteredBriefs.length / briefsPerPage);
 
-    const handlePageChange = (pageNumber) => {
+    const handlePageChange = (pageNumber: number) => {
         setCurrentPage(pageNumber);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    const handleBriefClick = (briefId) => {
-        router.push(`/press/news-briefs/${briefId}`);
+    const handleBriefClick = (briefId: string) => {
+        if (briefId) {
+            router.push(`/press/news-briefs/${briefId}`);
+        }
     };
 
     return (

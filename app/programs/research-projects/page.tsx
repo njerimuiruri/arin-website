@@ -64,10 +64,10 @@ const ResearchProjectsPage = () => {
     return (
         <>
             <Navbar />
-            <div className="w-full bg-gradient-to-br from-slate-50 via-white to-blue-50 min-h-screen">
+            <div className="w-full bg-linear-to-br from-slate-50 via-white to-blue-50 min-h-screen">
                 {/* Hero Section */}
-                <section className="relative overflow-hidden bg-gradient-to-br from-[#021d49] via-[#032d6b] to-[#021d49] text-white">
-                    <div className="absolute inset-0 bg-grid-white/[0.05] bg-[size:20px_20px]"></div>
+                <section className="relative overflow-hidden bg-linear-to-br from-[#021d49] via-[#032d6b] to-[#021d49] text-white">
+                    <div className="absolute inset-0 bg-grid-white/[0.05] bg-size-[20px_20px]"></div>
                     <div className="max-w-7xl mx-auto px-6 py-12 relative z-10">
                         <div className="text-center">
                             <h1 className="text-4xl lg:text-5xl font-bold leading-tight mb-4">
@@ -192,23 +192,23 @@ const ResearchProjectsPage = () => {
                                     >
                                         {/* Main Image */}
                                         {imageUrl ? (
-                                            <div className="h-48 w-full bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden relative">
+                                            <div className="h-48 w-full bg-linear-to-br from-gray-100 to-gray-200 overflow-hidden relative">
                                                 <img
                                                     src={imageUrl}
                                                     alt={project.title || 'Project image'}
                                                     className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500"
                                                 />
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                                <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                                             </div>
                                         ) : (
-                                            <div className="h-48 w-full bg-gradient-to-br from-[#021d49]/5 to-[#021d49]/10 flex items-center justify-center">
+                                            <div className="h-48 w-full bg-linear-to-br from-[#021d49]/5 to-[#021d49]/10 flex items-center justify-center">
                                                 <FileText className="w-16 h-16 text-[#021d49]/30" />
                                             </div>
                                         )}
 
                                         <div className="p-6 space-y-4">
                                             {/* Title */}
-                                            <h3 className="text-xl font-bold text-gray-900 group-hover:text-[#021d49] transition-colors leading-snug line-clamp-2 min-h-[3.5rem]">
+                                            <h3 className="text-xl font-bold text-gray-900 group-hover:text-[#021d49] transition-colors leading-snug line-clamp-2 min-h-14">
                                                 {project.title}
                                             </h3>
 
@@ -232,7 +232,7 @@ const ResearchProjectsPage = () => {
                                             </div>
 
                                             {/* Description */}
-                                            <p className="text-sm text-gray-600 leading-relaxed line-clamp-3 min-h-[4.5rem]">
+                                            <p className="text-sm text-gray-600 leading-relaxed line-clamp-3 min-h-18">
                                                 {stripHtml(project.description || 'No description available').slice(0, 150)}
                                                 {stripHtml(project.description || '').length > 150 ? '...' : ''}
                                             </p>

@@ -6,11 +6,25 @@ import Navbar from "@/app/navbar/Navbar";
 import { Calendar, FileText, Lightbulb, ArrowLeft } from "lucide-react";
 import { policyBriefsService } from "@/services/policyBriefsService";
 
+interface PolicyBrief {
+    id: string;
+    title: string;
+    category?: string;
+    image?: string;
+    coverImage?: string;
+    datePosted?: string;
+    excerpt?: string;
+    description?: string;
+    availableResources?: string[];
+}
+
 const PolicyBriefViewPage = () => {
-    const { id } = useParams();
-    const [brief, setBrief] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    // useParams returns Record<string, string> | null in Next.js 13+
+    const params = useParams();
+    const id = typeof params === 'object' && params !== null && 'id' in params ? String((params as Record<string, string>).id) : '';
+    const [brief, setBrief] = useState<PolicyBrief | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchBrief = async () => {
@@ -19,13 +33,13 @@ const PolicyBriefViewPage = () => {
                 const data = await policyBriefsService.getById(id);
                 setBrief(data);
                 setError(null);
-            } catch (err) {
-                setError(err instanceof Error ? err.message : "Failed to load policy brief");
+            } catch (err: any) {
+                setError(err?.message || "Failed to load policy brief");
             } finally {
                 setLoading(false);
             }
         };
-        if (id) fetchBrief();
+        if (id && typeof id === 'string' && id.length > 0) fetchBrief();
     }, [id]);
 
     return (
@@ -58,7 +72,7 @@ const PolicyBriefViewPage = () => {
                                 {(brief.image || brief.coverImage) ? (
                                     <img
                                         src={brief.image || brief.coverImage}
-                                        alt={brief.title}
+                                        alt={brief.title || 'Policy Brief'}
                                         className="w-full h-64 object-cover rounded-xl mb-4"
                                     />
                                 ) : (
@@ -67,9 +81,9 @@ const PolicyBriefViewPage = () => {
                                     </div>
                                 )}
                                 <span className="inline-block px-3 py-1 bg-gradient-to-r from-[#021d49] to-[#021d49] text-white font-bold text-xs uppercase tracking-wide rounded-full mb-3">
-                                    {brief.category}
+                                    {brief.category || 'Uncategorized'}
                                 </span>
-                                <h1 className="text-3xl font-bold text-gray-900 mb-2">{brief.title}</h1>
+                                <h1 className="text-3xl font-bold text-gray-900 mb-2">{brief.title || 'Untitled'}</h1>
                                 <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
                                     <Calendar className="w-4 h-4 text-[#021d49]" />
                                     <span>{brief.datePosted ? new Date(brief.datePosted).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : ''}</span>
@@ -77,19 +91,19 @@ const PolicyBriefViewPage = () => {
                             </div>
                             <div className="mb-6">
                                 <h2 className="text-lg font-semibold mb-2">Summary</h2>
-                                <p className="text-gray-700 leading-relaxed">{brief.excerpt}</p>
+                                <p className="text-gray-700 leading-relaxed">{brief.excerpt ? brief.excerpt : 'No summary available.'}</p>
                             </div>
-                            {brief.description && (
+                            {brief.description && typeof brief.description === 'string' && brief.description.trim().length > 0 ? (
                                 <div className="mb-6">
                                     <h2 className="text-lg font-semibold mb-2">Description</h2>
                                     <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: brief.description }} />
                                 </div>
-                            )}
-                            {brief.availableResources && brief.availableResources.length > 0 && (
+                            ) : null}
+                            {Array.isArray(brief.availableResources) && brief.availableResources.length > 0 && (
                                 <div className="mb-6">
                                     <h2 className="text-lg font-semibold mb-2">Resources</h2>
                                     <ul className="list-disc pl-6">
-                                        {brief.availableResources.map((url, idx) => (
+                                        {brief.availableResources.map((url: string, idx: number) => (
                                             <li key={idx} className="mb-2">
                                                 <a
                                                     href={url}

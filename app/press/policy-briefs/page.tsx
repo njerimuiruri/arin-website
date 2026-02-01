@@ -5,21 +5,21 @@ import { FileText, Calendar, Search, Filter, ChevronLeft, ChevronRight, ArrowRig
 import Navbar from '@/app/navbar/Navbar';
 
 const PolicyBriefsPage = () => {
-    const [searchTerm, setSearchTerm] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState('All');
-    const [currentPage, setCurrentPage] = useState(1);
+    const [searchTerm, setSearchTerm] = useState<string>('');
+    const [selectedCategory, setSelectedCategory] = useState<string>('All');
+    const [currentPage, setCurrentPage] = useState<number>(1);
     const briefsPerPage = 6;
-    const [briefs, setBriefs] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [briefs, setBriefs] = useState<any[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchBriefs = async () => {
             try {
                 const data = await policyBriefsService.getAll();
                 setBriefs(data);
-            } catch (err) {
-                setError(err.message);
+            } catch (err: any) {
+                setError(err.message || 'Failed to load policy briefs');
             } finally {
                 setLoading(false);
             }
@@ -28,9 +28,9 @@ const PolicyBriefsPage = () => {
     }, []);
 
     // Dynamically get categories from briefs
-    const categories = ['All', ...Array.from(new Set(briefs.map(b => b.category).filter(Boolean)))];
+    const categories = ['All', ...Array.from(new Set(briefs.map((b: any) => b.category).filter((c: any) => !!c)))];
 
-    const filteredBriefs = briefs.filter(brief => {
+    const filteredBriefs = briefs.filter((brief: any) => {
         const matchesSearch = (brief.title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
             (brief.excerpt || '').toLowerCase().includes(searchTerm.toLowerCase());
         const matchesCategory = selectedCategory === 'All' || brief.category === selectedCategory;
@@ -43,14 +43,16 @@ const PolicyBriefsPage = () => {
     const currentBriefs = filteredBriefs.slice(indexOfFirstBrief, indexOfLastBrief);
     const totalPages = Math.ceil(filteredBriefs.length / briefsPerPage);
 
-    const handlePageChange = (pageNumber) => {
+    const handlePageChange = (pageNumber: number) => {
         setCurrentPage(pageNumber);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    const handleBriefClick = (briefId) => {
+    const handleBriefClick = (briefId: string) => {
         // TODO: Replace with Next.js router navigation
-        window.location.href = `/press/policy-briefs/${briefId}`;
+        if (briefId) {
+            window.location.href = `/press/policy-briefs/${briefId}`;
+        }
     };
 
     return (

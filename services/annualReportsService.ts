@@ -1,3 +1,5 @@
+import { fetchWithTimeout } from '../lib/fetchWithTimeout';
+
 const API_URL = 'https://api.demo.arin-africa.org/api';
 
 export interface AnnualReport {
@@ -15,9 +17,10 @@ export interface AnnualReport {
 
 export async function getAnnualReports(): Promise<AnnualReport[]> {
     try {
-        const res = await fetch(`${API_URL}/annual-reports`, {
+        const res = await fetchWithTimeout(`${API_URL}/annual-reports`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
+            timeout: 10000,
         });
         if (!res.ok) return [];
         const data = await res.json();
@@ -37,9 +40,10 @@ export async function getAnnualReports(): Promise<AnnualReport[]> {
 
 export async function getAnnualReport(id: string): Promise<AnnualReport | null> {
     try {
-        const res = await fetch(`${API_URL}/annual-reports/${id}`, {
+        const res = await fetchWithTimeout(`${API_URL}/annual-reports/${id}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
+            timeout: 10000,
         });
         if (!res.ok) return null;
         const data = await res.json();
@@ -59,9 +63,10 @@ export async function getAnnualReport(id: string): Promise<AnnualReport | null> 
 
 export async function searchAnnualReports(query: string): Promise<AnnualReport[]> {
     try {
-        const res = await fetch(`${API_URL}/annual-reports?search=${encodeURIComponent(query)}`, {
+        const res = await fetchWithTimeout(`${API_URL}/annual-reports?search=${encodeURIComponent(query)}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
+            timeout: 10000,
         });
         if (!res.ok) return [];
         const data = await res.json();

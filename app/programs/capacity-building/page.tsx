@@ -10,7 +10,7 @@ import Footer from '@/app/footer/Footer';
 const CapacityBuildingList = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedStatus, setSelectedStatus] = useState('All');
-    const [projects, setProjects] = useState([]);
+    const [projects, setProjects] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {

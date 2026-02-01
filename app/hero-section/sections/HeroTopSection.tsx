@@ -1,11 +1,11 @@
 "use client";
 import { ArrowRight, Play, Pause, Calendar, MapPin, Users, ChevronLeft, ChevronRight, FileText, Download, Eye, Clock, Tag, Newspaper, BookOpen, PenTool, Sparkles } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
-import { getEvents, Event as ArinEvent } from "@/services/eventsService";
-import { technicalReportsService, TechnicalReport } from "@/services/technicalReportsService";
-import { policyBriefsService, PolicyBrief } from "@/services/policyBriefsService";
-import { getNewsBriefs } from "@/services/newsBriefsService";
-import { getResearchProjects } from "@/services/researchProjectService";
+
+// Import types only
+import { Event as ArinEvent } from "@/services/eventsService";
+import { TechnicalReport } from "@/services/technicalReportsService";
+import { PolicyBrief } from "@/services/policyBriefsService";
 
 interface NewsBrief {
     _id?: string;
@@ -34,7 +34,23 @@ interface EventWithFlag extends ArinEvent {
     isUpcoming: boolean;
 }
 
-const HeroTopSection = () => {
+interface HeroTopSectionProps {
+    events: ArinEvent[];
+    techReports: TechnicalReport[];
+    policyBriefs: PolicyBrief[];
+    newsBriefs: NewsBrief[];
+    researchProjects: ResearchProject[];
+    policyDialogues: any[];
+}
+
+const HeroTopSection = ({
+    events,
+    techReports,
+    policyBriefs,
+    newsBriefs,
+    researchProjects,
+    policyDialogues
+}: HeroTopSectionProps) => {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
     const [isTransitioning, setIsTransitioning] = useState(false);
@@ -88,12 +104,64 @@ const HeroTopSection = () => {
         }
     ];
 
-    const [upcomingEvent, setUpcomingEvent] = useState<EventWithFlag | null>(null);
-    const [latestDocument, setLatestDocument] = useState<any | null>(null);
-    const [latestTechnicalReport, setLatestTechnicalReport] = useState<TechnicalReport | null>(null);
-    const [latestPolicyBrief, setLatestPolicyBrief] = useState<PolicyBrief | null>(null);
-    const [latestNewsBrief, setLatestNewsBrief] = useState<NewsBrief | null>(null);
-    const [latestResearchProject, setLatestResearchProject] = useState<ResearchProject | null>(null);
+    // Compute latest items from props
+    let upcomingEvent: EventWithFlag | null = null;
+    let latestTechnicalReport: TechnicalReport | null = null;
+    let latestPolicyBrief: PolicyBrief | null = null;
+    let latestNewsBrief: NewsBrief | null = null;
+    let latestResearchProject: ResearchProject | null = null;
+    let latestDocument: any | null = null;
+
+    // Find upcoming event
+    if (Array.isArray(events) && events.length > 0) {
+        const now = new Date();
+        const upcoming = events.filter(e => new Date(e.date) >= now);
+        if (upcoming.length > 0) {
+            const next = upcoming.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0];
+            upcomingEvent = { ...next, isUpcoming: true };
+        } else {
+            const past = events.filter(e => new Date(e.date) < now);
+            if (past.length > 0) {
+                const last = past.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
+                upcomingEvent = { ...last, isUpcoming: false };
+            } else {
+                upcomingEvent = null;
+            }
+        }
+    }
+
+    // Sort and get latest for each type
+    const sortByDate = (arr: any[]) => arr.sort((a, b) => new Date(b.datePosted || b.createdAt || b.date || 0).getTime() - new Date(a.datePosted || a.createdAt || a.date || 0).getTime());
+    if (Array.isArray(techReports) && techReports.length > 0) {
+        sortByDate(techReports);
+        latestTechnicalReport = techReports[0];
+    }
+    if (Array.isArray(policyBriefs) && policyBriefs.length > 0) {
+        sortByDate(policyBriefs);
+        latestPolicyBrief = policyBriefs[0];
+    }
+    if (Array.isArray(newsBriefs) && newsBriefs.length > 0) {
+        sortByDate(newsBriefs);
+        latestNewsBrief = newsBriefs[0];
+    }
+    if (Array.isArray(researchProjects) && researchProjects.length > 0) {
+        sortByDate(researchProjects);
+        latestResearchProject = researchProjects[0];
+    }
+    if (Array.isArray(policyDialogues) && policyDialogues.length > 0) {
+        sortByDate(policyDialogues);
+    }
+    // Combine all docs for latestDocument
+    const allDocs: any[] = [];
+    if (Array.isArray(techReports)) allDocs.push(...techReports.map(d => ({ ...d, docType: 'Technical Report' })));
+    if (Array.isArray(policyBriefs)) allDocs.push(...policyBriefs.map(d => ({ ...d, docType: 'Policy Brief' })));
+    if (Array.isArray(newsBriefs)) allDocs.push(...newsBriefs.map(d => ({ ...d, docType: 'News Brief' })));
+    if (Array.isArray(researchProjects)) allDocs.push(...researchProjects.map(d => ({ ...d, docType: 'Research Project' })));
+    if (Array.isArray(policyDialogues)) allDocs.push(...policyDialogues.map(d => ({ ...d, docType: 'Policy Dialogue' })));
+    if (allDocs.length > 0) {
+        sortByDate(allDocs);
+        latestDocument = allDocs[0];
+    }
 
     // Auto-slide functionality
     useEffect(() => {
@@ -130,86 +198,7 @@ const HeroTopSection = () => {
         };
     }, [currentSlide, isPaused]);
 
-    // Fetch latest content on mount
-    useEffect(() => {
-        async function fetchLatest() {
-            const events = await getEvents();
-            if (Array.isArray(events) && events.length > 0) {
-                const now = new Date();
-                const upcoming = events.filter(e => new Date(e.date) >= now);
-                if (upcoming.length > 0) {
-                    const next = upcoming.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0];
-                    setUpcomingEvent({ ...next, isUpcoming: true });
-                } else {
-                    const past = events.filter(e => new Date(e.date) < now);
-                    if (past.length > 0) {
-                        const last = past.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
-                        setUpcomingEvent({ ...last, isUpcoming: false });
-                    } else {
-                        setUpcomingEvent(null);
-                    }
-                }
-            } else {
-                setUpcomingEvent(null);
-            }
 
-            // Add policyDialoguesService if available
-            let policyDialogues = [];
-            if (typeof policyDialoguesService !== 'undefined' && policyDialoguesService.getAll) {
-                try {
-                    policyDialogues = await policyDialoguesService.getAll();
-                } catch (e) {
-                    policyDialogues = [];
-                }
-            }
-
-            const [techReports, policyBriefs, newsBriefs, researchProjects] = await Promise.all([
-                technicalReportsService.getAll(),
-                policyBriefsService.getAll(),
-                getNewsBriefs(),
-                getResearchProjects()
-            ]);
-
-            // Sort arrays by date descending (latest first)
-            if (Array.isArray(techReports)) {
-                techReports.sort((a, b) => new Date(b.datePosted || b.createdAt || b.date || 0).getTime() - new Date(a.datePosted || a.createdAt || a.date || 0).getTime());
-            }
-            if (Array.isArray(policyBriefs)) {
-                policyBriefs.sort((a, b) => new Date(b.datePosted || b.createdAt || b.date || 0).getTime() - new Date(a.datePosted || a.createdAt || a.date || 0).getTime());
-            }
-            if (Array.isArray(researchProjects)) {
-                researchProjects.sort((a, b) => new Date(b.datePosted || b.createdAt || b.date || 0).getTime() - new Date(a.datePosted || a.createdAt || a.date || 0).getTime());
-            }
-            if (Array.isArray(policyDialogues)) {
-                policyDialogues.sort((a, b) => new Date(b.datePosted || b.createdAt || b.date || 0).getTime() - new Date(a.datePosted || a.createdAt || a.date || 0).getTime());
-            }
-            if (Array.isArray(newsBriefs)) {
-                newsBriefs.sort((a, b) => new Date(b.datePosted || b.createdAt || b.date || 0).getTime() - new Date(a.datePosted || a.createdAt || a.date || 0).getTime());
-            }
-
-            // Set individual latest items
-            setLatestTechnicalReport(Array.isArray(techReports) && techReports.length > 0 ? techReports[0] : null);
-            setLatestPolicyBrief(Array.isArray(policyBriefs) && policyBriefs.length > 0 ? policyBriefs[0] : null);
-            setLatestNewsBrief(Array.isArray(newsBriefs) && newsBriefs.length > 0 ? newsBriefs[0] : null);
-            setLatestResearchProject(Array.isArray(researchProjects) && researchProjects.length > 0 ? researchProjects[0] : null);
-
-            // Set combined latest document
-            const allDocs = [];
-            if (Array.isArray(techReports)) allDocs.push(...techReports.map(d => ({ ...d, docType: 'Technical Report' })));
-            if (Array.isArray(policyBriefs)) allDocs.push(...policyBriefs.map(d => ({ ...d, docType: 'Policy Brief' })));
-            if (Array.isArray(newsBriefs)) allDocs.push(...newsBriefs.map(d => ({ ...d, docType: 'News Brief' })));
-            if (Array.isArray(researchProjects)) allDocs.push(...researchProjects.map(d => ({ ...d, docType: 'Research Project' })));
-            if (Array.isArray(policyDialogues)) allDocs.push(...policyDialogues.map(d => ({ ...d, docType: 'Policy Dialogue' })));
-
-            if (allDocs.length > 0) {
-                allDocs.sort((a, b) => new Date(b.datePosted || b.createdAt || b.date || 0).getTime() - new Date(a.datePosted || a.createdAt || a.date || 0).getTime());
-                setLatestDocument(allDocs[0]);
-            } else {
-                setLatestDocument(null);
-            }
-        }
-        fetchLatest();
-    }, []);
 
     const nextSlide = () => {
         setIsTransitioning(true);

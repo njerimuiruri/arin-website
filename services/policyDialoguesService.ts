@@ -1,9 +1,12 @@
+
+import { fetchWithTimeout } from '../lib/fetchWithTimeout';
 const API_URL = 'https://api.demo.arin-africa.org/api';
 
 export interface PolicyDialogue {
     _id: string;
     title: string;
     description: string;
+    excerpt?: string; // Added excerpt property
     date: string;
     status: 'Ongoing' | 'Completed' | 'Incomplete';
     image?: string;
@@ -14,9 +17,10 @@ export interface PolicyDialogue {
 
 export async function getPolicyDialogues(): Promise<PolicyDialogue[]> {
     try {
-        const res = await fetch(`${API_URL}/policy-dialogue`, {
+        const res = await fetchWithTimeout(`${API_URL}/policy-dialogue`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
+            timeout: 10000,
         });
         if (!res.ok) return [];
         return res.json();
@@ -28,9 +32,10 @@ export async function getPolicyDialogues(): Promise<PolicyDialogue[]> {
 
 export async function getPolicyDialogue(id: string): Promise<PolicyDialogue | null> {
     try {
-        const res = await fetch(`${API_URL}/policy-dialogue/${id}`, {
+        const res = await fetchWithTimeout(`${API_URL}/policy-dialogue/${id}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
+            timeout: 10000,
         });
         if (!res.ok) return null;
         return res.json();

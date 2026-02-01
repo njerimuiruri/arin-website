@@ -1,3 +1,5 @@
+import { fetchWithTimeout } from '../lib/fetchWithTimeout';
+
 const API_URL = 'https://api.demo.arin-africa.org/api';
 
 export interface Event {
@@ -17,9 +19,10 @@ export interface Event {
 
 export async function getEvents(): Promise<Event[]> {
     try {
-        const res = await fetch(`${API_URL}/events`, {
+        const res = await fetchWithTimeout(`${API_URL}/events`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
+            timeout: 10000,
         });
         if (!res.ok) return [];
         return res.json();
@@ -31,9 +34,10 @@ export async function getEvents(): Promise<Event[]> {
 
 export async function getEvent(id: string): Promise<Event | null> {
     try {
-        const res = await fetch(`${API_URL}/events/${id}`, {
+        const res = await fetchWithTimeout(`${API_URL}/events/${id}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
+            timeout: 10000,
         });
         if (!res.ok) return null;
         return res.json();

@@ -1,3 +1,5 @@
+import { fetchWithTimeout } from '../lib/fetchWithTimeout';
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.demo.arin-africa.org';
 
 export interface ContactFormData {
@@ -11,12 +13,13 @@ export interface ContactFormData {
 export const contactService = {
   async submitContact(data: ContactFormData): Promise<{ success: boolean; message: string }> {
     try {
-      const response = await fetch(`${API_URL}/contacts`, {
+      const response = await fetchWithTimeout(`${API_URL}/contacts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
+        timeout: 10000,
       });
 
       if (!response.ok) {

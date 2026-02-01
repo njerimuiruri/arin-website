@@ -48,13 +48,13 @@ export default function TechnicalReportDetailPage() {
                             <FileText className="w-10 h-10 text-red-600" />
                         </div>
                         <h2 className="text-2xl font-bold text-gray-900 mb-2">Report Not Found</h2>
-                        <p className="text-gray-600 mb-6">The technical report you're looking for doesn't exist or has been removed.</p>
+                        <p className="text-gray-600 mb-6">The technical report you are looking for does not exist or has been removed.</p>
                         <button
                             onClick={() => window.location.href = '/press/technical-reports'}
                             className="inline-flex items-center gap-2 px-6 py-3 bg-[#021d49] text-white font-semibold rounded-lg hover:bg-[#032a5e] transition-colors"
                         >
                             <ArrowLeft className="w-4 h-4" />
-                            Back to Reports
+                            Back to All Reports
                         </button>
                     </div>
                 </div>
@@ -76,94 +76,31 @@ export default function TechnicalReportDetailPage() {
                         />
                         {/* Balanced Overlay - Shows image better */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30"></div>
-
                         {/* Content Overlay - Centered */}
                         <div className="absolute inset-0 flex items-center justify-center p-6 md:p-12">
                             <div className="max-w-5xl w-full text-center">
-                                {/* Category Badge */}
                                 <div className="mb-6">
                                     <span className="inline-block px-5 py-2.5 bg-white text-[#021d49] font-bold text-sm uppercase tracking-wider rounded-lg shadow-xl">
                                         {report.category || 'Technical Report'}
                                     </span>
                                 </div>
-
-                                {/* Title */}
                                 <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight drop-shadow-[0_4px_20px_rgba(0,0,0,0.9)] [text-shadow:_2px_2px_8px_rgb(0_0_0_/_90%)]">
                                     {report.title}
                                 </h1>
-
-                                {/* Meta Information */}
                                 <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 text-white">
                                     {(report.authors && report.authors.length > 0) && (
-                                        <div className="flex items-center gap-2 bg-black/40 backdrop-blur-md px-5 py-2.5 rounded-lg shadow-lg border border-white/20">
+                                        <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg">
                                             <User className="w-5 h-5" />
-                                            <span className="font-semibold">{report.authors.join(", ")}</span>
+                                            <span className="font-medium">{report.authors.join(", ")}</span>
                                         </div>
                                     )}
                                     {report.datePosted && (
-                                        <div className="flex items-center gap-2 bg-black/40 backdrop-blur-md px-5 py-2.5 rounded-lg shadow-lg border border-white/20">
+                                        <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg">
                                             <Calendar className="w-5 h-5" />
-                                            <span className="font-semibold">{new Date(report.datePosted).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-                                        </div>
-                                    )}
-                                    {report.postedBy && (
-                                        <div className="flex items-center gap-2 bg-black/40 backdrop-blur-md px-5 py-2.5 rounded-lg shadow-lg border border-white/20">
-                                            <User className="w-5 h-5" />
-                                            <span className="font-semibold">Posted by {report.postedBy}</span>
+                                            <span className="font-medium">{new Date(report.datePosted).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                                         </div>
                                     )}
                                 </div>
-                            </div>
-                        </div>
-
-                        {/* Back Button */}
-                        <div className="absolute top-6 left-6">
-                            <button
-                                onClick={() => window.location.href = '/press/technical-reports'}
-                                className="flex items-center gap-2 px-5 py-2.5 bg-white/95 backdrop-blur-sm text-gray-900 font-semibold rounded-lg hover:bg-white transition-all shadow-xl"
-                            >
-                                <ArrowLeft className="w-4 h-4" />
-                                <span className="hidden sm:inline">Back to Reports</span>
-                            </button>
-                        </div>
-                    </div>
-                )}
-
-                {/* No Image Fallback Header */}
-                {!report.image && (
-                    <div className="relative bg-gradient-to-br from-[#021d49] via-[#032a5e] to-[#021d49] text-white py-20">
-                        <div className="max-w-5xl mx-auto px-6">
-                            <button
-                                onClick={() => window.location.href = '/press/technical-reports'}
-                                className="flex items-center gap-2 mb-8 px-4 py-2 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-lg hover:bg-white/20 transition-all"
-                            >
-                                <ArrowLeft className="w-4 h-4" />
-                                Back to Reports
-                            </button>
-
-                            <div className="mb-4">
-                                <span className="inline-block px-4 py-2 bg-white/20 backdrop-blur-sm text-white font-bold text-sm uppercase tracking-wide rounded-lg">
-                                    {report.category || 'Technical Report'}
-                                </span>
-                            </div>
-
-                            <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-                                {report.title}
-                            </h1>
-
-                            <div className="flex flex-wrap items-center gap-4 text-white/90">
-                                {(report.authors && report.authors.length > 0) && (
-                                    <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg">
-                                        <User className="w-5 h-5" />
-                                        <span className="font-medium">{report.authors.join(", ")}</span>
-                                    </div>
-                                )}
-                                {report.datePosted && (
-                                    <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg">
-                                        <Calendar className="w-5 h-5" />
-                                        <span className="font-medium">{new Date(report.datePosted).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-                                    </div>
-                                )}
                             </div>
                         </div>
                     </div>
