@@ -1,6 +1,6 @@
-
 import { fetchWithTimeout } from '../lib/fetchWithTimeout';
-const API_URL = 'https://api.demo.arin-africa.org/api';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL ? `${process.env.NEXT_PUBLIC_API_URL}/api` : 'https://api.demo.arin-africa.org/api';
 
 export interface PolicyDialogue {
     _id: string;

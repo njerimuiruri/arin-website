@@ -15,8 +15,10 @@ export async function fetchWithTimeout(resource: RequestInfo, options: any = {})
       throw new Error(`Request timeout after ${timeout}ms to ${resource}`);
     }
     
-    // Log the error for debugging
-    console.error(`Fetch error for ${resource}:`, error.message);
+    // Only log errors in development mode
+    if (process.env.NODE_ENV === 'development') {
+      console.error(`Fetch error for ${resource}:`, error.message);
+    }
     throw error;
   }
 }

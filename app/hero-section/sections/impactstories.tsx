@@ -58,7 +58,8 @@ const ImpactStories = () => {
                     {!loading && !error && stories.map((story) => (
                         <div
                             key={story._id || story.id}
-                            className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100"
+                            className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 cursor-pointer"
+                            onClick={() => router.push(`/press/impact-stories/${story._id || story.id}`)}
                         >
                             {/* Image */}
                             <div className="relative h-56 overflow-hidden">
@@ -108,7 +109,16 @@ const ImpactStories = () => {
                                     {truncate(story.excerpt || story.description)}
                                 </p>
 
-                                {/* Optionally, add a Read Full Story button here to navigate to the detail page */}
+                                <button
+                                    className="inline-flex items-center gap-2 text-[#021d49] font-semibold hover:gap-3 transition-all"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        router.push(`/press/impact-stories/${story._id || story.id}`);
+                                    }}
+                                >
+                                    Read Full Story
+                                    <ArrowRight className="w-4 h-4" />
+                                </button>
                             </div>
                         </div>
                     ))}
