@@ -37,13 +37,11 @@ const BlogsPage = () => {
 
     const categories = ['All', ...Array.from(new Set(blogs.map(blog => blog.category).filter(Boolean)))];
 
-    // Helper to strip HTML tags
     function stripHtml(html: string) {
         if (!html) return '';
         return html.replace(/<[^>]+>/g, '');
     }
 
-    // Truncate text
     const truncateText = (text: string, wordLimit: number) => {
         const words = stripHtml(text).split(' ');
         if (words.length <= wordLimit) return stripHtml(text);
@@ -61,7 +59,6 @@ const BlogsPage = () => {
         return matchesSearch && matchesCategory;
     });
 
-    // Pagination logic
     const indexOfLastBlog = currentPage * blogsPerPage;
     const indexOfFirstBlog = indexOfLastBlog - blogsPerPage;
     const currentBlogs = filteredBlogs.slice(indexOfFirstBlog, indexOfLastBlog);
