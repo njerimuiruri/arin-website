@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Navbar from "@/app/navbar/Navbar";
-import { Calendar, FileText, Lightbulb, ArrowLeft } from "lucide-react";
+import { Calendar, FileText, Lightbulb, ArrowLeft, Download, ExternalLink } from "lucide-react";
 import { policyBriefsService } from "@/services/policyBriefsService";
 
 interface PolicyBrief {
@@ -41,6 +41,28 @@ const PolicyBriefViewPage = () => {
         };
         if (id && typeof id === 'string' && id.length > 0) fetchBrief();
     }, [id]);
+
+    const handleOpenResource = (url: string) => {
+        // Open the resource in a new tab for viewing
+        window.open(url, '_blank', 'noopener,noreferrer');
+    };
+
+    const getResourceFileName = (url: string, index: number) => {
+        // Extract the filename from the URL
+        const urlParts = url.split('/');
+        const fileName = urlParts[urlParts.length - 1];
+
+        // If it's a Cloudinary URL, try to get the original filename
+        if (url.includes('cloudinary.com')) {
+            // Extract the part after the last slash and before any query parameters
+            const cleanFileName = fileName.split('?')[0];
+            // Decode URL encoding
+            const decodedFileName = decodeURIComponent(cleanFileName);
+            return decodedFileName || `Resource ${index + 1}`;
+        }
+
+        return fileName || `Resource ${index + 1}`;
+    };
 
     return (
         <>
@@ -101,21 +123,40 @@ const PolicyBriefViewPage = () => {
                             ) : null}
                             {Array.isArray(brief.availableResources) && brief.availableResources.length > 0 && (
                                 <div className="mb-6">
-                                    <h2 className="text-lg font-semibold mb-2">Resources</h2>
-                                    <ul className="list-disc pl-6">
-                                        {brief.availableResources.map((url: string, idx: number) => (
-                                            <li key={idx} className="mb-2">
-                                                <a
-                                                    href={url}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="text-[#021d49] hover:underline flex items-center gap-2"
+                                    <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-200">
+                                        <div className="bg-green-100 p-2 rounded-lg">
+                                            <Download className="w-5 h-5 text-green-600" />
+                                        </div>
+                                        <h2 className="text-xl font-bold text-gray-900">Available Resources</h2>
+                                    </div>
+
+                                    <div className="space-y-3">
+                                        {brief.availableResources.map((url: string, idx: number) => {
+                                            const fileName = getResourceFileName(url, idx);
+                                            return (
+                                                <button
+                                                    key={idx}
+                                                    onClick={() => handleOpenResource(url)}
+                                                    className="w-full flex items-center justify-between gap-3 p-4 bg-gradient-to-r from-gray-50 to-green-50/50 hover:from-[#021d49] hover:to-[#032a5e] border border-gray-200 hover:border-[#021d49] rounded-xl transition-all duration-300 group"
                                                 >
-                                                    <FileText className="w-4 h-4" /> {url.split('/').pop()}
-                                                </a>
-                                            </li>
-                                        ))}
-                                    </ul>
+                                                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                                                        <div className="bg-white p-2 rounded-lg shadow-sm group-hover:bg-white/20 transition-colors">
+                                                            <FileText className="w-5 h-5 text-[#021d49] group-hover:text-white transition-colors" />
+                                                        </div>
+                                                        <div className="flex-1 min-w-0 text-left">
+                                                            <span className="text-sm font-semibold text-gray-700 group-hover:text-white transition-colors block truncate">
+                                                                {fileName}
+                                                            </span>
+                                                            <span className="text-xs text-gray-500 group-hover:text-white/80 transition-colors">
+                                                                Click to view or download
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <ExternalLink className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors shrink-0" />
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
                                 </div>
                             )}
                         </div>

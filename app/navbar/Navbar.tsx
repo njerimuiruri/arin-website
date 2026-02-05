@@ -75,18 +75,8 @@ const Navbar = () => {
         },
         {
             name: 'ARIN Fellowship',
-            href: '/fellowship',
-            submenu: [
-                { name: 'About Fellowship', href: '/fellowship/about' },
-                { name: 'ARIN Fellows', href: 'https://arin-fellowshiporg.org/', external: true },
-                { name: 'Accountable Adaptation Fellows', href: '/fellowship/accountable-adaptation-fellows' },
-                { name: 'SDG Fellows', href: '/fellowship/sdg-fellows' },
-                { name: 'Summer School', href: '/fellowship/summer-school' },
-                { name: 'Mini Grants', href: '/fellowship/mini-grants' },
-                { name: 'Friday Reviews', href: '/fellowship/friday-reviews' },
-                { name: 'NDC Fellowship', href: '/fellowship/ndc-fellowship' },
-                { name: 'NDC Academy', href: '/fellowship/ndc-academy' },
-            ]
+            href: 'https://arin-fellowshiporg.org/',
+            external: true
         },
         {
             name: 'Opportunities',
@@ -160,72 +150,99 @@ const Navbar = () => {
                                     <li
                                         key={index}
                                         className="relative group"
-                                        onMouseEnter={() => setActiveMenu(index)}
-                                        onMouseLeave={() => setActiveMenu(null)}
+                                        onMouseEnter={() => item.submenu && setActiveMenu(index)}
+                                        onMouseLeave={() => item.submenu && setActiveMenu(null)}
                                     >
-                                        <button
-                                            className={`flex items-center gap-0.5 text-[12px] 2xl:text-[13px] font-medium transition-all duration-200 py-1 px-2 rounded-lg whitespace-nowrap ${isActive(item.href)
-                                                ? 'text-[#021d49] font-semibold bg-blue-50'
-                                                : 'text-gray-700 hover:text-[#021d49] hover:bg-gray-50'
-                                                }`}
-                                        >
-                                            {item.name}
-                                            {item.submenu && (
-                                                <ChevronDown
-                                                    className={`w-3 h-3 transition-transform duration-300 ${activeMenu === index ? 'rotate-180' : ''
+                                        {item.submenu ? (
+                                            <>
+                                                <button
+                                                    className={`flex items-center gap-0.5 text-[12px] 2xl:text-[13px] font-medium transition-all duration-200 py-1 px-2 rounded-lg whitespace-nowrap ${isActive(item.href)
+                                                        ? 'text-[#021d49] font-semibold bg-blue-50'
+                                                        : 'text-gray-700 hover:text-[#021d49] hover:bg-gray-50'
+                                                        }`}
+                                                >
+                                                    {item.name}
+                                                    <ChevronDown
+                                                        className={`w-3 h-3 transition-transform duration-300 ${activeMenu === index ? 'rotate-180' : ''
+                                                            }`}
+                                                    />
+                                                </button>
+
+                                                {/* Elegant underline indicator */}
+                                                <div
+                                                    className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-[#021d49] to-blue-600 transition-all duration-300 ${isActive(item.href) ? 'w-full' : 'w-0 group-hover:w-full'
                                                         }`}
                                                 />
-                                            )}
-                                        </button>
 
-                                        {/* Elegant underline indicator */}
-                                        <div
-                                            className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-[#021d49] to-blue-600 transition-all duration-300 ${isActive(item.href) ? 'w-full' : 'w-0 group-hover:w-full'
-                                                }`}
-                                        />
-
-                                        {/* Dropdown Menu */}
-                                        {item.submenu && activeMenu === index && (
-                                            <div
-                                                className={`absolute top-full pt-4 min-w-[450px] 2xl:min-w-[500px] ${index >= menuItems.length - 2 ? 'right-0' : 'left-0'
-                                                    }`}
-                                            >
-                                                <div className="bg-white rounded-xl shadow-2xl border border-gray-200 py-3 px-4 2xl:py-4 2xl:px-5 animate-fadeIn">
+                                                {/* Dropdown Menu */}
+                                                {activeMenu === index && (
                                                     <div
-                                                        className={`grid gap-1 ${item.submenu.length > 10
-                                                            ? 'grid-cols-3'
-                                                            : item.submenu.length > 4
-                                                                ? 'grid-cols-2'
-                                                                : 'grid-cols-1'
+                                                        className={`absolute top-full pt-4 min-w-[450px] 2xl:min-w-[500px] ${index >= menuItems.length - 2 ? 'right-0' : 'left-0'
                                                             }`}
                                                     >
-                                                        {item.submenu.map((subItem, subIndex) => (
-                                                            <a
-                                                                key={subIndex}
-                                                                href={subItem.href}
-                                                                target={subItem.external ? "_blank" : undefined}
-                                                                rel={subItem.external ? "noopener noreferrer" : undefined}
-                                                                className={`block px-3 py-2 text-[12px] 2xl:text-[13px] transition-all duration-200 rounded-lg whitespace-nowrap group/item ${pathname === subItem.href
-                                                                    ? 'bg-gradient-to-r from-[#021d49] to-blue-700 text-white font-medium shadow-md'
-                                                                    : 'text-gray-800 hover:bg-gradient-to-r hover:from-blue-50 hover:to-gray-50 hover:text-[#021d49] font-normal'
+                                                        <div className="bg-white rounded-xl shadow-2xl border border-gray-200 py-3 px-4 2xl:py-4 2xl:px-5 animate-fadeIn">
+                                                            <div
+                                                                className={`grid gap-1 ${item.submenu.length > 10
+                                                                    ? 'grid-cols-3'
+                                                                    : item.submenu.length > 4
+                                                                        ? 'grid-cols-2'
+                                                                        : 'grid-cols-1'
                                                                     }`}
                                                             >
-                                                                <span className="flex items-center gap-1.5">
-                                                                    {pathname !== subItem.href && (
-                                                                        <span className="w-0 h-0.5 bg-[#021d49] transition-all duration-300 group-hover/item:w-1.5" />
-                                                                    )}
-                                                                    {subItem.name}
-                                                                    {subItem.external && (
-                                                                        <svg className="w-2.5 h-2.5 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                                                        </svg>
-                                                                    )}
-                                                                </span>
-                                                            </a>
-                                                        ))}
+                                                                {item.submenu.map((subItem, subIndex) => (
+                                                                    <a
+                                                                        key={subIndex}
+                                                                        href={subItem.href}
+                                                                        target={subItem.external ? "_blank" : undefined}
+                                                                        rel={subItem.external ? "noopener noreferrer" : undefined}
+                                                                        className={`block px-3 py-2 text-[12px] 2xl:text-[13px] transition-all duration-200 rounded-lg whitespace-nowrap group/item ${pathname === subItem.href
+                                                                            ? 'bg-gradient-to-r from-[#021d49] to-blue-700 text-white font-medium shadow-md'
+                                                                            : 'text-gray-800 hover:bg-gradient-to-r hover:from-blue-50 hover:to-gray-50 hover:text-[#021d49] font-normal'
+                                                                            }`}
+                                                                    >
+                                                                        <span className="flex items-center gap-1.5">
+                                                                            {pathname !== subItem.href && (
+                                                                                <span className="w-0 h-0.5 bg-[#021d49] transition-all duration-300 group-hover/item:w-1.5" />
+                                                                            )}
+                                                                            {subItem.name}
+                                                                            {subItem.external && (
+                                                                                <svg className="w-2.5 h-2.5 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                                                                </svg>
+                                                                            )}
+                                                                        </span>
+                                                                    </a>
+                                                                ))}
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </div>
+                                                )}
+                                            </>
+                                        ) : (
+                                            <>
+                                                <a
+                                                    href={item.href}
+                                                    target={item.external ? "_blank" : undefined}
+                                                    rel={item.external ? "noopener noreferrer" : undefined}
+                                                    className={`flex items-center gap-0.5 text-[12px] 2xl:text-[13px] font-medium transition-all duration-200 py-1 px-2 rounded-lg whitespace-nowrap ${isActive(item.href)
+                                                        ? 'text-[#021d49] font-semibold bg-blue-50'
+                                                        : 'text-gray-700 hover:text-[#021d49] hover:bg-gray-50'
+                                                        }`}
+                                                >
+                                                    {item.name}
+                                                    {item.external && (
+                                                        <svg className="w-2.5 h-2.5 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                                        </svg>
+                                                    )}
+                                                </a>
+
+                                                {/* Elegant underline indicator */}
+                                                <div
+                                                    className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-[#021d49] to-blue-600 transition-all duration-300 ${isActive(item.href) ? 'w-full' : 'w-0 group-hover:w-full'
+                                                        }`}
+                                                />
+                                            </>
                                         )}
                                     </li>
                                 ))}
@@ -341,12 +358,21 @@ const Navbar = () => {
                                 ) : (
                                     <a
                                         href={item.href}
+                                        target={item.external ? "_blank" : undefined}
+                                        rel={item.external ? "noopener noreferrer" : undefined}
                                         className={`block px-3 py-2.5 text-[14px] sm:text-[15px] font-medium rounded-lg transition-all duration-200 touch-manipulation ${pathname === item.href
                                             ? 'text-[#021d49] bg-gradient-to-r from-blue-50 to-gray-50'
                                             : 'text-gray-700 hover:bg-gray-50 active:bg-gray-100'
                                             }`}
                                     >
-                                        {item.name}
+                                        <span className="flex items-center gap-1.5">
+                                            {item.name}
+                                            {item.external && (
+                                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                                </svg>
+                                            )}
+                                        </span>
                                     </a>
                                 )}
                             </div>
