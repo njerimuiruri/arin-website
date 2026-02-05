@@ -134,9 +134,9 @@ const NewslettersPage = () => {
                     <div className="space-y-6 max-w-6xl mx-auto">
                         {currentNewsletters.map((newsletter) => (
                             <div
-                                key={newsletter.id}
+                                key={newsletter._id}
                                 className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-[#021d49] cursor-pointer group"
-                                onClick={() => handleNewsletterClick(newsletter.id)}
+                                onClick={() => handleNewsletterClick(newsletter._id)}
                             >
                                 <div className="md:flex">
                                     {/* Left Side - Newsletter Image */}

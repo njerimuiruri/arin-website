@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowRight, Search, Filter, Heart, Users, Briefcase, Calendar } from 'lucide-react';
+import { ArrowRight, Search, Filter, Heart, Users, Briefcase, Calendar, User } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
 
 interface Csr {
@@ -112,9 +112,9 @@ const CSRPage = () => {
                     <div className="space-y-6 max-w-6xl mx-auto">
                         {filteredActivities.map((activity) => (
                             <div
-                                key={activity.id}
+                                key={activity._id}
                                 className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-[#021d49] cursor-pointer group"
-                                onClick={() => handleActivityClick(activity.id)}
+                                onClick={() => handleActivityClick(activity._id)}
                             >
                                 <div className="md:flex">
                                     {/* Left Side - Image */}
@@ -156,14 +156,16 @@ const CSRPage = () => {
 
                                         {/* Excerpt */}
                                         <p className="text-base text-gray-600 leading-relaxed mb-6">
-                                            {activity.excerpt}
+                                            {activity.description.replace(/<[^>]+>/g, '').length > 180
+                                                ? activity.description.replace(/<[^>]+>/g, '').slice(0, 180) + '...'
+                                                : activity.description.replace(/<[^>]+>/g, '')}
                                         </p>
 
                                         {/* Tags and Button Row */}
                                         <div className="flex items-center justify-between gap-4">
                                             {/* Tags */}
                                             <div className="flex flex-wrap gap-2 flex-1">
-                                                {activity.tags.map((tag, index) => (
+                                                {(activity.tags || []).map((tag, index) => (
                                                     <span
                                                         key={index}
                                                         className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-semibold rounded-full"
@@ -175,7 +177,7 @@ const CSRPage = () => {
 
                                             {/* Read More Button */}
                                             <button
-                                                onClick={(e) => { e.stopPropagation(); handleActivityClick(activity.id); }}
+                                                onClick={(e) => { e.stopPropagation(); handleActivityClick(activity._id); }}
                                                 className="px-6 py-3 bg-gradient-to-r from-[#021d49] to-[#021d49] hover:shadow-xl text-white font-semibold rounded-lg shadow-md flex items-center gap-2 justify-center transition-all duration-200 whitespace-nowrap"
                                             >
                                                 <span>Read More</span>

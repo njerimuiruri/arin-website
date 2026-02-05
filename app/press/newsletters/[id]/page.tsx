@@ -6,7 +6,7 @@ import { Mail, Calendar, User } from 'lucide-react';
 
 
 interface Newsletter {
-    id: string;
+    _id: string;
     title: string;
     image?: string;
     authors?: string[];
