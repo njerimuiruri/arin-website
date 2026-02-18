@@ -6,13 +6,13 @@ const FocusAreasSection = () => {
     const focusAreas = [
         {
             icon: <Leaf className="w-8 h-8" />,
-            title: "Climate Change",
+            title: "Climate Change Adaptation & Mitigation",
             description: "Research and policy on climate adaptation, mitigation, and resilience for Africa's most vulnerable communities."
         },
         {
             icon: <TrendingUp className="w-8 h-8" />,
-            title: "Mining & Trade",
-            description: "Promoting sustainable and transparent mineral resource management and trade practices."
+            title: "Climate Change, Health & Energy",
+            description: "Exploring the intersections of climate change, health, and energy systems to promote sustainable, resilient, and equitable solutions."
         },
         {
             icon: <Sprout className="w-8 h-8" />,
