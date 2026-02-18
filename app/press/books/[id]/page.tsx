@@ -18,6 +18,16 @@ interface Book {
     year?: number;
 }
 
+const getFileTypeLabel = (url: string): string => {
+    const lower = url.toLowerCase();
+    if (lower.endsWith('.pdf')) return 'PDF document';
+    if (lower.endsWith('.doc') || lower.endsWith('.docx')) return 'Word document';
+    if (lower.endsWith('.ppt') || lower.endsWith('.pptx')) return 'PowerPoint presentation';
+    if (lower.endsWith('.xls') || lower.endsWith('.xlsx')) return 'Excel spreadsheet';
+    if (lower.endsWith('.txt')) return 'Text file';
+    return 'Document';
+};
+
 export default function BookDetailPage() {
     const params = useParams();
     const id = params.id as string;
@@ -25,6 +35,7 @@ export default function BookDetailPage() {
     const [book, setBook] = useState<Book | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [activeResourceUrl, setActiveResourceUrl] = useState<string | null>(null);
 
     useEffect(() => {
         loadBook();
@@ -217,27 +228,25 @@ export default function BookDetailPage() {
                         />
                     </div>
 
-                    {/* Download Resources Section */}
+                    {/* Resources Section */}
                     {book.availableResources && book.availableResources.length > 0 && (
                         <div className="mb-20">
                             <div className="flex items-center gap-3 mb-8">
                                 <Download className="w-7 h-7 text-[#021d49]" />
                                 <h2 className="text-3xl font-bold text-gray-900">
-                                    Download Resources
+                                    Resources
                                 </h2>
                             </div>
 
                             <div className="space-y-4">
                                 {book.availableResources.map((url, index) => {
                                     const fileName = url.split('/').pop() || `Resource ${index + 1}`;
-                                    const downloadUrl = url.startsWith('http') ? url : `https://api.demo.arin-africa.org${url}`;
+                                    const viewUrl = url.startsWith('http') ? url : `https://api.demo.arin-africa.org${url}`;
+                                    const fileTypeLabel = getFileTypeLabel(url);
 
                                     return (
-                                        <a
+                                        <div
                                             key={index}
-                                            href={downloadUrl}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
                                             className="group flex items-center justify-between p-6 border-2 border-gray-200 hover:border-[#021d49] rounded-lg transition-all hover:shadow-lg"
                                         >
                                             <div className="flex items-center gap-5">
@@ -251,12 +260,21 @@ export default function BookDetailPage() {
                                                         {fileName}
                                                     </p>
                                                     <p className="text-sm text-gray-500">
-                                                        PDF Document
+                                                        {fileTypeLabel}
                                                     </p>
                                                 </div>
                                             </div>
-                                            <Download className="w-6 h-6 text-gray-400 group-hover:text-[#021d49] transition-colors" />
-                                        </a>
+
+                                            {/* View More button shows inline PDF viewer overlay */}
+                                            <button
+                                                type="button"
+                                                onClick={() => setActiveResourceUrl(viewUrl)}
+                                                className="inline-flex items-center gap-2 px-4 py-2 border border-[#021d49] text-[#021d49] rounded-lg font-medium hover:bg-[#021d49] hover:text-white transition-colors"
+                                            >
+                                                <BookOpen className="w-5 h-5" />
+                                                View More
+                                            </button>
+                                        </div>
                                     );
                                 })}
                             </div>
@@ -275,6 +293,33 @@ export default function BookDetailPage() {
                     </div>
                 </div>
             </div>
+
+            {/* PDF Viewer Overlay */}
+            {activeResourceUrl && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+                    <div className="bg-white rounded-lg shadow-2xl w-[95vw] h-[90vh] max-w-5xl flex flex-col overflow-hidden">
+                        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
+                            <h3 className="text-lg font-semibold text-gray-900">
+                                Viewing document
+                            </h3>
+                            <button
+                                type="button"
+                                onClick={() => setActiveResourceUrl(null)}
+                                className="px-3 py-1 text-sm font-medium text-gray-600 hover:text-white hover:bg-gray-700 rounded-md transition-colors"
+                            >
+                                Close
+                            </button>
+                        </div>
+                        <div className="flex-1 bg-gray-50">
+                            <iframe
+                                src={activeResourceUrl}
+                                className="w-full h-full border-0"
+                                title="Document viewer"
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     );
 }

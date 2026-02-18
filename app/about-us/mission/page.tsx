@@ -210,7 +210,7 @@ const ARINMissionPage = () => {
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-8">
-                        {/* Climate Change and Energy */}
+                        {/* Climate change, Health and Energy */}
                         <div className="group bg-gradient-to-br from-white to-blue-50 rounded-3xl p-10 shadow-xl hover:shadow-2xl transition-all duration-500 border-2 border-[#021d49]/30 hover:border-[#021d49]">
                             <div className="flex items-start gap-6 mb-6">
                                 <div className="w-16 h-16 bg-gradient-to-br from-[#021d49] to-[#021d49] rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
@@ -218,7 +218,7 @@ const ARINMissionPage = () => {
                                 </div>
                                 <div>
                                     <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                                        Climate Change and Energy
+                                        Climate change, Health and Energy
                                     </h3>
                                     <span className="inline-block px-4 py-2 bg-[#021d49]/10 text-[#021d49] text-xs font-bold rounded-full">
                                         Sustainable Development

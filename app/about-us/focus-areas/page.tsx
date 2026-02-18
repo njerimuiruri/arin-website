@@ -14,7 +14,7 @@ const ARINFocusAreasPage = () => {
             category: "Africa Sustainability Hub"
         },
         {
-            title: "Climate Change and Energy",
+            title: "Climate change, Health and Energy",
             icon: Wind,
             color: "from-green-500 to-emerald-600",
             gradient: "from-white to-green-50",
@@ -127,7 +127,7 @@ const ARINFocusAreasPage = () => {
                     </div>
                 </section>
 
-                {/* Climate Change and Energy */}
+                {/* Climate change, Health and Energy */}
                 <section className="max-w-[1600px] mx-auto px-6 pb-20">
                     <div className="bg-gradient-to-br from-white to-green-50 rounded-3xl p-12 lg:p-16 shadow-2xl border-2 border-green-200">
                         <div className="flex items-start gap-6 mb-8">
@@ -136,7 +136,7 @@ const ARINFocusAreasPage = () => {
                             </div>
                             <div>
                                 <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-                                    Climate change and Energy
+                                    Climate change, Health and Energy
                                 </h2>
                                 <span className="inline-block px-4 py-2 bg-green-100 text-green-800 text-sm font-bold rounded-full">
                                     Environmental Action
