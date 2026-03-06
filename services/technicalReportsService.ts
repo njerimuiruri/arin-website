@@ -20,7 +20,10 @@ export const technicalReportsService = {
   },
 
   async getById(id: string): Promise<TechnicalReport> {
-    const response = await fetchWithTimeout(`${API_BASE_URL}/technical-reports/${id}`, { timeout: 10000 });
+    const response = await fetchWithTimeout(`${API_BASE_URL}/technical-reports/${id}`, {
+      cache: 'no-store',
+      timeout: 10000,
+    });
     if (!response.ok) throw new Error('Technical report not found');
     return response.json();
   },

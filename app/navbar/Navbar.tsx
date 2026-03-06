@@ -138,9 +138,9 @@ const Navbar = () => {
                                     style={{ imageRendering: 'crisp-edges' }}
                                 />
                             </div>
-                            <span className="text-[#021d49] font-bold text-[10px] sm:text-[11px] lg:text-[12px] xl:text-[13px] tracking-[0.05em] uppercase leading-[1.2] group-hover:text-blue-700 transition-colors">
+                            {/* <span className="text-[#021d49] font-bold text-[10px] sm:text-[11px] lg:text-[12px] xl:text-[13px] tracking-[0.05em] uppercase leading-[1.2] group-hover:text-blue-700 transition-colors">
                                 Africa Research &<br />Impact Network
-                            </span>
+                            </span> */}
                         </a>
 
                         {/* Desktop Navigation - Compact */}
