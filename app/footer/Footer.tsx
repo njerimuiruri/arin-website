@@ -48,7 +48,7 @@ const Footer: React.FC = () => {
                         <div className="flex items-start gap-3">
                             <MapPin className="w-5 h-5 text-gray-300 mt-1 flex-shrink-0" />
                             <address className="text-gray-300 not-italic leading-relaxed">
-                                ACK Gardens House, Bishop Road,<br />
+                                ACK Gardens House, <br />
                                 1st Ngong Ave, Upperhill,<br />
                                 Nairobi, Kenya<br />
                                 P.O Box 53358 - 00200

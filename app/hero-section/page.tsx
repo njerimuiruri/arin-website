@@ -22,6 +22,9 @@ import { policyBriefsService } from "@/services/policyBriefsService";
 import { getNewsBriefs } from "@/services/newsBriefsService";
 import { getResearchProjects } from "@/services/researchProjectService";
 import { getPolicyDialogues } from "@/services/policyDialoguesService";
+import StatsSection from "./sections/StatsSection";
+import AboutSection from "./sections/Aboutsection";
+import PresenceSection from "./sections/Presencesection";
 
 const latestPosts = [
     {
@@ -135,14 +138,19 @@ export default async function HeroSection() {
                 researchProjects={researchProjects}
                 policyDialogues={policyDialogues}
             />
-            <FeaturesSection />
+            <StatsSection />
+            <AboutSection />
+            <PresenceSection />
+            {/* <FeaturesSection /> */}
             <FocusAreasSection />
             <MissionAreasSection />
-            <AfricaPresenceMap />
+            {/* <AfricaPresenceMap /> */}
+
             {/* <LatestPostsSection latestPosts={latestPosts} /> */}
             {/* <UpcomingEventsSection upcomingEvents={upcomingEvents} /> */}
             {/* <LatestProjectsSection latestProjects={latestProjects} /> */}
-            <ImpactStories />
+            {/* <ImpactStories /> */}
+
             <PartnersSection partners={partners} />
             <CTASection />
         </div>

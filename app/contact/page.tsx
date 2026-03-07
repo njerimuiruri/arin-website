@@ -97,7 +97,7 @@ const ContactPage = () => {
                                         <MapPin className="w-5 h-5 text-[#021d49] flex-shrink-0 mt-1" />
                                         <div>
                                             <p className="text-gray-700 leading-relaxed">
-                                                Africa Research & Impact Network, ACK Gardens House, 1st Floor, Bishop Road, 1St Ngong Ave, Upperhill, Nairobi.
+                                                Africa Research & Impact Network, ACK Gardens House, 1st Floor,  1St Ngong Ave, Upperhill, Nairobi.
                                             </p>
                                             <p className="text-gray-700 mt-2">
                                                 P.O Box 53358 – 00200. Nairobi, Kenya

@@ -9,9 +9,20 @@ type SecretariatMember = {
     firstName: string;
     lastName: string;
     role: string;
+    category?: string;
     image?: string;
     bio?: string;
 };
+
+const CATEGORY_ORDER = [
+    "Leadership",
+    "Focal Point",
+    "Researchers",
+    "Communication",
+    "IT",
+    "Administration",
+    "Finance",
+];
 
 const SecretariatPage = () => {
     const [selectedMember, setSelectedMember] = useState<SecretariatMember | null>(null);
@@ -85,45 +96,60 @@ const SecretariatPage = () => {
                         </div>
                     )}
 
-                    {/* Team Grid - Very compact cards */}
-                    {!loading && members.length > 0 && (
-                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-                            {members.map((member) => (
-                                <div
-                                    key={member._id}
-                                    className="group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 hover:border-[#021d49]/30 cursor-pointer"
-                                    onClick={() => setSelectedMember(member)}
-                                >
-                                    {/* Image - Compact height */}
-                                    <div className="relative aspect-[3/4] overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
-                                        <img
-                                            src={member.image && member.image.startsWith('http') ? member.image : member.image ? `https://api.demo.arin-africa.org${member.image}` : 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop'}
-                                            alt={`${member.firstName} ${member.lastName}`}
-                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                            onError={e => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop'; }}
-                                        />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                    </div>
-
-                                    {/* Content - Minimal padding */}
-                                    <div className="p-3">
-                                        <h3 className="text-sm font-bold text-gray-900 mb-0.5 group-hover:text-[#021d49] transition-colors leading-tight">
-                                            {member.firstName} {member.lastName}
-                                        </h3>
-                                        <div className="flex items-center gap-1 mb-2">
-                                            <Briefcase className="w-3 h-3 text-[#021d49] flex-shrink-0" />
-                                            <p className="text-xs text-[#021d49] font-medium truncate">{member.role}</p>
-                                        </div>
-
-                                        <div className="flex items-center gap-1.5 text-[#021d49] text-xs font-semibold group-hover:gap-2 transition-all pt-2 border-t border-gray-100">
-                                            <span>View</span>
-                                            <ArrowRight className="w-3 h-3" />
-                                        </div>
-                                    </div>
+                    {/* Team Grid - Grouped by Category */}
+                    {!loading && members.length > 0 && (() => {
+                        const grouped: Record<string, SecretariatMember[]> = {};
+                        members.forEach(m => {
+                            const cat = m.category?.trim() || "Uncategorized";
+                            if (!grouped[cat]) grouped[cat] = [];
+                            grouped[cat].push(m);
+                        });
+                        const orderedKeys = [
+                            ...CATEGORY_ORDER.filter(c => grouped[c]),
+                            ...Object.keys(grouped).filter(c => !CATEGORY_ORDER.includes(c) && c !== "Uncategorized"),
+                            ...(grouped["Uncategorized"] ? ["Uncategorized"] : []),
+                        ];
+                        return orderedKeys.map(category => (
+                            <div key={category} className="mb-10">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <h2 className="text-lg sm:text-xl font-bold text-[#021d49]">{category}</h2>
+                                    <div className="flex-1 h-px bg-gradient-to-r from-[#021d49]/30 to-transparent"></div>
                                 </div>
-                            ))}
-                        </div>
-                    )}
+                                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+                                    {grouped[category].map((member) => (
+                                        <div
+                                            key={member._id}
+                                            className="group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 hover:border-[#021d49]/30 cursor-pointer"
+                                            onClick={() => setSelectedMember(member)}
+                                        >
+                                            <div className="relative aspect-[3/4] overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
+                                                <img
+                                                    src={member.image && member.image.startsWith('http') ? member.image : member.image ? `https://api.demo.arin-africa.org${member.image}` : 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop'}
+                                                    alt={`${member.firstName} ${member.lastName}`}
+                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                    onError={e => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop'; }}
+                                                />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                            </div>
+                                            <div className="p-3">
+                                                <h3 className="text-sm font-bold text-gray-900 mb-0.5 group-hover:text-[#021d49] transition-colors leading-tight">
+                                                    {member.firstName} {member.lastName}
+                                                </h3>
+                                                <div className="flex items-center gap-1 mb-2">
+                                                    <Briefcase className="w-3 h-3 text-[#021d49] flex-shrink-0" />
+                                                    <p className="text-xs text-[#021d49] font-medium truncate">{member.role}</p>
+                                                </div>
+                                                <div className="flex items-center gap-1.5 text-[#021d49] text-xs font-semibold group-hover:gap-2 transition-all pt-2 border-t border-gray-100">
+                                                    <span>View</span>
+                                                    <ArrowRight className="w-3 h-3" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ));
+                    })()}
                 </section>
 
                 {/* Modal - Compact version */}
