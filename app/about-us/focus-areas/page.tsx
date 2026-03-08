@@ -5,6 +5,7 @@ import {
     Trees, SunMedium, ArrowRight, ArrowUpRight, ChevronDown
 } from "lucide-react";
 import Navbar from "@/app/navbar/Navbar";
+import Footer from "@/app/footer/Footer";
 
 /* ─────────────────────────────────────────
    DATA
@@ -468,6 +469,7 @@ export default function FocusAreasPage() {
                 </div>
 
             </div>
+            <Footer />
         </>
     );
 }

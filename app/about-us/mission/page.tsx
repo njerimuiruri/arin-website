@@ -2,6 +2,7 @@
 import React from "react";
 import { ArrowUpRight, FlaskConical, Lightbulb, BookOpen, Users } from "lucide-react";
 import Navbar from "@/app/navbar/Navbar";
+import Footer from "@/app/footer/Footer";
 
 const pillars = [
     {
@@ -58,7 +59,7 @@ export default function ARINAboutPage() {
                         <div className="ms-strip">
                             {/* Image 1 */}
                             <div className="ms-strip-img">
-                                <img src="/images/mission-1.jpg" alt="ARIN Researchers" />
+                                <img src="/images/DSC_0318.jpg" alt="ARIN Researchers" />
                             </div>
 
                             {/* Card 1 — Mission */}
@@ -78,7 +79,7 @@ export default function ARINAboutPage() {
 
                             {/* Image 2 */}
                             <div className="ms-strip-img">
-                                <img src="/images/mission-2.jpg" alt="Africa Research" />
+                                <img src="/images/lreb.jpg" alt="Africa Research" />
                             </div>
 
                             {/* Card 2 — Vision */}
@@ -110,16 +111,16 @@ export default function ARINAboutPage() {
                         {/* Left: stacked images */}
                         <div className="wu-img-stack">
                             <div className="wu-img-back">
-                                <img src="/images/why-us-1.jpg" alt="ARIN Network" />
+                                <img src="/images/map.jpg" alt="ARIN Network" />
                             </div>
                             <div className="wu-img-front">
-                                <img src="/images/why-us-2.jpg" alt="ARIN Research" />
+                                <img src="/images/map.jpg" alt="ARIN Research" />
                             </div>
                             {/* Floating badge */}
-                            <div className="wu-badge">
+                            {/* <div className="wu-badge">
                                 <div className="wu-badge-num">25+</div>
                                 <div className="wu-badge-lbl">Countries</div>
-                            </div>
+                            </div> */}
                         </div>
 
                         {/* Right: text */}
@@ -159,6 +160,7 @@ export default function ARINAboutPage() {
                 </section>
 
             </div>
+            <Footer />
         </>
     );
 }
