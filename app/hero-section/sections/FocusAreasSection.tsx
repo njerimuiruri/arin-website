@@ -63,12 +63,12 @@ export default function FocusAreasSection() {
             <div className="fa-wrap">
                 {/* Header */}
                 <div className="fa-header">
-                    <div className="fa-eyebrow">
+                    {/* <div className="fa-eyebrow">
                         <div className="fa-ey-dot" />
                         Thematic Disciplines
-                    </div>
+                    </div> */}
                     <h2 className="fa-title">
-                        Our <em>Focus Areas</em>
+                        Our Focus Areas
                     </h2>
                     <p className="fa-subtitle">
                         ARIN pioneers path-breaking research across key thematic areas

@@ -105,7 +105,7 @@ function AreaCard({ area, index }: { area: typeof areas[0]; index: number }) {
 
     return (
         <a
-            href={`/focus-areas/${area.slug}`}
+            href={`/about-us/focus-areas/${area.slug}`}
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
             style={{

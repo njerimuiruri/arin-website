@@ -49,9 +49,9 @@ export default function ARINAboutPage() {
                                 <p className="ms-body">
                                     ARIN seeks to identify and leverage key research talents to flexibly and innovatively contribute to Africa's research transformation, policy analysis and capacity building. ARIN provides a peer review platform where best research and impact practices from different African contexts are shared, profiled, and leveraged to inform transformative policy action.
                                 </p>
-                                <a href="/about-us" className="ms-btn">
+                                {/* <a href="/about-us" className="ms-btn">
                                     Learn More <ArrowUpRight />
-                                </a>
+                                </a> */}
                             </div>
                         </div>
 

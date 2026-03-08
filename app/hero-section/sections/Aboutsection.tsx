@@ -117,7 +117,7 @@ export default function AboutSection() {
                         </div>
 
                         <div className="ab2-ctas">
-                            <a href="/about-us" className="ab2-btn-p">
+                            <a href="/about-us/mission" className="ab2-btn-p">
                                 Learn About ARIN <ArrowRight className="w-4 h-4" />
                             </a>
                             <a href="/contact" className="ab2-btn-s">
