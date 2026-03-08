@@ -1,513 +1,473 @@
 "use client";
-import React from 'react';
-import { ArrowRight, Users, BookOpen, TrendingUp, Globe, Lightbulb, Award, Target, Layers, Zap, Factory, Leaf, Droplet, Wind, TreePine, Building2, Cpu, Shield, Sprout, Calendar } from 'lucide-react';
-import Navbar from '@/app/navbar/Navbar';
+import React, { useState, useEffect, useRef } from "react";
+import {
+    Wind, Building2, Wheat, Pickaxe, Cpu, HeartPulse,
+    Trees, SunMedium, ArrowRight, ArrowUpRight, ChevronDown
+} from "lucide-react";
+import Navbar from "@/app/navbar/Navbar";
 
-const ARINFocusAreasPage = () => {
-    const focusAreas = [
-        {
-            title: "Sustainable Development",
-            icon: Globe,
-            color: "from-[#021d49] to-[#021d49]",
-            gradient: "from-white to-blue-50",
-            border: "border-[#021d49]/30 hover:border-[#021d49]",
-            category: "Africa Sustainability Hub"
-        },
-        {
-            title: "Climate Change, Health and Energy",
-            icon: Wind,
-            color: "from-green-500 to-emerald-600",
-            gradient: "from-white to-green-50",
-            border: "border-green-200 hover:border-green-400",
-            category: "Environmental Action"
-        },
-        {
-            title: "Agriculture and Forestry",
-            icon: Sprout,
-            color: "from-lime-500 to-green-600",
-            gradient: "from-white to-lime-50",
-            border: "border-lime-200 hover:border-lime-400",
-            category: "Food Security"
-        },
-        {
-            title: "Cities and Resilience",
-            icon: Building2,
-            color: "from-purple-500 to-pink-600",
-            gradient: "from-white to-purple-50",
-            border: "border-purple-200 hover:border-purple-400",
-            category: "Urban Development"
-        },
-        {
-            title: "Mining, Trade and Industry",
-            icon: Factory,
-            color: "from-amber-500 to-orange-600",
-            gradient: "from-white to-amber-50",
-            border: "border-amber-200 hover:border-amber-400",
-            category: "Economic Development"
-        },
-        {
-            title: "Technology and Innovation",
-            icon: Cpu,
-            color: "from-indigo-500 to-blue-600",
-            gradient: "from-white to-indigo-50",
-            border: "border-indigo-200 hover:border-indigo-400",
-            category: "Digital Transformation"
-        }
-    ];
+/* ─────────────────────────────────────────
+   DATA
+───────────────────────────────────────── */
+const areas = [
+    {
+        icon: SunMedium,
+        title: "Sustainable Development",
+        slug: "sustainable-development",
+        color: "#f59e0b",
+        desc: "Advancing policies and research that balance economic growth, social equity, and environmental stewardship across African nations.",
+        highlights: ["SDG alignment", "Policy research", "Economic equity"],
+    },
+    {
+        icon: Wind,
+        title: "Climate Change & Energy",
+        slug: "climate-change-energy",
+        color: "#0ea5e9",
+        desc: "Exploring intersections of climate systems and energy transitions to promote resilient, low-carbon solutions for the continent.",
+        highlights: ["Energy transition", "Carbon resilience", "Climate adaptation"],
+    },
+    {
+        icon: Building2,
+        title: "Cities & Resilience",
+        slug: "cities-resilience",
+        color: "#8b5cf6",
+        desc: "Building adaptive urban frameworks that enable African cities to withstand climate shocks, migration pressures, and infrastructure challenges.",
+        highlights: ["Urban planning", "SDG 11", "Infrastructure"],
+    },
+    {
+        icon: Wheat,
+        title: "Agriculture & Forestry",
+        slug: "agriculture-forestry",
+        color: "#22c55e",
+        desc: "Driving climate-smart agriculture and sustainable forestry practices to secure food systems and rural livelihoods.",
+        highlights: ["Food security", "Climate-smart farming", "Rural livelihoods"],
+    },
+    {
+        icon: Pickaxe,
+        title: "Mining, Trade & Industry",
+        slug: "mining-trade-industry",
+        color: "#f97316",
+        desc: "Shaping responsible resource extraction, trade policy, and industrial transformation for inclusive economic development.",
+        highlights: ["Resource governance", "Trade policy", "Industrialisation"],
+    },
+    {
+        icon: Cpu,
+        title: "Technology & Innovation",
+        slug: "technology-innovation",
+        color: "#3b82f6",
+        desc: "Harnessing digital technologies, AI, and innovation ecosystems to accelerate research uptake and policy implementation.",
+        highlights: ["AI & digital", "Innovation systems", "Research uptake"],
+    },
+    {
+        icon: HeartPulse,
+        title: "Climate and Health",
+        slug: "climate-health",
+        color: "#ef4444",
+        desc: "Investigating the health impacts of climate change and building evidence for health-resilient communities and systems.",
+        highlights: ["Health systems", "Climate-health nexus", "Community resilience"],
+    },
+    {
+        icon: Trees,
+        title: "Forests & Ecosystems",
+        slug: "forests-ecosystems",
+        color: "#10b981",
+        desc: "Protecting and restoring Africa's forests and biodiversity through evidence-based conservation and ecosystem governance.",
+        highlights: ["Biodiversity", "Conservation", "Ecosystem governance"],
+    },
+];
+
+/* ─────────────────────────────────────────
+   ANIMATED COUNTER HOOK
+───────────────────────────────────────── */
+function useCountUp(target: number, duration = 1800, start = false) {
+    const [count, setCount] = useState(0);
+    useEffect(() => {
+        if (!start) return;
+        let startTime: number | null = null;
+        const step = (ts: number) => {
+            if (!startTime) startTime = ts;
+            const progress = Math.min((ts - startTime) / duration, 1);
+            setCount(Math.floor(progress * target));
+            if (progress < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+    }, [start, target, duration]);
+    return count;
+}
+
+/* ─────────────────────────────────────────
+   FOCUS AREA CARD
+───────────────────────────────────────── */
+function AreaCard({ area, index }: { area: typeof areas[0]; index: number }) {
+    const [hovered, setHovered] = useState(false);
+    const Icon = area.icon;
 
     return (
+        <a
+            href={`/focus-areas/${area.slug}`}
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+            style={{
+                display: "flex",
+                flexDirection: "column",
+                padding: "28px 24px 24px",
+                borderRadius: 22,
+                background: "white",
+                border: `1px solid ${hovered ? area.color + "55" : "rgba(2,29,73,.08)"}`,
+                boxShadow: hovered
+                    ? `0 20px 56px rgba(2,29,73,.12), 0 0 0 1px ${area.color}33`
+                    : "0 4px 20px rgba(2,29,73,.06)",
+                cursor: "pointer",
+                textDecoration: "none",
+                transform: hovered ? "translateY(-6px)" : "translateY(0)",
+                transition: "all .35s cubic-bezier(.34,1.1,.64,1)",
+                position: "relative",
+                overflow: "hidden",
+                animationDelay: `${index * 0.07}s`,
+            }}
+        >
+            {/* Top accent bar */}
+            <div style={{
+                position: "absolute", top: 0, left: 0, right: 0, height: 3,
+                background: area.color,
+                borderRadius: "22px 22px 0 0",
+                transform: hovered ? "scaleX(1)" : "scaleX(0)",
+                transformOrigin: "left",
+                transition: "transform .4s ease",
+            }} />
 
+            {/* Subtle bg glow */}
+            <div style={{
+                position: "absolute", top: -40, right: -40,
+                width: 140, height: 140, borderRadius: "50%",
+                background: `radial-gradient(circle, ${area.color}18 0%, transparent 70%)`,
+                opacity: hovered ? 1 : 0,
+                transition: "opacity .4s ease",
+                pointerEvents: "none",
+            }} />
+
+            {/* Icon */}
+            <div style={{
+                width: 52, height: 52, borderRadius: 16,
+                background: hovered ? area.color : "#021d49",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                marginBottom: 18,
+                flexShrink: 0,
+                boxShadow: hovered ? `0 6px 20px ${area.color}55` : "none",
+                transition: "all .3s ease",
+            }}>
+                <Icon style={{ width: 22, height: 22, color: "white" }} />
+            </div>
+
+            {/* Title */}
+            <div style={{
+                fontFamily: "'Cormorant Garamond', Georgia, serif",
+                fontWeight: 700, fontSize: "1.05rem",
+                color: "#021d49", lineHeight: 1.3,
+                marginBottom: 10,
+            }}>
+                {area.title}
+            </div>
+
+            {/* Desc */}
+            <div style={{
+                fontFamily: "'Inter', sans-serif",
+                fontSize: 13, color: "#64748b",
+                lineHeight: 1.7, flex: 1, marginBottom: 20,
+            }}>
+                {area.desc}
+            </div>
+
+
+
+            {/* Learn more */}
+            <div style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 600, fontSize: 12.5,
+                color: area.color,
+                transition: "gap .25s ease",
+            }}>
+                Learn more
+                <ArrowRight style={{
+                    width: 14, height: 14,
+                    transform: hovered ? "translateX(4px)" : "translateX(0)",
+                    transition: "transform .25s ease",
+                }} />
+            </div>
+        </a>
+    );
+}
+
+/* ─────────────────────────────────────────
+   PAGE
+───────────────────────────────────────── */
+export default function FocusAreasPage() {
+    const cardsRef = useRef<HTMLDivElement>(null);
+    const [statsVisible, setStatsVisible] = useState(false);
+    const statsRef = useRef<HTMLDivElement>(null);
+
+    const c1 = useCountUp(8, 1400, statsVisible);
+    const c2 = useCountUp(25, 1600, statsVisible);
+    const c3 = useCountUp(500, 1800, statsVisible);
+
+    useEffect(() => {
+        const obs = new IntersectionObserver(([e]) => {
+            if (e.isIntersecting) setStatsVisible(true);
+        }, { threshold: 0.3 });
+        if (statsRef.current) obs.observe(statsRef.current);
+        return () => obs.disconnect();
+    }, []);
+
+    const scrollToCards = () => {
+        cardsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+
+    return (
         <>
             <Navbar />
 
-            <div className="w-full bg-gradient-to-br from-slate-50 via-white to-stone-50">
-                {/* Hero Section */}
-                <section className="max-w-[1600px] mx-auto px-6 py-20">
-                    <div className="text-center mb-16">
-                        <div className="inline-flex items-center gap-2 px-5 py-3 bg-white rounded-full shadow-md border border-stone-200 mb-8">
-                            <span className="text-[#021d49] text-xl">★</span>
-                            <span className="text-sm text-gray-700 font-semibold">
-                                Thematic Disciplines
-                            </span>
+            <div style={{ background: "#f8faff", minHeight: "100vh" }}>
+
+                {/* ══════════════════════════════════
+                    HERO — infographic image
+                ══════════════════════════════════ */}
+                <section style={{
+                    background: "#ffffff",
+                    padding: "22px 40px 60px",
+                    position: "relative",
+                    overflow: "hidden",
+                    borderBottom: "1px solid rgba(2,29,73,.07)",
+                }}>
+                    {/* Grid lines */}
+                    <div style={{
+                        position: "absolute", inset: 0,
+                        backgroundImage: "repeating-linear-gradient(0deg,transparent,transparent 47px,rgba(2,29,73,.04) 47px,rgba(2,29,73,.04) 48px),repeating-linear-gradient(90deg,transparent,transparent 47px,rgba(2,29,73,.04) 47px,rgba(2,29,73,.04) 48px)",
+                        pointerEvents: "none",
+                    }} />
+                    {/* Glow orbs */}
+
+
+                    <div style={{
+                        maxWidth: 1160, margin: "0 auto",
+                        position: "relative", zIndex: 1,
+                    }}>
+                        {/* Eyebrow */}
+                        <div style={{
+                            display: "inline-flex", alignItems: "center", gap: 8,
+                            fontFamily: "'Space Mono', monospace",
+                            fontSize: 10, letterSpacing: ".16em", textTransform: "uppercase",
+                            color: "#021d49",
+                            background: "#eff6ff",
+                            border: "1px solid #bfdbfe",
+                            borderRadius: 99, padding: "5px 16px",
+                            marginBottom: 24,
+                            animation: "fa-fadeUp .6s ease forwards",
+                        }}>
+                            <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#38bdf8", animation: "fa-pulse 2s ease infinite" }} />
+                            Thematic Disciplines
                         </div>
 
-                        <h1 className="text-5xl lg:text-7xl font-bold text-gray-900 leading-tight mb-8">
-                            Focus{' '}
-                            <span className="bg-gradient-to-r from-[#021d49] to-[#021d49] bg-clip-text text-transparent">Areas</span>
+                        {/* Heading */}
+                        <h1 style={{
+                            fontFamily: "'Cormorant Garamond', Georgia, serif",
+                            fontWeight: 700, fontSize: "clamp(2.6rem, 5vw, 4rem)",
+                            color: "#021d49", lineHeight: 1.05,
+                            marginBottom: 16, maxWidth: 680,
+                            animation: "fa-fadeUp .7s .1s ease both",
+                        }}>
+                            Our <em style={{ fontStyle: "italic", color: "#00c4b3" }}>Focus Areas</em>
                         </h1>
+                        <p style={{
+                            fontFamily: "'Inter', sans-serif",
+                            fontSize: 15, color: "#64748b",
+                            lineHeight: 1.8, maxWidth: 560, marginBottom: 52,
+                            animation: "fa-fadeUp .7s .2s ease both",
+                        }}>
+                            ARIN pioneers path-breaking research across eight thematic disciplines shaping Africa's sustainable development and policy transformation agenda.
+                        </p>
 
-                        <p className="text-xl text-gray-600 leading-relaxed max-w-4xl mx-auto">
-                            Exploring pathways to sustainable development through strategic research across key thematic areas
+                        {/* ── Infographic image ── */}
+                        <div style={{
+                            borderRadius: 24,
+                            overflow: "hidden",
+                            boxShadow: "0 32px 80px rgba(0,0,0,.35)",
+                            border: "1px solid rgba(255,255,255,.1)",
+                            animation: "fa-fadeUp .8s .3s ease both",
+                            maxWidth: 960, margin: "0 auto",
+                        }}>
+                            <img
+                                src="/images/ThematicAreasARIN.jpg"
+                                alt="ARIN Thematic Disciplines and Analytical Approaches"
+                                style={{ width: "100%", display: "block" }}
+                            />
+                        </div>
+
+                        {/* Scroll cue */}
+                        <div style={{ textAlign: "center", marginTop: 40 }}>
+                            <button
+                                onClick={scrollToCards}
+                                style={{
+                                    display: "inline-flex", flexDirection: "column",
+                                    alignItems: "center", gap: 6,
+                                    background: "none", border: "none",
+                                    cursor: "pointer",
+                                    fontFamily: "'Space Mono', monospace",
+                                    fontSize: 9, letterSpacing: ".12em", textTransform: "uppercase",
+                                    color: "rgba(2,29,73,.3)",
+                                    animation: "fa-float 2.5s ease infinite",
+                                }}
+                            >
+                                Explore Areas
+                                <ChevronDown style={{ width: 18, height: 18 }} />
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                {/* ══════════════════════════════════
+                    STAT STRIP
+                ══════════════════════════════════ */}
+                {/* <div ref={statsRef} style={{
+                    background: "white",
+                    borderBottom: "1px solid rgba(2,29,73,.07)",
+                }}>
+                    <div style={{
+                        maxWidth: 1160, margin: "0 auto",
+                        padding: "0 40px",
+                        display: "grid",
+                        gridTemplateColumns: "repeat(3, 1fr)",
+                    }}>
+                        {[
+                            { num: c1, suffix: "", label: "Thematic Focus Areas" },
+                            { num: c2, suffix: "+", label: "African Countries" },
+                            { num: c3, suffix: "+", label: "Research Projects" },
+                        ].map((s, i) => (
+                            <div key={i} style={{
+                                padding: "28px 24px",
+                                textAlign: "center",
+                                borderRight: i < 2 ? "1px solid rgba(2,29,73,.07)" : "none",
+                            }}>
+                                <div style={{
+                                    fontFamily: "'Cormorant Garamond', Georgia, serif",
+                                    fontWeight: 700, fontSize: "2.4rem",
+                                    color: "#021d49", lineHeight: 1,
+                                    marginBottom: 4,
+                                }}>
+                                    {s.num}{s.suffix}
+                                </div>
+                                <div style={{
+                                    fontFamily: "'Space Mono', monospace",
+                                    fontSize: 9.5, color: "#94a3b8",
+                                    letterSpacing: ".1em", textTransform: "uppercase",
+                                }}>
+                                    {s.label}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div> */}
+
+                {/* ══════════════════════════════════
+                    FOCUS AREA CARDS
+                ══════════════════════════════════ */}
+                <div ref={cardsRef} style={{
+                    maxWidth: 1160, margin: "0 auto",
+                    padding: "32px 40px 96px",
+                }}>
+                    {/* Section label */}
+                    <div style={{ marginBottom: 48, display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
+                        <div>
+                            <div style={{
+                                display: "inline-flex", alignItems: "center", gap: 7,
+                                fontFamily: "'Space Mono', monospace",
+                                fontSize: 9.5, letterSpacing: ".14em", textTransform: "uppercase",
+                                color: "#021d49",
+                                background: "#eff6ff", border: "1px solid #bfdbfe",
+                                borderRadius: 99, padding: "4px 14px", marginBottom: 14,
+                            }}>
+                                <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#00c4b3" }} />
+                                All Areas
+                            </div>
+                            <h2 style={{
+                                fontFamily: "'Cormorant Garamond', Georgia, serif",
+                                fontWeight: 700, fontSize: "clamp(1.8rem, 3vw, 2.4rem)",
+                                color: "#021d49", lineHeight: 1.1, margin: 0,
+                            }}>
+                                Explore Each <em style={{ fontStyle: "italic", color: "#00c4b3" }}>Discipline</em>
+                            </h2>
+                        </div>
+                        <p style={{
+                            fontFamily: "'Inter', sans-serif",
+                            fontSize: 14, color: "#94a3b8",
+                            maxWidth: 340, lineHeight: 1.7, margin: 0,
+                        }}>
+                            Click any area below to explore its research focus, publications, and policy contributions.
                         </p>
                     </div>
 
-                    {/* Focus Areas Grid */}
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
-                        {focusAreas.map((area, index) => {
-                            const Icon = area.icon;
-                            return (
-                                <div key={index} className={`group bg-gradient-to-br ${area.gradient} rounded-3xl p-10 shadow-xl hover:shadow-2xl transition-all duration-500 border-2 ${area.border} hover:-translate-y-2`}>
-                                    <div className={`w-20 h-20 bg-gradient-to-br ${area.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg`}>
-                                        <Icon className="w-10 h-10 text-white" />
-                                    </div>
-                                    <span className="inline-block px-4 py-2 bg-white/80 text-gray-700 text-xs font-bold rounded-full mb-4 border border-stone-200">
-                                        {area.category}
-                                    </span>
-                                    <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                                        {area.title}
-                                    </h3>
-                                </div>
-                            );
-                        })}
+                    {/* 4-col grid */}
+                    <div style={{
+                        display: "grid",
+                        gridTemplateColumns: "repeat(4, 1fr)",
+                        gap: 20,
+                    }}
+                        className="fa-grid"
+                    >
+                        {areas.map((area, i) => (
+                            <AreaCard key={area.slug} area={area} index={i} />
+                        ))}
                     </div>
-                </section>
 
-                {/* Sustainable Development Section */}
-                <section className="max-w-[1600px] mx-auto px-6 pb-20">
-                    <div className="bg-gradient-to-br from-[#021d49] via-gray-900 to-[#021d49] rounded-3xl p-12 lg:p-16 text-white shadow-2xl">
-                        <div className="flex items-start gap-6 mb-8">
-                            <div className="w-20 h-20 bg-gradient-to-br from-[#021d49] to-[#021d49] rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
-                                <Globe className="w-10 h-10 text-white" />
-                            </div>
-                            <div>
-                                <h2 className="text-4xl lg:text-5xl font-bold mb-4">
-                                    Sustainable Development - Africa Sustainability Hub
-                                </h2>
-                            </div>
-                        </div>
 
-                        <div className="space-y-6 text-lg text-gray-300 leading-relaxed">
-                            <p>
-                                Since the 1992 Conference on Environment and Development, Africa has committed to steer its growth towards a sustainable path. The continent actively pursued Millennium Development Goals of 2000 with the main aim of eradicating poverty. In 2001, African heads of state launched the New Partnership for Africa's Development (NEPAD) to provide a framework for sustainable development to be shared by all Africa's people, emphasizing the role of partnerships among African countries and the international community.
-                            </p>
-                            <p>
-                                However, Africa's performance in the pursuit of the MDGs was relatively low compared to other developing regions. The United Nations Sustainable Development Goals launched in 2015 provide a renewed hope for the continent to learn lessons and undertake strategic actions in line with set targets. This area of work aims to provide research evidence on pathways to sustainable development including social, technical and environmental pathways to sustainability. Activities under this theme builds on the strategic research under the Africa Sustainability Hub
-                            </p>
-                        </div>
-                    </div>
-                </section>
+                </div>
 
-                {/* Climate Change, Health and Energy */}
-                <section className="max-w-[1600px] mx-auto px-6 pb-20">
-                    <div className="bg-gradient-to-br from-white to-green-50 rounded-3xl p-12 lg:p-16 shadow-2xl border-2 border-green-200">
-                        <div className="flex items-start gap-6 mb-8">
-                            <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
-                                <Wind className="w-10 h-10 text-white" />
-                            </div>
-                            <div>
-                                <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-                                    Climate Change, Health and Energy
-                                </h2>
-                                <span className="inline-block px-4 py-2 bg-green-100 text-green-800 text-sm font-bold rounded-full">
-                                    Environmental Action
-                                </span>
-                            </div>
-                        </div>
-
-                        <div className="grid lg:grid-cols-2 gap-10">
-                            <div className="space-y-6 text-gray-700 leading-relaxed">
-                                <p>
-                                    Climate change is recognised as one of the threats that drags Africa's effort to alleviate poverty. According to the Intergovernmental Panel on Climate Change (IPCC) reports, Africa is among the most vulnerable continents to climate change. The factors that make Africa vulnerable to climate change include weak adaptive capacity, evolving energy system, high dependency on ecosystem based goods for livelihoods and majorly rain-fed agriculture. Projections by the United Nations Environment Programme (UNEP)estimate that climate change will lead to an equivalent of 2 percent to 4 percent annual loss in GDP in Africa by 2040.
-                                </p>
-                                <p>
-                                    African countries have initiated climate actions by submitting intended Nationally Determined Contributions (INDCs) under the Paris Agreement, which each country is expected to reduce national emissions and adapt to the impacts of climate change. So far, out of 54 IDNCs, 40 African countries have submitted Nationally Determined Contributions (NDCs).
-                                </p>
-                                <p>
-                                    The implementation of the sustainable energy for all initiative (SEforALL) to support sectors of economies to cut emissions and facilitate adaptation of the communities requires concerted efforts by all relevant agencies and experts.
-                                </p>
-                            </div>
-
-                            <div className="space-y-6 text-gray-700 leading-relaxed">
-                                <p>
-                                    This work area aims to catalyse the achievement of climate change commitments by the African countries through research evidence on low-carbon technologies, policy dialogue, and long-term sustainable capacity building initiatives aimed at creating climate research and policy champions in the continent.
-                                </p>
-                                <p>
-                                    Our work on energy focuses on the role of clean energy for all as catalyst for poverty alleviation and climate action. Here we present research on sustainable options that enhance access to clean energy, including solar, wind, and biomass technologies.
-                                </p>
-                                <p>
-                                    We also identify the main barriers that prevent African countries from adopting these technologies and provide evidence-based recommendations that make it feasible and affordable for them to implement.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="grid md:grid-cols-3 gap-6 mt-12">
-                            <div className="bg-white rounded-2xl p-6 shadow-lg border-2 border-green-100">
-                                <div className="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center mb-4">
-                                    <Target className="w-7 h-7 text-green-600" />
-                                </div>
-                                <p className="text-3xl font-bold text-gray-900 mb-2">40/54</p>
-                                <p className="text-sm text-gray-600">African countries submitted NDCs</p>
-                            </div>
-                            <div className="bg-white rounded-2xl p-6 shadow-lg border-2 border-green-100">
-                                <div className="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center mb-4">
-                                    <TrendingUp className="w-7 h-7 text-green-600" />
-                                </div>
-                                <p className="text-3xl font-bold text-gray-900 mb-2">2-4%</p>
-                                <p className="text-sm text-gray-600">Projected GDP loss by 2040</p>
-                            </div>
-                            <div className="bg-white rounded-2xl p-6 shadow-lg border-2 border-green-100">
-                                <div className="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center mb-4">
-                                    <Zap className="w-7 h-7 text-green-600" />
-                                </div>
-                                <p className="text-2xl font-bold text-gray-900 mb-2">SEforALL</p>
-                                <p className="text-sm text-gray-600">Sustainable Energy Initiative</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Agriculture and Forestry */}
-                <section className="max-w-[1600px] mx-auto px-6 pb-20">
-                    <div className="bg-gradient-to-br from-white to-lime-50 rounded-3xl p-12 lg:p-16 shadow-2xl border-2 border-lime-200">
-                        <div className="flex items-start gap-6 mb-8">
-                            <div className="w-20 h-20 bg-gradient-to-br from-lime-500 to-green-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
-                                <Sprout className="w-10 h-10 text-white" />
-                            </div>
-                            <div>
-                                <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-                                    Agriculture and Forestry
-                                </h2>
-                                <span className="inline-block px-4 py-2 bg-lime-100 text-lime-800 text-sm font-bold rounded-full">
-                                    Food Security
-                                </span>
-                            </div>
-                        </div>
-
-                        <div className="grid lg:grid-cols-2 gap-10 mb-12">
-                            <div className="space-y-6 text-gray-700 leading-relaxed">
-                                <p>
-                                    Agriculture contributes directly and indirectly to climate change rendering farmers among the most vulnerable in Africa. Africa' economy is majorly dependant on agriculture, which highly rainfed hence among the most vulnerable areas to climate impacts. Approximately, 60% of Africa' trade and jobs respectively are derived from agricultural. Agricultural practices have impacted on the forestry in Africa. The indigenous agricultural practices like 'slash and burn' and mechanization have continually contributed to the destruction of forests as creation for more land for intense crop and livestock increase in order to produce more for the increasing population in
-                                </p>
-                                <p>
-                                    Africa and international markets. Africa through the African Union (AU) adopted various declarations to reduce hunger in the continent. The AU' Malabo Declaration adopted in 2014, include commitment to end hunger by 2025, reduce poverty through inclusive agricultural transformation agenda, and enhance resilience of livelihoods and production systems.
-                                </p>
-                            </div>
-
-                            <div className="space-y-6 text-gray-700 leading-relaxed">
-                                <p>
-                                    In line with the Malabo Declaration, the Food and Agriculture Organisation (UN-FAO) has rolled out three regional initiatives on accelerating actions towards fighting hunger, promote sustainable and innovative production practices and building resilience of vulnerable farming and pastoral communities in Africa. Several REDD+ initiatives are being implemented in the region with the objective to contribute to the global effort in increased carbon sequestration and enhancing biodiversity conservation. Africa with support from World Bank (WB) and African Development Bank (AfDB) is operationalizing Climate Smart Agriculture (CSA) aiming at achieving sustainable and resilient transformation of Africa agriculture for food security in the context of climate change. The expected impact include conversion of 5 million hectares of degraded land recovered and forests to sustainable management in Africa. This theme will examine how innovations in agriculture and forestry can be harnessed, within the broader context of sustainable development in Africa.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="bg-gradient-to-r from-lime-500 to-green-600 rounded-2xl p-10 text-white">
-                            <h3 className="text-2xl font-bold mb-6">Our Research Focus</h3>
-                            <div className="grid md:grid-cols-2 gap-8">
-                                <div className="flex items-start gap-4">
-                                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                                        <Lightbulb className="w-6 h-6 text-white" />
-                                    </div>
-                                    <div>
-                                        <p className="font-semibold mb-2">Innovation Research</p>
-                                        <p className="text-sm text-white/90">We conduct research on innovations that improve food security through increasing agricultural productivity, researching food systems, and supporting agribusiness/entrepreneurship.</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-4">
-                                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                                        <Users className="w-6 h-6 text-white" />
-                                    </div>
-                                    <div>
-                                        <p className="font-semibold mb-2">Agricultural Transformation</p>
-                                        <p className="text-sm text-white/90">We aim to inform Africa's agricultural transformation, through research and policy systems driven by farmers, policymakers, and other key stakeholders in the agricultural value chain.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="grid md:grid-cols-3 gap-6 mt-12">
-                            <div className="bg-white rounded-2xl p-6 shadow-lg border-2 border-lime-100">
-                                <div className="w-14 h-14 bg-lime-100 rounded-xl flex items-center justify-center mb-4">
-                                    <TrendingUp className="w-7 h-7 text-lime-600" />
-                                </div>
-                                <p className="text-3xl font-bold text-gray-900 mb-2">60%</p>
-                                <p className="text-sm text-gray-600">Trade and jobs from agriculture</p>
-                            </div>
-                            <div className="bg-white rounded-2xl p-6 shadow-lg border-2 border-lime-100">
-                                <div className="w-14 h-14 bg-lime-100 rounded-xl flex items-center justify-center mb-4">
-                                    <Calendar className="w-7 h-7 text-lime-600" />
-                                </div>
-                                <p className="text-3xl font-bold text-gray-900 mb-2">2025</p>
-                                <p className="text-sm text-gray-600">Target to end hunger (Malabo)</p>
-                            </div>
-                            <div className="bg-white rounded-2xl p-6 shadow-lg border-2 border-lime-100">
-                                <div className="w-14 h-14 bg-lime-100 rounded-xl flex items-center justify-center mb-4">
-                                    <TreePine className="w-7 h-7 text-lime-600" />
-                                </div>
-                                <p className="text-3xl font-bold text-gray-900 mb-2">5M</p>
-                                <p className="text-sm text-gray-600">Hectares for sustainable management</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Cities and Resilience */}
-                <section className="max-w-[1600px] mx-auto px-6 pb-20">
-                    <div className="bg-gradient-to-br from-white to-purple-50 rounded-3xl p-12 lg:p-16 shadow-2xl border-2 border-purple-200">
-                        <div className="flex items-start gap-6 mb-8">
-                            <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
-                                <Building2 className="w-10 h-10 text-white" />
-                            </div>
-                            <div>
-                                <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-                                    Cities and Resilience
-                                </h2>
-                                <span className="inline-block px-4 py-2 bg-purple-100 text-purple-800 text-sm font-bold rounded-full">
-                                    Urban Development
-                                </span>
-                            </div>
-                        </div>
-
-                        <div className="grid lg:grid-cols-2 gap-10 mb-12">
-                            <div className="space-y-6 text-gray-700 leading-relaxed">
-                                <p>
-                                    More than 50% of the world's population live in cities or urban centres and one billion people live in informal settlements and slums worldwide. Cities contribute significantly towards achievement of Sustainable Development Goals (SDGs) especially SDG 11 on sustainable cities and communities. African cities will double in population by 2050 this is because being home to the world's youngest and fast-growing population, the continent is urbanizing more rapidly than any other part of the planet (World Economic Forum). The primary concern is Africa's preparation for the urban explosion in the face of the many threats including climate change and disasters such as floods, fires, heat waves, air pollution among others. African cities and urban areas are already facing environmental related extremes such as floods, fires, and droughts. Africa's low capacity to respond to climate change compounded by poverty, weak economies, and overreliance on ecosystem based goods for livelihoods make African cities and urban areas vulnerable to multiple risks, hazards and disasters.
-                                </p>
-                            </div>
-
-                            <div className="space-y-6 text-gray-700 leading-relaxed">
-                                <p>
-                                    There is urgency to build resilient of current and emerging cities and urban areas in Africa through integrated multihazard research and policy approach, innovative financing, capacity building and inclusive partnership to transition them from crisis response to integrated disaster management.
-                                </p>
-                                <p>
-                                    This thematic area focuses on pursuing interdisciplinary research to support African cities with the necessary capacity and systems to transition from emergency response to more integrated disaster preparedness. The focus is to understand the linkage between various disasters and their risks and to use science to inform multi-hazard action plans in various African Cities. The work area also involves learning and profiling excellent research on cities and resilience taking place in various African contexts to the continental level.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="grid md:grid-cols-3 gap-6">
-                            <div className="bg-white rounded-2xl p-6 shadow-lg border-2 border-purple-100">
-                                <div className="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
-                                    <Users className="w-7 h-7 text-purple-600" />
-                                </div>
-                                <p className="text-3xl font-bold text-gray-900 mb-2">50%+</p>
-                                <p className="text-sm text-gray-600">Global urban population</p>
-                            </div>
-                            <div className="bg-white rounded-2xl p-6 shadow-lg border-2 border-purple-100">
-                                <div className="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
-                                    <TrendingUp className="w-7 h-7 text-purple-600" />
-                                </div>
-                                <p className="text-3xl font-bold text-gray-900 mb-2">2x by 2050</p>
-                                <p className="text-sm text-gray-600">African cities population</p>
-                            </div>
-                            <div className="bg-white rounded-2xl p-6 shadow-lg border-2 border-purple-100">
-                                <div className="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
-                                    <Shield className="w-7 h-7 text-purple-600" />
-                                </div>
-                                <p className="text-2xl font-bold text-gray-900 mb-2">SDG 11</p>
-                                <p className="text-sm text-gray-600">Sustainable cities goal</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Mining, Trade and Industry */}
-                <section className="max-w-[1600px] mx-auto px-6 pb-20">
-                    <div className="bg-gradient-to-br from-white to-amber-50 rounded-3xl p-12 lg:p-16 shadow-2xl border-2 border-amber-200">
-                        <div className="flex items-start gap-6 mb-8">
-                            <div className="w-20 h-20 bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
-                                <Factory className="w-10 h-10 text-white" />
-                            </div>
-                            <div>
-                                <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-                                    Mining, Trade and Industry
-                                </h2>
-                                <span className="inline-block px-4 py-2 bg-amber-100 text-amber-800 text-sm font-bold rounded-full">
-                                    Economic Development
-                                </span>
-                            </div>
-                        </div>
-
-                        <div className="space-y-6 text-gray-700 leading-relaxed mb-12">
-                            <p>
-                                Africa is well endowed with mineral resources harbouring the world's largest mineral reserve of platinum, gold, diamonds, chromite, manganese, and vanadium (UNECA). However, according to the African Review report on Mining, 2009, most of these minerals are exported as ores, concentrates or metals without significant downstream processing to add value leading to low economic benefit to Africa. Africa conceived a mining Vision to advocate for transparent, equitable and optimal exploitation of mineral resources to underpin broad-based sustainable growth and socio-economic development. Therefore, the untapped mineral potential can help African leapfrog to industrialised economy if value added.
-                            </p>
-                            <p>
-                                Africa trade policy has been undergoing transformation. However, the geographical boundaries have overtime hindered efficient intra-trade among the African countries as well as trade with the rest of the world. To open up African for free trade, the African Union (AU) with support from partners like the UN Economic Commission for Africa (UNECA) brokered and mobilized 44 AU member states to sign the African Continental Free Trade Agreement (AfCFTA) in Kigali, Rwanda on March 21, 2018. AfCFTA is the largest in the world in terms of participating countries since the formation of the World Trade Organization (WTO). As of July 2019, out of the 55 AU members, 54 have signed while 22 have ratified the Agreement. AfCFTA is envisioned to boost intra-African trade by 52 percent by 2022. The Agreement was designed with the requirement that members remove tariffs from 90 percent of goods, allow free access to commodities, goods and services across the continent. Progress have been made in the operationalization of the Agreement. In the East African Community (EAC), which is one of the vibrant regional economic blocs, member have initiated One-Stop Border Posts (OSBP) in their borders to facilitate free movement of people and goods.
-                            </p>
-                            <p>
-                                African industry is still underdeveloped because the key industrial sectors like agriculture remain vulnerable to climate change. Even though it is endowed with minerals, there no value addition hence generating little benefit to the continent. Agriculture industry is estimated to employ 60 percent of the workforce in Africa but its full potential is hindered by the continent' low adaptive capacity. The service industry is growing due to penetration of ICT based support like internet and phone penetration in the continent. The services like banking and financial services, communication and information technology and tourism have seen major progress over the past decade. The investment in the linkage between the service industries and productive sectors like agriculture and mining require strategic support in order to boost African industry to transition Africa' economy into middle-income economy. This thematic area will examine the role, impact and potential of the trifecta of mining, trade and industry in Africa's transformation.
-                            </p>
-                        </div>
-
-                        <div className="grid md:grid-cols-4 gap-6">
-                            <div className="bg-white rounded-2xl p-6 shadow-lg border-2 border-amber-100">
-                                <div className="w-14 h-14 bg-amber-100 rounded-xl flex items-center justify-center mb-4">
-                                    <Target className="w-7 h-7 text-amber-600" />
-                                </div>
-                                <p className="text-3xl font-bold text-gray-900 mb-2">54/55</p>
-                                <p className="text-sm text-gray-600">AU members signed AfCFTA</p>
-                            </div>
-                            <div className="bg-white rounded-2xl p-6 shadow-lg border-2 border-amber-100">
-                                <div className="w-14 h-14 bg-amber-100 rounded-xl flex items-center justify-center mb-4">
-                                    <TrendingUp className="w-7 h-7 text-amber-600" />
-                                </div>
-                                <p className="text-3xl font-bold text-gray-900 mb-2">52%</p>
-                                <p className="text-sm text-gray-600">Intra-African trade boost target</p>
-                            </div>
-                            <div className="bg-white rounded-2xl p-6 shadow-lg border-2 border-amber-100">
-                                <div className="w-14 h-14 bg-amber-100 rounded-xl flex items-center justify-center mb-4">
-                                    <Award className="w-7 h-7 text-amber-600" />
-                                </div>
-                                <p className="text-3xl font-bold text-gray-900 mb-2">90%</p>
-                                <p className="text-sm text-gray-600">Goods with removed tariffs</p>
-                            </div>
-                            <div className="bg-white rounded-2xl p-6 shadow-lg border-2 border-amber-100">
-                                <div className="w-14 h-14 bg-amber-100 rounded-xl flex items-center justify-center mb-4">
-                                    <Users className="w-7 h-7 text-amber-600" />
-                                </div>
-                                <p className="text-3xl font-bold text-gray-900 mb-2">60%</p>
-                                <p className="text-sm text-gray-600">Workforce in agriculture</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Technology and Innovation */}
-                <section className="max-w-[1600px] mx-auto px-6 pb-20">
-                    <div className="bg-gradient-to-br from-white to-indigo-50 rounded-3xl p-12 lg:p-16 shadow-2xl border-2 border-indigo-200">
-                        <div className="flex items-start gap-6 mb-8">
-                            <div className="w-20 h-20 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
-                                <Cpu className="w-10 h-10 text-white" />
-                            </div>
-                            <div>
-                                <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-                                    Technology and Innovation
-                                </h2>
-                                <span className="inline-block px-4 py-2 bg-indigo-100 text-indigo-800 text-sm font-bold rounded-full">
-                                    Digital Transformation
-                                </span>
-                            </div>
-                        </div>
-
-                        <div className="grid lg:grid-cols-2 gap-10 mb-12">
-                            <div className="space-y-6 text-gray-700 leading-relaxed">
-                                <p>
-                                    Technology and innovation are key drivers of economic transformation and sustainable development in Africa. The continent has witnessed rapid technological advancement, particularly in mobile technology, digital finance, and innovative solutions tailored to local challenges. Africa's young and growing population presents enormous potential for technological innovation and entrepreneurship.
-                                </p>
-                                <p>
-                                    Digital transformation is reshaping sectors across the continent, from agriculture and healthcare to education and governance. Mobile penetration has enabled leapfrogging traditional infrastructure, with innovations like mobile money revolutionizing financial inclusion. Kenya's M-Pesa and similar platforms have become global models for digital financial services.
-                                </p>
-                            </div>
-
-                            <div className="space-y-6 text-gray-700 leading-relaxed">
-                                <p>
-                                    However, significant challenges remain, including limited internet connectivity in rural areas, inadequate digital infrastructure, skills gaps, and regulatory frameworks that may not keep pace with technological advancement. Bridging the digital divide is essential for ensuring inclusive growth and preventing further marginalization of vulnerable populations.
-                                </p>
-                                <p>
-                                    This thematic area focuses on research that explores how technology and innovation can accelerate sustainable development, enhance productivity, create employment opportunities, and address Africa's unique challenges. We examine emerging technologies, innovation ecosystems, digital policy frameworks, and strategies for building robust technological capabilities across the continent.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="bg-gradient-to-r from-indigo-500 to-blue-600 rounded-2xl p-10 text-white mb-12">
-                            <h3 className="text-2xl font-bold mb-6">Key Research Areas</h3>
-                            <div className="grid md:grid-cols-2 gap-8">
-                                <div className="flex items-start gap-4">
-                                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                                        <Lightbulb className="w-6 h-6 text-white" />
-                                    </div>
-                                    <div>
-                                        <p className="font-semibold mb-2">Innovation Ecosystems</p>
-                                        <p className="text-sm text-white/90">Research on building vibrant innovation hubs, incubators, and technology parks that foster entrepreneurship and technological advancement.</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-4">
-                                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                                        <Zap className="w-6 h-6 text-white" />
-                                    </div>
-                                    <div>
-                                        <p className="font-semibold mb-2">Digital Infrastructure</p>
-                                        <p className="text-sm text-white/90">Examining strategies for expanding connectivity, improving digital infrastructure, and ensuring equitable access to technology across the continent.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="grid md:grid-cols-3 gap-6">
-                            <div className="bg-white rounded-2xl p-6 shadow-lg border-2 border-indigo-100">
-                                <div className="w-14 h-14 bg-indigo-100 rounded-xl flex items-center justify-center mb-4">
-                                    <Cpu className="w-7 h-7 text-indigo-600" />
-                                </div>
-                                <p className="text-2xl font-bold text-gray-900 mb-2">Digital</p>
-                                <p className="text-sm text-gray-600">Transformation initiatives</p>
-                            </div>
-                            <div className="bg-white rounded-2xl p-6 shadow-lg border-2 border-indigo-100">
-                                <div className="w-14 h-14 bg-indigo-100 rounded-xl flex items-center justify-center mb-4">
-                                    <Users className="w-7 h-7 text-indigo-600" />
-                                </div>
-                                <p className="text-2xl font-bold text-gray-900 mb-2">Youth</p>
-                                <p className="text-sm text-gray-600">Driving innovation forward</p>
-                            </div>
-                            <div className="bg-white rounded-2xl p-6 shadow-lg border-2 border-indigo-100">
-                                <div className="w-14 h-14 bg-indigo-100 rounded-xl flex items-center justify-center mb-4">
-                                    <Lightbulb className="w-7 h-7 text-indigo-600" />
-                                </div>
-                                <p className="text-2xl font-bold text-gray-900 mb-2">Innovation</p>
-                                <p className="text-sm text-gray-600">Ecosystem development</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Call to Action */}
-                <section className="max-w-[1600px] mx-auto px-6 pb-20">
-                    <div className="bg-gradient-to-br from-[#021d49] via-[#021d49] to-[#021d49] rounded-3xl p-12 lg:p-16 text-center text-white shadow-2xl">
-                        <h2 className="text-4xl lg:text-5xl font-bold mb-6">
-                            Join Us in Shaping Africa's Future
-                        </h2>
-                        <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto">
-                            Together, we can drive transformative research and policy solutions that address Africa's most pressing challenges
+                {/* ══════════════════════════════════
+                    CTA BANNER
+                ══════════════════════════════════ */}
+                <div style={{ padding: "0 40px 80px" }}>
+                    <div style={{
+                        maxWidth: 1160, margin: "0 auto",
+                        background: "#021d49",
+                        borderRadius: 20,
+                        padding: "28px 40px",
+                        display: "flex", alignItems: "center",
+                        justifyContent: "space-between",
+                        flexWrap: "wrap", gap: 20,
+                        position: "relative", overflow: "hidden",
+                    }}>
+                        <div style={{
+                            position: "absolute", inset: 0,
+                            backgroundImage: "repeating-linear-gradient(90deg,transparent,transparent 79px,rgba(255,255,255,.03) 79px,rgba(255,255,255,.03) 80px)",
+                            pointerEvents: "none",
+                        }} />
+                        <p style={{
+                            fontFamily: "'Cormorant Garamond', Georgia, serif",
+                            fontWeight: 600, fontSize: "1.3rem",
+                            color: "white", margin: 0, position: "relative",
+                        }}>
+                            Want to contribute to ARIN's research agenda?
                         </p>
-                        <button className="group bg-white text-[#021d49] px-8 py-4 rounded-full font-bold text-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 inline-flex items-center gap-3">
-                            Explore Our Work
-                            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                        </button>
+                        <a href="/contact" style={{
+                            display: "inline-flex", alignItems: "center", gap: 8,
+                            padding: "11px 24px", borderRadius: 99,
+                            background: "white", color: "#021d49",
+                            fontFamily: "'Inter', sans-serif",
+                            fontWeight: 700, fontSize: 13,
+                            textDecoration: "none",
+                            whiteSpace: "nowrap",
+                            position: "relative",
+                            transition: "background .2s",
+                        }}
+                            onMouseEnter={e => (e.currentTarget.style.background = "#eff6ff")}
+                            onMouseLeave={e => (e.currentTarget.style.background = "white")}
+                        >
+                            Get in Touch <ArrowUpRight style={{ width: 14, height: 14 }} />
+                        </a>
                     </div>
-                </section>
+                </div>
+
             </div>
         </>
-
     );
-};
-
-export default ARINFocusAreasPage;
+}

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { ChevronDown, Menu, X } from 'lucide-react';
+import { ChevronDown, ChevronRight, Menu, X } from 'lucide-react';
 import Image from 'next/image';
 
 const Navbar = () => {
@@ -8,6 +8,8 @@ const Navbar = () => {
     const [pathname, setPathname] = useState('/');
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [mobileSubmenuOpen, setMobileSubmenuOpen] = useState<number | null>(null);
+    const [activeNestedMenu, setActiveNestedMenu] = useState<string | null>(null);
+    const [mobileNestedOpen, setMobileNestedOpen] = useState<string | null>(null);
     const [scrolled, setScrolled] = useState(false);
 
     useEffect(() => {
@@ -40,14 +42,50 @@ const Navbar = () => {
         };
     }, [mobileMenuOpen]);
 
+    useEffect(() => {
+        if (activeMenu !== null) {
+            const item = menuItems[activeMenu];
+            if (item.submenu) {
+                const firstSectionsIndex = item.submenu.findIndex(s => (s as { sections?: unknown }).sections);
+                if (firstSectionsIndex >= 0) {
+                    setActiveNestedMenu(`${activeMenu}-${firstSectionsIndex}`);
+                }
+            }
+        } else {
+            setActiveNestedMenu(null);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [activeMenu]);
+
     const menuItems = [
+        {
+            name: 'Home',
+            href: '/',
+            // external: true
+        },
         {
             name: 'About Us',
             href: '/about-us',
             submenu: [
                 { name: "ARIN's Mission", href: '/about-us/mission' },
                 { name: 'The Secretariat', href: '/about-us/secretariat' },
-                { name: 'Focus Areas', href: '/about-us/focus-areas' },
+                {
+                    name: 'Focus Areas', href: '/about-us/focus-areas',
+                    sections: [
+                        {
+                            items: [
+                                { name: 'Sustainable Development', href: '/about-us/focus-areas/sustainable-development' },
+                                { name: 'Climate Change & Energy', href: '/about-us/focus-areas/climate-change-energy' },
+                                { name: 'Cities & Resilience', href: '/about-us/focus-areas/cities-resilience' },
+                                { name: 'Agriculture & Forestry', href: '/about-us/focus-areas/agriculture-forestry' },
+                                { name: 'Mining, Trade & Industry', href: '/about-us/focus-areas/mining-trade-industry' },
+                                { name: 'Technology & Innovation', href: '/about-us/focus-areas/technology-innovation' },
+                                { name: 'Climate and Health', href: '/about-us/focus-areas/climate-health' },
+                                { name: 'Forests & Ecosystems', href: '/about-us/focus-areas/forests-ecosystems' },
+                            ]
+                        }
+                    ]
+                },
             ]
         },
         {
@@ -166,29 +204,119 @@ const Navbar = () => {
                                                 {activeMenu === index && (
                                                     <div className={`absolute top-full pt-4 min-w-[450px] 2xl:min-w-[500px] ${index >= menuItems.length - 2 ? 'right-0' : 'left-0'}`}>
                                                         <div className="bg-white rounded-xl shadow-2xl border border-gray-200 py-3 px-4 2xl:py-4 2xl:px-5 animate-fadeIn">
-                                                            <div className={`grid gap-1 ${item.submenu.length > 10 ? 'grid-cols-3' : item.submenu.length > 4 ? 'grid-cols-2' : 'grid-cols-1'}`}>
-                                                                {item.submenu.map((subItem, subIndex) => (
-                                                                    <a
-                                                                        key={subIndex}
-                                                                        href={subItem.href}
-                                                                        target={subItem.external ? "_blank" : undefined}
-                                                                        rel={subItem.external ? "noopener noreferrer" : undefined}
-                                                                        className={`block px-3 py-2 text-[12px] 2xl:text-[13px] transition-all duration-200 rounded-lg whitespace-nowrap group/item ${pathname === subItem.href ? 'bg-gradient-to-r from-[#021d49] to-blue-700 text-white font-medium shadow-md' : 'text-gray-800 hover:bg-gradient-to-r hover:from-blue-50 hover:to-gray-50 hover:text-[#021d49] font-normal'}`}
-                                                                    >
-                                                                        <span className="flex items-center gap-1.5">
-                                                                            {pathname !== subItem.href && (
-                                                                                <span className="w-0 h-0.5 bg-[#021d49] transition-all duration-300 group-hover/item:w-1.5" />
-                                                                            )}
-                                                                            {subItem.name}
-                                                                            {subItem.external && (
-                                                                                <svg className="w-2.5 h-2.5 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                                                                </svg>
-                                                                            )}
-                                                                        </span>
-                                                                    </a>
-                                                                ))}
-                                                            </div>
+                                                            {item.submenu.some(s => (s as { sections?: unknown }).sections) ? (
+                                                                <div className="flex">
+                                                                    {/* Left panel - menu items */}
+                                                                    <div className="min-w-[160px] pr-3 border-r border-gray-100">
+                                                                        {item.submenu.map((subItem, subIndex) => {
+                                                                            const sub = subItem as { name: string; href: string; external?: boolean; sections?: { title: string; items: { name: string; href: string }[] }[] };
+                                                                            const nestedKey = `${index}-${subIndex}`;
+                                                                            if (sub.sections) {
+                                                                                return (
+                                                                                    <a
+                                                                                        key={subIndex}
+                                                                                        href={sub.href}
+                                                                                        onMouseEnter={() => setActiveNestedMenu(nestedKey)}
+                                                                                        className={`flex items-center justify-between px-3 py-2 text-[12px] 2xl:text-[13px] transition-all duration-200 rounded-lg whitespace-nowrap group/item ${activeNestedMenu === nestedKey || pathname.startsWith(sub.href) ? 'bg-gradient-to-r from-[#021d49] to-blue-700 text-white font-medium shadow-md' : 'text-gray-800 hover:bg-gradient-to-r hover:from-blue-50 hover:to-gray-50 hover:text-[#021d49] font-normal'}`}
+                                                                                    >
+                                                                                        <span className="flex items-center gap-1.5">
+                                                                                            {activeNestedMenu !== nestedKey && !pathname.startsWith(sub.href) && (
+                                                                                                <span className="w-0 h-0.5 bg-[#021d49] transition-all duration-300 group-hover/item:w-1.5" />
+                                                                                            )}
+                                                                                            {sub.name}
+                                                                                        </span>
+                                                                                        <ChevronRight className="w-3 h-3 ml-2 flex-shrink-0" />
+                                                                                    </a>
+                                                                                );
+                                                                            }
+                                                                            return (
+                                                                                <a
+                                                                                    key={subIndex}
+                                                                                    href={sub.href}
+                                                                                    target={sub.external ? "_blank" : undefined}
+                                                                                    rel={sub.external ? "noopener noreferrer" : undefined}
+                                                                                    onMouseEnter={() => setActiveNestedMenu(null)}
+                                                                                    className={`block px-3 py-2 text-[12px] 2xl:text-[13px] transition-all duration-200 rounded-lg whitespace-nowrap group/item ${pathname === sub.href ? 'bg-gradient-to-r from-[#021d49] to-blue-700 text-white font-medium shadow-md' : 'text-gray-800 hover:bg-gradient-to-r hover:from-blue-50 hover:to-gray-50 hover:text-[#021d49] font-normal'}`}
+                                                                                >
+                                                                                    <span className="flex items-center gap-1.5">
+                                                                                        {pathname !== sub.href && (
+                                                                                            <span className="w-0 h-0.5 bg-[#021d49] transition-all duration-300 group-hover/item:w-1.5" />
+                                                                                        )}
+                                                                                        {sub.name}
+                                                                                        {sub.external && (
+                                                                                            <svg className="w-2.5 h-2.5 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                                                                            </svg>
+                                                                                        )}
+                                                                                    </span>
+                                                                                </a>
+                                                                            );
+                                                                        })}
+                                                                    </div>
+                                                                    {/* Right panel - sections content */}
+                                                                    <div className="pl-3 flex-1 min-w-[240px]">
+                                                                        {item.submenu.map((subItem, subIndex) => {
+                                                                            const sub = subItem as { name: string; href: string; sections?: { title: string; items: { name: string; href: string }[] }[] };
+                                                                            const nestedKey = `${index}-${subIndex}`;
+                                                                            if (!sub.sections || activeNestedMenu !== nestedKey) return null;
+                                                                            return (
+                                                                                <div key={subIndex}>
+                                                                                    {sub.sections.map((section, sectionIndex) => (
+                                                                                        <div key={sectionIndex}>
+                                                                                            <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[#021d49] border-b border-gray-100 mb-2">
+                                                                                                {section.title}
+                                                                                            </div>
+                                                                                            <div className="space-y-0.5">
+                                                                                                {section.items.map((sectionItem, sectionItemIndex) => (
+                                                                                                    <a
+                                                                                                        key={sectionItemIndex}
+                                                                                                        href={sectionItem.href}
+                                                                                                        className={`block px-3 py-2 text-[12px] 2xl:text-[13px] transition-all duration-200 rounded-lg whitespace-nowrap group/nested ${pathname === sectionItem.href ? 'bg-gradient-to-r from-[#021d49] to-blue-700 text-white font-medium shadow-md' : 'text-gray-800 hover:bg-gradient-to-r hover:from-blue-50 hover:to-gray-50 hover:text-[#021d49] font-normal'}`}
+                                                                                                    >
+                                                                                                        <span className="flex items-center gap-1.5">
+                                                                                                            {pathname !== sectionItem.href && (
+                                                                                                                <span className="w-0 h-0.5 bg-[#021d49] transition-all duration-300 group-hover/nested:w-1.5" />
+                                                                                                            )}
+                                                                                                            {sectionItem.name}
+                                                                                                        </span>
+                                                                                                    </a>
+                                                                                                ))}
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    ))}
+                                                                                </div>
+                                                                            );
+                                                                        })}
+                                                                    </div>
+                                                                </div>
+                                                            ) : (
+                                                                <div className={`grid gap-1 ${item.submenu.length > 10 ? 'grid-cols-3' : item.submenu.length > 4 ? 'grid-cols-2' : 'grid-cols-1'}`}>
+                                                                    {item.submenu.map((subItem, subIndex) => {
+                                                                        const sub = subItem as { name: string; href: string; external?: boolean };
+                                                                        return (
+                                                                            <a
+                                                                                key={subIndex}
+                                                                                href={sub.href}
+                                                                                target={sub.external ? "_blank" : undefined}
+                                                                                rel={sub.external ? "noopener noreferrer" : undefined}
+                                                                                className={`block px-3 py-2 text-[12px] 2xl:text-[13px] transition-all duration-200 rounded-lg whitespace-nowrap group/item ${pathname === sub.href ? 'bg-gradient-to-r from-[#021d49] to-blue-700 text-white font-medium shadow-md' : 'text-gray-800 hover:bg-gradient-to-r hover:from-blue-50 hover:to-gray-50 hover:text-[#021d49] font-normal'}`}
+                                                                            >
+                                                                                <span className="flex items-center gap-1.5">
+                                                                                    {pathname !== sub.href && (
+                                                                                        <span className="w-0 h-0.5 bg-[#021d49] transition-all duration-300 group-hover/item:w-1.5" />
+                                                                                    )}
+                                                                                    {sub.name}
+                                                                                    {sub.external && (
+                                                                                        <svg className="w-2.5 h-2.5 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                                                                        </svg>
+                                                                                    )}
+                                                                                </span>
+                                                                            </a>
+                                                                        );
+                                                                    })}
+                                                                </div>
+                                                            )}
                                                         </div>
                                                     </div>
                                                 )}
@@ -286,24 +414,71 @@ const Navbar = () => {
                                         </button>
                                         {mobileSubmenuOpen === index && (
                                             <div className="ml-2 mt-1 space-y-0.5 animate-fadeIn">
-                                                {item.submenu.map((subItem, subIndex) => (
-                                                    <a
-                                                        key={subIndex}
-                                                        href={subItem.href}
-                                                        target={subItem.external ? "_blank" : undefined}
-                                                        rel={subItem.external ? "noopener noreferrer" : undefined}
-                                                        className={`block px-3 py-2.5 text-[13px] sm:text-[14px] rounded-lg transition-all duration-200 touch-manipulation ${pathname === subItem.href ? 'bg-gradient-to-r from-[#021d49] to-blue-700 text-white font-medium shadow-md' : 'text-gray-700 hover:bg-gray-50 hover:text-[#021d49] active:bg-gray-100'}`}
-                                                    >
-                                                        <span className="flex items-center gap-1.5">
-                                                            {subItem.name}
-                                                            {subItem.external && (
-                                                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                                                </svg>
-                                                            )}
-                                                        </span>
-                                                    </a>
-                                                ))}
+                                                {item.submenu.map((subItem, subIndex) => {
+                                                    const sub = subItem as { name: string; href: string; external?: boolean; sections?: { title: string; items: { name: string; href: string }[] }[] };
+                                                    const nestedKey = `${index}-${subIndex}`;
+                                                    if (sub.sections) {
+                                                        return (
+                                                            <div key={subIndex}>
+                                                                <div className={`flex items-center rounded-lg transition-all duration-200 ${pathname.startsWith(sub.href) ? 'text-[#021d49] bg-gradient-to-r from-blue-50 to-gray-50' : 'text-gray-700 hover:bg-gray-50'}`}>
+                                                                    <a
+                                                                        href={sub.href}
+                                                                        className="flex-1 px-3 py-2.5 text-[13px] sm:text-[14px] touch-manipulation"
+                                                                    >
+                                                                        {sub.name}
+                                                                    </a>
+                                                                    <button
+                                                                        onClick={() => setMobileNestedOpen(mobileNestedOpen === nestedKey ? null : nestedKey)}
+                                                                        className="px-3 py-2.5 touch-manipulation"
+                                                                        aria-label="Toggle submenu"
+                                                                    >
+                                                                        <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${mobileNestedOpen === nestedKey ? 'rotate-180' : ''}`} />
+                                                                    </button>
+                                                                </div>
+                                                                {mobileNestedOpen === nestedKey && (
+                                                                    <div className="ml-3 mt-0.5 animate-fadeIn">
+                                                                        {sub.sections.map((section, sectionIndex) => (
+                                                                            <div key={sectionIndex}>
+                                                                                <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[#021d49]">
+                                                                                    {section.title}
+                                                                                </div>
+                                                                                <div className="space-y-0.5">
+                                                                                    {section.items.map((sectionItem, sectionItemIndex) => (
+                                                                                        <a
+                                                                                            key={sectionItemIndex}
+                                                                                            href={sectionItem.href}
+                                                                                            className={`block px-3 py-2 text-[12px] sm:text-[13px] rounded-lg transition-all duration-200 touch-manipulation ${pathname === sectionItem.href ? 'bg-gradient-to-r from-[#021d49] to-blue-700 text-white font-medium shadow-md' : 'text-gray-700 hover:bg-gray-50 hover:text-[#021d49] active:bg-gray-100'}`}
+                                                                                        >
+                                                                                            {sectionItem.name}
+                                                                                        </a>
+                                                                                    ))}
+                                                                                </div>
+                                                                            </div>
+                                                                        ))}
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        );
+                                                    }
+                                                    return (
+                                                        <a
+                                                            key={subIndex}
+                                                            href={sub.href}
+                                                            target={sub.external ? "_blank" : undefined}
+                                                            rel={sub.external ? "noopener noreferrer" : undefined}
+                                                            className={`block px-3 py-2.5 text-[13px] sm:text-[14px] rounded-lg transition-all duration-200 touch-manipulation ${pathname === sub.href ? 'bg-gradient-to-r from-[#021d49] to-blue-700 text-white font-medium shadow-md' : 'text-gray-700 hover:bg-gray-50 hover:text-[#021d49] active:bg-gray-100'}`}
+                                                        >
+                                                            <span className="flex items-center gap-1.5">
+                                                                {sub.name}
+                                                                {sub.external && (
+                                                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                                                    </svg>
+                                                                )}
+                                                            </span>
+                                                        </a>
+                                                    );
+                                                })}
                                             </div>
                                         )}
                                     </React.Fragment>

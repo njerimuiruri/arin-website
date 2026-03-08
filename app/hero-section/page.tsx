@@ -12,6 +12,7 @@ import LatestPostsSection from "./sections/LatestPostsSection";
 import UpcomingEventsSection from "./sections/UpcomingEventsSection";
 import LatestProjectsSection from "./sections/LatestProjectsSection";
 import PartnersSection from "./sections/PartnersSection";
+import LatestFromArinSection from "./sections/LatestFromArinSection";
 import CTASection from "./sections/CTASection";
 import AfricaPresenceMap from "./sections/AfricaPresenceMap";
 import ImpactStories from "./sections/impactstories";
@@ -21,7 +22,7 @@ import { technicalReportsService } from "@/services/technicalReportsService";
 import { policyBriefsService } from "@/services/policyBriefsService";
 import { getNewsBriefs } from "@/services/newsBriefsService";
 import { getResearchProjects } from "@/services/researchProjectService";
-import { getPolicyDialogues } from "@/services/policyDialoguesService";
+
 import StatsSection from "./sections/StatsSection";
 import AboutSection from "./sections/Aboutsection";
 import PresenceSection from "./sections/Presencesection";
@@ -117,27 +118,19 @@ const latestProjects = [
 
 export default async function HeroSection() {
     // Fetch all data on the server
-    const [events, techReports, policyBriefs, newsBriefs, researchProjects, policyDialogues] = await Promise.allSettled([
+    const [, techReports, policyBriefs, newsBriefs, researchProjects] = await Promise.allSettled([
         getEvents(),
         technicalReportsService.getAll().catch(() => []),
         policyBriefsService.getAll().catch(() => []),
         getNewsBriefs().catch(() => []),
         getResearchProjects().catch(() => []),
-        getPolicyDialogues ? getPolicyDialogues().catch(() => []) : Promise.resolve([])
     ]).then(results =>
         results.map(r => r.status === 'fulfilled' ? r.value : [])
     );
 
     return (
         <div className="w-full bg-gradient-to-br from-slate-50 via-white to-stone-50">
-            <HeroTopSection
-                events={events}
-                techReports={techReports}
-                policyBriefs={policyBriefs}
-                newsBriefs={newsBriefs}
-                researchProjects={researchProjects}
-                policyDialogues={policyDialogues}
-            />
+            <HeroTopSection />
             <StatsSection />
             <AboutSection />
             <PresenceSection />
@@ -151,6 +144,12 @@ export default async function HeroSection() {
             {/* <LatestProjectsSection latestProjects={latestProjects} /> */}
             {/* <ImpactStories /> */}
 
+            <LatestFromArinSection
+                newsBriefs={newsBriefs}
+                techReports={techReports}
+                policyBriefs={policyBriefs}
+                researchProjects={researchProjects}
+            />
             <PartnersSection partners={partners} />
             <CTASection />
         </div>
