@@ -10,7 +10,7 @@ const AREA = {
     icon: Wheat,
     tagline: "Climate-Smart Agriculture and Sustainable Forestry",
     description:
-        "ARIN's Agriculture & Forestry focus area drives climate-smart agriculture and sustainable forestry practices to secure food systems and rural livelihoods across Africa. Our research supports smallholder farmers, forest-dependent communities, and policymakers in building resilient, productive, and environmentally sustainable land-use systems.",
+        "Agriculture contributes directly and indirectly to climate change rendering farmers among the most vulnerable in Africa. Africa' economy is majorly dependant on agriculture, which highly rainfed hence among the most vulnerable areas to climate impacts. Approximately, 60% of Africa' trade and jobs respectively are derived from agricultural. Agricultural practices have impacted on the forestry in Africa. The indigenous agricultural practices like 'slash and burn' and mechanization have continually contributed to the destruction of forests as creation for more land for intense crop and livestock increase in order to produce more for the increasing population.",
     highlights: [
         "Climate-smart agriculture research",
         "Food systems and security policy",

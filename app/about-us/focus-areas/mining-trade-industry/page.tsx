@@ -10,7 +10,7 @@ const AREA = {
     icon: Pickaxe,
     tagline: "Responsible Resources for Inclusive Economic Development",
     description:
-        "ARIN's Mining, Trade & Industry focus area shapes responsible resource extraction, trade policy, and industrial transformation for inclusive economic development. We examine how African nations can leverage natural resource wealth to build diversified, equitable, and sustainable economies.",
+        "Africa is well endowed with mineral resources harbouring the world's largest mineral reserve of platinum, gold, diamonds, chromite, manganese, and vanadium (UNECA). However, according to the African Review report on Mining, 2009, most of these minerals are exported as ores, concentrates or metals without significant downstream processing to add value leading to low economic benefit to Africa. Africa conceived a mining Vision to advocate for transparent, equitable and optimal exploitation of mineral resources to underpin broad-based sustainable growth and socio-economic development. Therefore, the untapped mineral potential can help African leapfrog to industrialised economy if value added.",
     highlights: [
         "Responsible mining governance",
         "Trade policy and regional integration",

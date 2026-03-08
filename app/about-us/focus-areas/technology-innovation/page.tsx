@@ -10,7 +10,7 @@ const AREA = {
     icon: Cpu,
     tagline: "Digital Solutions to Accelerate Africa's Development",
     description:
-        "ARIN's Technology & Innovation focus area harnesses digital technologies, AI, and innovation ecosystems to accelerate research uptake and policy implementation. We investigate how emerging technologies can be leveraged to address Africa's most pressing development challenges while managing associated risks and inequalities.",
+        "Africa is well endowed with mineral resources harbouring the world's largest mineral reserve of platinum, gold, diamonds, chromite, manganese, and vanadium (UNECA). However, according to the African Review report on Mining, 2009, most of these minerals are exported as ores, concentrates or metals without significant downstream processing to add value leading to low economic benefit to Africa. Africa conceived a mining Vision to advocate for transparent, equitable and optimal exploitation of mineral resources to underpin broad-based sustainable growth and socio-economic development. Therefore, the untapped mineral potential can help African leapfrog to industrialised economy if value added.",
     highlights: [
         "Digital transformation policy",
         "Artificial intelligence in development",

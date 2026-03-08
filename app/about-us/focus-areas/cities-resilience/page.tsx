@@ -10,7 +10,7 @@ const AREA = {
     icon: Building2,
     tagline: "Adaptive Urban Frameworks for African Cities",
     description:
-        "ARIN's Cities & Resilience focus area builds adaptive urban frameworks that enable African cities to withstand climate shocks, migration pressures, and infrastructure challenges. Our research informs city planning, housing policy, and governance systems that prioritise the most vulnerable urban residents.",
+        "More than 50% of the world's population live in cities or urban centres and one billion people live in informal settlements and slums worldwide. Cities contribute significantly towards achievement of Sustainable Development Goals (SDGs) especially SDG 11 on sustainable cities and communities. African cities will double in population by 2050 this is because being home to the world's youngest and fast-growing population, the continent is urbanizing more rapidly than any other part of the planet (World Economic Forum).",
     highlights: [
         "Urban climate risk assessments",
         "Informal settlement resilience",
