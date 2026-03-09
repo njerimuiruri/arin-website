@@ -48,6 +48,9 @@ const BlogsPage = () => {
         return words.slice(0, wordLimit).join(' ') + '...';
     };
 
+    const today = new Date();
+    today.setHours(23, 59, 59, 999);
+
     const filteredBlogs = blogs.filter((blog: Blog) => {
         const title = (blog.title || '').toLowerCase();
         const description = stripHtml(blog.description || '').toLowerCase();
@@ -56,7 +59,8 @@ const BlogsPage = () => {
             description.includes(searchTerm.toLowerCase()) ||
             team.includes(searchTerm.toLowerCase());
         const matchesCategory = selectedCategory === 'All' || (blog.category === selectedCategory);
-        return matchesSearch && matchesCategory;
+        const matchesDate = !blog.date || new Date(blog.date) <= today;
+        return matchesSearch && matchesCategory && matchesDate;
     });
 
     const indexOfLastBlog = currentPage * blogsPerPage;

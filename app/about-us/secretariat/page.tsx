@@ -161,16 +161,18 @@ function BioModal({
     onClose: () => void;
 }) {
     const name = `${member.firstName} ${member.lastName}`;
+    const photoSrc = imgSrc(member.image) || fallback(name);
+
     return (
         <div
             onClick={onClose}
             style={{
                 position: "fixed", inset: 0, zIndex: 1000,
-                background: "rgba(2,10,30,.6)",
-                backdropFilter: "blur(12px)",
-                WebkitBackdropFilter: "blur(12px)",
+                background: "rgba(2,10,30,.65)",
+                backdropFilter: "blur(14px)",
+                WebkitBackdropFilter: "blur(14px)",
                 display: "flex", alignItems: "center", justifyContent: "center",
-                padding: 24,
+                padding: "20px 16px",
                 animation: "tm-fadeIn .2s ease",
             }}
         >
@@ -178,130 +180,139 @@ function BioModal({
                 onClick={e => e.stopPropagation()}
                 style={{
                     background: "white",
-                    borderRadius: 28,
-                    maxWidth: 560, width: "100%",
-                    maxHeight: "90vh", overflowY: "auto",
-                    boxShadow: "0 40px 120px rgba(2,29,73,.28)",
+                    borderRadius: 24,
+                    maxWidth: 760, width: "100%",
+                    maxHeight: "90vh",
+                    boxShadow: "0 40px 120px rgba(2,29,73,.32)",
                     animation: "tm-slideUp .3s cubic-bezier(.22,1,.36,1)",
+                    display: "flex",
+                    flexDirection: "row",
+                    overflow: "hidden",
                 }}
             >
-                {/* Banner */}
+                {/* ── Left: portrait photo card ── */}
                 <div style={{
+                    width: 240,
+                    flexShrink: 0,
                     position: "relative",
                     background: "#021d49",
-                    height: 200,
-                    overflow: "hidden",
                 }}>
-                    {/* Grid lines */}
+                    <img
+                        src={photoSrc}
+                        alt={name}
+                        onError={e => { (e.currentTarget as HTMLImageElement).src = fallback(name); }}
+                        style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                            objectPosition: "center top",
+                            display: "block",
+                        }}
+                    />
+                    {/* subtle bottom gradient so name is legible if we ever overlay */}
                     <div style={{
                         position: "absolute", inset: 0,
-                        backgroundImage: "repeating-linear-gradient(0deg,transparent,transparent 31px,rgba(255,255,255,.04) 31px,rgba(255,255,255,.04) 32px),repeating-linear-gradient(90deg,transparent,transparent 31px,rgba(255,255,255,.04) 31px,rgba(255,255,255,.04) 32px)",
+                        background: "linear-gradient(to top, rgba(2,8,30,.55) 0%, transparent 50%)",
+                        pointerEvents: "none",
                     }} />
-                    {/* Glow */}
-                    <div style={{
-                        position: "absolute", top: -80, right: -80,
-                        width: 280, height: 280, borderRadius: "50%",
-                        background: "radial-gradient(circle, rgba(29,78,216,.3) 0%, transparent 70%)",
-                    }} />
-                    <div style={{
-                        position: "absolute", bottom: -60, left: -60,
-                        width: 200, height: 200, borderRadius: "50%",
-                        background: "radial-gradient(circle, rgba(56,189,248,.15) 0%, transparent 70%)",
-                    }} />
-                    {/* Close */}
+                </div>
+
+                {/* ── Right: info + bio ── */}
+                <div style={{
+                    flex: 1,
+                    display: "flex",
+                    flexDirection: "column",
+                    overflowY: "auto",
+                    position: "relative",
+                }}>
+                    {/* Close button */}
                     <button
                         onClick={onClose}
                         style={{
                             position: "absolute", top: 14, right: 14, zIndex: 2,
                             width: 36, height: 36, borderRadius: "50%",
-                            background: "rgba(255,255,255,.12)",
-                            border: "1px solid rgba(255,255,255,.2)",
+                            background: "rgba(2,29,73,.08)",
+                            border: "1px solid rgba(2,29,73,.12)",
                             display: "flex", alignItems: "center", justifyContent: "center",
-                            cursor: "pointer", color: "white",
+                            cursor: "pointer", color: "#021d49",
                         }}
                     >
-                        <X size={16} />
+                        <X size={15} />
                     </button>
-                </div>
 
-                {/* Content (photo overlaps banner) */}
-                <div style={{ padding: "0 32px 32px", marginTop: -52 }}>
-                    {/* Avatar */}
-                    <div style={{
-                        width: 96, height: 96, borderRadius: "50%",
-                        overflow: "hidden",
-                        border: "4px solid white",
-                        boxShadow: "0 8px 28px rgba(2,29,73,.2)",
-                        marginBottom: 14,
-                    }}>
-                        <img
-                            src={imgSrc(member.image) || fallback(name)}
-                            alt={name}
-                            onError={e => { (e.currentTarget as HTMLImageElement).src = fallback(name); }}
-                            style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                        />
-                    </div>
-
-                    {/* Role label */}
-                    <div style={{
-                        display: "inline-flex", alignItems: "center", gap: 6,
-                        padding: "4px 12px", borderRadius: 99,
-                        background: "#eff6ff", marginBottom: 8,
-                    }}>
-                        <Briefcase size={11} style={{ color: "#00c4b3" }} />
-                        <span style={{
-                            fontFamily: "'Inter', sans-serif",
-                            fontSize: 10, color: "#00c4b3",
-                            letterSpacing: ".08em", textTransform: "uppercase",
-                        }}>
-                            {member.role}
-                        </span>
-                    </div>
-
-                    {/* Name */}
-                    <h2 style={{
-                        fontFamily: "'Cormorant Garamond', Georgia, serif",
-                        fontWeight: 700, fontSize: "1.6rem",
-                        color: "#021d49", lineHeight: 1.2, marginBottom: 20,
-                    }}>
-                        {name}
-                    </h2>
-
-                    {/* Bio */}
-                    <div style={{
-                        background: "#f8faff",
-                        borderRadius: 16,
-                        padding: "20px 22px",
-                        marginBottom: 24,
-                        border: "1px solid rgba(2,29,73,.07)",
-                    }}>
+                    {/* Header strip */}
+                    <div style={{ padding: "28px 28px 20px" }}>
+                        {/* Role badge */}
                         <div style={{
-                            display: "flex", alignItems: "center", gap: 10, marginBottom: 14,
+                            display: "inline-flex", alignItems: "center", gap: 5,
+                            padding: "4px 11px", borderRadius: 99,
+                            background: "#eff6ff",
+                            border: "1px solid rgba(0,196,179,.2)",
+                            marginBottom: 10,
                         }}>
-                            <div style={{
-                                width: 34, height: 34, borderRadius: 10,
-                                background: "#021d49",
-                                display: "flex", alignItems: "center", justifyContent: "center",
-                                flexShrink: 0,
-                            }}>
-                                <BookOpen size={15} style={{ color: "white" }} />
-                            </div>
+                            <Briefcase size={10} style={{ color: "#00c4b3" }} />
                             <span style={{
-                                fontFamily: "'Cormorant Garamond', Georgia, serif",
-                                fontWeight: 700, fontSize: "1rem", color: "#021d49",
+                                fontFamily: "'Inter', sans-serif",
+                                fontSize: 9.5, color: "#00c4b3",
+                                letterSpacing: ".07em", textTransform: "uppercase",
                             }}>
-                                Biography
+                                {member.role}
                             </span>
                         </div>
-                        <div
-                            style={{
-                                fontFamily: "'Inter', sans-serif",
-                                fontSize: 14, color: "#475569", lineHeight: 1.8,
-                            }}
-                            dangerouslySetInnerHTML={{
-                                __html: member.bio || '<p style="color:#94a3b8;font-style:italic">No biography available.</p>',
-                            }}
-                        />
+
+                        {/* Name */}
+                        <h2 style={{
+                            fontFamily: "'Cormorant Garamond', Georgia, serif",
+                            fontWeight: 700, fontSize: "1.6rem",
+                            color: "#021d49", lineHeight: 1.2, margin: "0 0 4px",
+                        }}>
+                            {name}
+                        </h2>
+
+                        {/* Divider */}
+                        <div style={{
+                            height: 2, marginTop: 16,
+                            background: "linear-gradient(to right, #021d49, #00c4b3 40%, transparent)",
+                            borderRadius: 2,
+                        }} />
+                    </div>
+
+                    {/* Bio */}
+                    <div style={{ padding: "0 28px 28px", flex: 1 }}>
+                        <div style={{
+                            background: "#f8faff",
+                            borderRadius: 14,
+                            padding: "18px 20px",
+                            border: "1px solid rgba(2,29,73,.07)",
+                        }}>
+                            <div style={{
+                                display: "flex", alignItems: "center", gap: 9, marginBottom: 12,
+                            }}>
+                                <div style={{
+                                    width: 32, height: 32, borderRadius: 9,
+                                    background: "#021d49",
+                                    display: "flex", alignItems: "center", justifyContent: "center",
+                                    flexShrink: 0,
+                                }}>
+                                    <BookOpen size={14} style={{ color: "white" }} />
+                                </div>
+                                <span style={{
+                                    fontFamily: "'Cormorant Garamond', Georgia, serif",
+                                    fontWeight: 700, fontSize: "1rem", color: "#021d49",
+                                }}>
+                                    Biography
+                                </span>
+                            </div>
+                            <div
+                                style={{
+                                    fontFamily: "'Inter', sans-serif",
+                                    fontSize: 13.5, color: "#475569", lineHeight: 1.8,
+                                }}
+                                dangerouslySetInnerHTML={{
+                                    __html: member.bio || '<p style="color:#94a3b8;font-style:italic">No biography available.</p>',
+                                }}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>

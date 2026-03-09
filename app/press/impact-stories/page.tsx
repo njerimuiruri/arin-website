@@ -26,11 +26,15 @@ const ImpactStoriesPage = () => {
 
     const categories = ['All', ...Array.from(new Set(stories.map(s => s.category).filter(Boolean)))];
 
+    const today = new Date();
+    today.setHours(23, 59, 59, 999);
+
     const filteredStories = stories.filter(story => {
         const matchesSearch = story.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             story.description?.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesCategory = selectedCategory === 'All' || story.category === selectedCategory;
-        return matchesSearch && matchesCategory;
+        const matchesDate = !story.date || new Date(story.date) <= today;
+        return matchesSearch && matchesCategory && matchesDate;
     });
 
     // Pagination

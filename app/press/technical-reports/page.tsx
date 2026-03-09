@@ -41,13 +41,17 @@ const TechnicalReportsPage = () => {
         });
     }, []);
 
-    const categories = ['All', 'Technical Reports', 'Workshop Reports', 'Webinar Reports'];
+    const categories = ['All', ...Array.from(new Set(reports.map(r => r.category).filter(Boolean)))] as string[];
+
+    const today = new Date();
+    today.setHours(23, 59, 59, 999);
 
     const filteredReports = reports.filter((report) => {
         const matchesSearch = (report.title ?? '').toLowerCase().includes(searchTerm.toLowerCase()) ||
             (report.excerpt ?? '').toLowerCase().includes(searchTerm.toLowerCase());
         const matchesCategory = selectedCategory === 'All' || report.category === selectedCategory;
-        return matchesSearch && matchesCategory;
+        const matchesDate = !report.datePosted || new Date(report.datePosted) <= today;
+        return matchesSearch && matchesCategory && matchesDate;
     }).sort((a, b) => {
         const dateA = a.datePosted ? new Date(a.datePosted).getTime() : 0;
         const dateB = b.datePosted ? new Date(b.datePosted).getTime() : 0;

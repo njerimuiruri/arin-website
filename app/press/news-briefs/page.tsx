@@ -42,6 +42,9 @@ const NewsBriefsPage = () => {
         return html.replace(/<[^>]+>/g, '');
     }
 
+    const today = new Date();
+    today.setHours(23, 59, 59, 999);
+
     const filteredBriefs = newsBriefs.filter((brief: NewsBrief) => {
         const title = (brief.title || '').toLowerCase();
         const description = stripHtml(brief.description || '').toLowerCase();
@@ -50,7 +53,8 @@ const NewsBriefsPage = () => {
             description.includes(searchTerm.toLowerCase()) ||
             authors.includes(searchTerm.toLowerCase());
         const matchesCategory = selectedCategory === 'All' || (brief.category === selectedCategory);
-        return matchesSearch && matchesCategory;
+        const matchesDate = !brief.datePosted || new Date(brief.datePosted) <= today;
+        return matchesSearch && matchesCategory && matchesDate;
     });
 
     // Pagination logic

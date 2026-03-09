@@ -33,13 +33,17 @@ const BooksPage = () => {
 
     const categories = ['All', 'Publications', 'Books', 'Research'];
 
+    const today = new Date();
+    today.setHours(23, 59, 59, 999);
+
     const filteredBooks = books.filter(book => {
         const authorsStr = Array.isArray(book.authors) ? book.authors.join(', ') : (book.authors || '');
         const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
             authorsStr.toLowerCase().includes(searchTerm.toLowerCase()) ||
             (book.description || '').toLowerCase().includes(searchTerm.toLowerCase());
         const matchesCategory = selectedCategory === 'All' || (book.category && book.category.includes(selectedCategory));
-        return matchesSearch && matchesCategory;
+        const matchesDate = !book.datePosted || new Date(book.datePosted) <= today;
+        return matchesSearch && matchesCategory && matchesDate;
     });
 
     // Pagination logic

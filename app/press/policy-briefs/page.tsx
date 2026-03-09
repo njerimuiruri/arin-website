@@ -30,11 +30,15 @@ const PolicyBriefsPage = () => {
     // Dynamically get categories from briefs
     const categories = ['All', ...Array.from(new Set(briefs.map((b: any) => b.category).filter((c: any) => !!c)))];
 
+    const today = new Date();
+    today.setHours(23, 59, 59, 999);
+
     const filteredBriefs = briefs.filter((brief: any) => {
         const matchesSearch = (brief.title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
             (brief.excerpt || '').toLowerCase().includes(searchTerm.toLowerCase());
         const matchesCategory = selectedCategory === 'All' || brief.category === selectedCategory;
-        return matchesSearch && matchesCategory;
+        const matchesDate = !brief.datePosted || new Date(brief.datePosted) <= today;
+        return matchesSearch && matchesCategory && matchesDate;
     });
 
     // Pagination logic

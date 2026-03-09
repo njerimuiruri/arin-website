@@ -39,12 +39,16 @@ const AnnualReportsPage = () => {
         fetchReports();
     }, []);
 
+    const today = new Date();
+    today.setHours(23, 59, 59, 999);
+
     const filteredReports = reports.filter(report => {
         const matchesSearch =
             report.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
             (report.description && report.description.toLowerCase().includes(searchTerm.toLowerCase()));
         const matchesYear = selectedYear === 'All' || report.year === selectedYear;
-        return matchesSearch && matchesYear;
+        const matchesDate = !report.date || new Date(report.date) <= today;
+        return matchesSearch && matchesYear && matchesDate;
     });
 
     const handleReportClick = (reportId: string) => {

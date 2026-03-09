@@ -33,6 +33,9 @@ const JournalArticlesPage = () => {
 
     const categories = ['All', 'Health & Climate', 'Environmental Policy', 'Health Economics'];
 
+    const today = new Date();
+    today.setHours(23, 59, 59, 999);
+
     const filteredArticles = articles.filter(article => {
         const authorsStr = Array.isArray(article.authors) ? article.authors.join(', ') : (article.authors || '');
         const descriptionStr = article.description || '';
@@ -40,7 +43,8 @@ const JournalArticlesPage = () => {
             authorsStr.toLowerCase().includes(searchTerm.toLowerCase()) ||
             descriptionStr.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesCategory = selectedCategory === 'All' || (article.category && article.category.includes(selectedCategory));
-        return matchesSearch && matchesCategory;
+        const matchesDate = !article.datePosted || new Date(article.datePosted) <= today;
+        return matchesSearch && matchesCategory && matchesDate;
     });
 
     // Pagination logic

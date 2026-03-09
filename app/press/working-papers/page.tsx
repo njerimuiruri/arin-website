@@ -11,6 +11,10 @@ export default function WorkingPapersPage() {
     useEffect(() => {
         workingPaperSeriesService.getAll().then(setPapers).catch(() => setPapers([]));
     }, []);
+
+    const today = new Date();
+    today.setHours(23, 59, 59, 999);
+    const visiblePapers = papers.filter(p => !p.datePosted || new Date(p.datePosted) <= today);
     const handleToggle = (id: string) => {
         setExpanded(prev => ({ ...prev, [id]: !prev[id] }));
     };
@@ -50,7 +54,7 @@ export default function WorkingPapersPage() {
                         </div>
                     </div>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-                        {papers.map((paper: any) => (
+                        {visiblePapers.map((paper: any) => (
                             <Link
                                 key={String(paper._id)}
                                 href={`/press/working-papers/${String(paper._id)}`}
@@ -138,7 +142,7 @@ export default function WorkingPapersPage() {
                     </div>
 
                     {/* No Results Message */}
-                    {papers.length === 0 && (
+                    {visiblePapers.length === 0 && (
                         <div className="text-center py-16">
                             <FileText className="w-12 h-12 text-gray-300 mx-auto mb-3" />
                             <h3 className="text-xl font-bold text-gray-900 mb-2">No Working Papers Found</h3>

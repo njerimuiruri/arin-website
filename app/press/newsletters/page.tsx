@@ -27,13 +27,17 @@ const NewslettersPage = () => {
 
     const categories = ['All', 'Quarterly', 'Research Updates', 'Network Updates', 'Special Edition'];
 
+    const today = new Date();
+    today.setHours(23, 59, 59, 999);
+
     const filteredNewsletters = newsletters.filter(newsletter => {
         const matchesSearch = (newsletter.title?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
             (newsletter.description?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
             (newsletter.authors?.join(' ').toLowerCase() || '').includes(searchTerm.toLowerCase());
         // If you have category, filter by it, else always true
         const matchesCategory = selectedCategory === 'All' || newsletter.category === selectedCategory;
-        return matchesSearch && matchesCategory;
+        const matchesDate = !newsletter.datePosted || new Date(newsletter.datePosted) <= today;
+        return matchesSearch && matchesCategory && matchesDate;
     });
 
     // Pagination logic

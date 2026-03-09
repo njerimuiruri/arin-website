@@ -36,11 +36,15 @@ const CallForBooksPage = () => {
         fetchCalls();
     }, []);
 
+    const today = new Date();
+    today.setHours(23, 59, 59, 999);
+
     const filteredCalls = calls.filter(call => {
         const matchesSearch = call.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             call.excerpt?.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesCategory = selectedCategory === 'All' || (call.category && call.category.includes(selectedCategory));
-        return matchesSearch && matchesCategory;
+        const matchesDate = !call.createdAt || new Date(call.createdAt) <= today;
+        return matchesSearch && matchesCategory && matchesDate;
     });
 
     // Pagination logic
