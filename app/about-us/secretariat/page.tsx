@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { X, BookOpen, Users, ArrowUpRight, Briefcase, Mail, Linkedin } from "lucide-react";
 import { getTeamMembers } from "@/services/teamsService";
 import Navbar from "@/app/navbar/Navbar";
+import Footer from "@/app/footer/Footer";
 
 type SecretariatMember = {
     _id: string;
@@ -119,7 +120,7 @@ function TeamCard({
                             {name}
                         </div>
                         <div style={{
-                            fontFamily: "'Space Mono', monospace",
+                            fontFamily: "'Inter', sans-serif",
                             fontSize: 9.5, color: "rgba(255,255,255,.6)",
                             letterSpacing: ".05em",
                             wordBreak: "break-word",
@@ -249,7 +250,7 @@ function BioModal({
                     }}>
                         <Briefcase size={11} style={{ color: "#00c4b3" }} />
                         <span style={{
-                            fontFamily: "'Space Mono', monospace",
+                            fontFamily: "'Inter', sans-serif",
                             fontSize: 10, color: "#00c4b3",
                             letterSpacing: ".08em", textTransform: "uppercase",
                         }}>
@@ -454,6 +455,7 @@ const SecretariatPage = () => {
                     onClose={() => setSelectedMember(null)}
                 />
             )}
+            <Footer />
         </>
     );
 };
