@@ -4,6 +4,7 @@ import { Newspaper, Calendar, Search, Filter, ChevronLeft, ChevronRight, ArrowRi
 import { useRouter } from 'next/navigation';
 import { getNewsBriefs } from '@/services/newsBriefsService';
 import Navbar from '@/app/navbar/Navbar';
+import Footer from '@/app/footer/Footer';
 
 interface NewsBrief {
     _id?: string;
@@ -79,76 +80,49 @@ const NewsBriefsPage = () => {
             <Navbar />
 
             {/* Hero Section */}
-            <section className="bg-gradient-to-br from-[#021d49] via-[#032a5e] to-[#021d49] text-white py-20">
-                <div className="max-w-7xl mx-auto px-6">
-                    <div className="text-center max-w-3xl mx-auto">
-                        <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
-                            <Newspaper className="w-5 h-5" />
-                            <span className="text-sm font-semibold tracking-wide">LATEST NEWS & UPDATES</span>
+            <section className="bg-gradient-to-br from-[#021d49] via-[#032a5e] to-[#021d49] text-white">
+                <div className="max-w-7xl mx-auto px-6 py-6">
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div>
+                            <h1 className="text-2xl lg:text-3xl font-bold leading-tight">ARIN News Briefs</h1>
+                            <p className="text-sm text-blue-100 mt-1">Stay informed with the latest updates, events, and impact stories from ARIN</p>
                         </div>
-                        <h1 className="text-5xl font-bold mb-6 leading-tight">
-                            ARIN News Briefs
-                        </h1>
-                        <p className="text-xl text-gray-200 leading-relaxed">
-                            Stay informed with the latest updates, events, and impact stories from the African Research and Innovation Network
-                        </p>
+                        <div className="w-full md:max-w-sm">
+                            <div className="bg-white/95 backdrop-blur-sm rounded-lg p-2 shadow-xl">
+                                <div className="relative">
+                                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                                    <input
+                                        type="text"
+                                        placeholder="Search news briefs..."
+                                        value={searchTerm}
+                                        onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
+                                        className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:border-[#021d49] focus:outline-none transition-all text-gray-800 text-sm"
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            {/* Search & Filter Section */}
-            <section className="bg-gray-50 border-b border-gray-200">
-                <div className="max-w-7xl mx-auto px-6 py-8">
-                    <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-                        {/* Search Bar */}
-                        <div className="relative flex-1 max-w-md w-full">
-                            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                            <input
-                                type="text"
-                                placeholder="Search news briefs..."
-                                value={searchTerm}
-                                onChange={(e) => {
-                                    setSearchTerm(e.target.value);
-                                    setCurrentPage(1);
-                                }}
-                                className="w-full pl-12 pr-10 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#021d49] focus:border-transparent"
-                            />
-                            {searchTerm && (
-                                <button
-                                    onClick={() => setSearchTerm('')}
-                                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                                >
-                                    <X className="w-5 h-5" />
-                                </button>
-                            )}
-                        </div>
-
-                        {/* Category Filter */}
-                        <div className="flex items-center gap-3 overflow-x-auto pb-2 md:pb-0">
-                            <Filter className="w-5 h-5 text-gray-600 flex-shrink-0" />
-                            <div className="flex gap-2">
-                                {categories.map((category) => (
-                                    <button
-                                        key={category}
-                                        onClick={() => {
-                                            setSelectedCategory(category);
-                                            setCurrentPage(1);
-                                        }}
-                                        className={`px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-all duration-200 ${selectedCategory === category
-                                            ? 'bg-[#021d49] text-white shadow-md'
-                                            : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
-                                            }`}
-                                    >
-                                        {category}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Results Count */}
-                    <div className="mt-4 text-sm text-gray-600">
-                        Showing <span className="font-semibold text-gray-900">{filteredBriefs.length}</span> news brief{filteredBriefs.length !== 1 ? 's' : ''}
+            {/* Filter Section */}
+            <section className="bg-white border-b border-gray-200">
+                <div className="max-w-7xl mx-auto px-6 py-4">
+                    <div className="flex items-center gap-3 flex-wrap">
+                        <Filter className="w-4 h-4 text-gray-500 flex-shrink-0" />
+                        {categories.map((category) => (
+                            <button
+                                key={category}
+                                onClick={() => { setSelectedCategory(category); setCurrentPage(1); }}
+                                className={`px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-200 ${selectedCategory === category
+                                    ? 'bg-[#021d49] text-white shadow-md'
+                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                    }`}
+                            >
+                                {category}
+                            </button>
+                        ))}
+                        <span className="ml-auto text-xs text-gray-500">{filteredBriefs.length} result{filteredBriefs.length !== 1 ? 's' : ''}</span>
                     </div>
                 </div>
             </section>
@@ -368,6 +342,7 @@ const NewsBriefsPage = () => {
                     </div>
                 </div>
             </section>
+            <Footer />
         </>
     );
 };

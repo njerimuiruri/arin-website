@@ -18,6 +18,7 @@ type TechnicalReport = {
 import { FileText, Calendar, Search, Filter, ChevronLeft, ChevronRight, ArrowRight, User, BookOpen, Download, TrendingUp } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
 import { cleanHtmlContent } from '@/lib/htmlUtils';
+import Footer from '@/app/footer/Footer';
 
 const TechnicalReportsPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -86,21 +87,22 @@ const TechnicalReportsPage = () => {
                         <div className="absolute bottom-0 right-0 w-96 h-96 bg-indigo-400 rounded-full filter blur-3xl"></div>
                     </div>
 
-                    <div className="relative max-w-7xl mx-auto px-6 py-12">
-                        <div className="text-center">
-                            <h1 className="text-4xl lg:text-5xl font-bold leading-tight mb-3">
-                                Technical Reports
-                            </h1>
+                    <div className="relative max-w-7xl mx-auto px-6 py-6">
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                            <div>
+                                <h1 className="text-2xl lg:text-3xl font-bold leading-tight">
+                                    Technical Reports
+                                </h1>
+                                <p className="text-sm text-blue-100 mt-1">
+                                    Comprehensive technical documentation and research insights from ARIN's initiatives
+                                </p>
+                            </div>
 
-                            <p className="text-lg text-blue-100 max-w-2xl mx-auto mb-8">
-                                Comprehensive technical documentation and research insights from ARIN's initiatives
-                            </p>
-
-                            {/* Search Only */}
-                            <div className="max-w-2xl mx-auto">
-                                <div className="bg-white/95 backdrop-blur-sm rounded-xl p-4 shadow-2xl">
+                            {/* Search */}
+                            <div className="w-full md:max-w-sm">
+                                <div className="bg-white/95 backdrop-blur-sm rounded-lg p-2 shadow-xl">
                                     <div className="relative">
-                                        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                                         <input
                                             type="text"
                                             placeholder="Search technical reports..."
@@ -109,7 +111,7 @@ const TechnicalReportsPage = () => {
                                                 setSearchTerm(e.target.value);
                                                 setCurrentPage(1);
                                             }}
-                                            className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#021d49] focus:outline-none transition-all text-gray-800"
+                                            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:border-[#021d49] focus:outline-none transition-all text-gray-800 text-sm"
                                         />
                                     </div>
                                 </div>
@@ -151,85 +153,83 @@ const TechnicalReportsPage = () => {
                         )}
                     </div>
 
-                    <div className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {currentReports.map((report) => (
                             <div
                                 key={report._id}
-                                className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-[#021d49] cursor-pointer group"
+                                className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-[#021d49] cursor-pointer group flex flex-col"
                                 onClick={() => handleReportClick(report._id)}
                             >
-                                <div className="md:flex">
-                                    {/* Image Section - Optimized */}
-                                    <div className="md:w-5/12 relative h-56 md:h-auto overflow-hidden">
-                                        {report.image ? (
-                                            <>
-                                                <img
-                                                    src={report.image}
-                                                    alt={report.title}
-                                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                                                />
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
-                                            </>
-                                        ) : (
-                                            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#021d49] to-[#032a5e]">
-                                                <BookOpen className="w-20 h-20 text-white/20" />
-                                            </div>
-                                        )}
-
-                                        {/* Floating Category Badge */}
-                                        <div className="absolute top-4 left-4">
-                                            <span className="px-3 py-1.5 bg-white/95 backdrop-blur-sm text-[#021d49] font-bold text-xs uppercase tracking-wide rounded-lg shadow-lg">
-                                                {report.category || 'Technical Report'}
-                                            </span>
+                                {/* Image Section */}
+                                <div className="relative h-52 overflow-hidden flex-shrink-0">
+                                    {report.image ? (
+                                        <>
+                                            <img
+                                                src={report.image}
+                                                alt={report.title}
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                            />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+                                        </>
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#021d49] to-[#032a5e]">
+                                            <BookOpen className="w-16 h-16 text-white/20" />
                                         </div>
+                                    )}
+
+                                    {/* Floating Category Badge */}
+                                    <div className="absolute top-3 left-3">
+                                        <span className="px-2.5 py-1 bg-white/95 backdrop-blur-sm text-[#021d49] font-bold text-xs uppercase tracking-wide rounded-lg shadow-lg">
+                                            {report.category || 'Technical Report'}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                {/* Content Section */}
+                                <div className="p-5 flex flex-col flex-1">
+                                    <div className="flex-1">
+                                        <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#021d49] transition-colors leading-tight mb-2 line-clamp-2">
+                                            {report.title}
+                                        </h3>
+
+                                        {/* Metadata */}
+                                        <div className="flex flex-wrap gap-3 mb-3 text-xs text-gray-500">
+                                            {report.postedBy && (
+                                                <div className="flex items-center gap-1">
+                                                    <User className="w-3.5 h-3.5 text-[#021d49]" />
+                                                    <span>{report.postedBy}</span>
+                                                </div>
+                                            )}
+                                            {report.postedDate && (
+                                                <div className="flex items-center gap-1">
+                                                    <Calendar className="w-3.5 h-3.5 text-[#021d49]" />
+                                                    <span>{report.postedDate}</span>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {/* Description */}
+                                        <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
+                                            {report.description
+                                                ? (() => {
+                                                    const plain = cleanHtmlContent(report.description).replace(/<[^>]+>/g, '');
+                                                    const words = plain.split(/\s+/);
+                                                    return words.slice(0, 25).join(' ') + (words.length > 25 ? '...' : '');
+                                                })()
+                                                : ''}
+                                        </p>
                                     </div>
 
-                                    {/* Content Section */}
-                                    <div className="md:w-7/12 p-6 md:p-8 flex flex-col justify-between">
-                                        <div>
-                                            <h3 className="text-2xl font-bold text-gray-900 group-hover:text-[#021d49] transition-colors leading-tight mb-3 line-clamp-2">
-                                                {report.title}
-                                            </h3>
-
-                                            {/* Metadata - Compact */}
-                                            <div className="flex flex-wrap gap-4 mb-4 text-sm text-gray-600">
-                                                {report.postedBy && (
-                                                    <div className="flex items-center gap-1.5">
-                                                        <User className="w-4 h-4 text-[#021d49]" />
-                                                        <span>{report.postedBy}</span>
-                                                    </div>
-                                                )}
-                                                {report.postedDate && (
-                                                    <div className="flex items-center gap-1.5">
-                                                        <Calendar className="w-4 h-4 text-[#021d49]" />
-                                                        <span>{report.postedDate}</span>
-                                                    </div>
-                                                )}
-                                            </div>
-
-                                            {/* Description */}
-                                            <p className="text-gray-600 leading-relaxed mb-4 line-clamp-3">
-                                                {report.description
-                                                    ? (() => {
-                                                        const plain = cleanHtmlContent(report.description).replace(/<[^>]+>/g, '');
-                                                        const words = plain.split(/\s+/);
-                                                        return words.slice(0, 35).join(' ') + (words.length > 35 ? '...' : '');
-                                                    })()
-                                                    : ''}
-                                            </p>
-                                        </div>
-
-                                        {/* Action Button */}
-                                        <div className="flex items-center justify-end pt-4 border-t border-gray-100">
-                                            <button
-                                                onClick={(e) => { e.stopPropagation(); handleReportClick(report._id); }}
-                                                className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-[#021d49] to-[#032a5e] hover:from-[#032a5e] hover:to-[#021d49] text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
-                                            >
-                                                <FileText className="w-4 h-4" />
-                                                <span>Read Report</span>
-                                                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                                            </button>
-                                        </div>
+                                    {/* Action Button */}
+                                    <div className="pt-4 mt-4 border-t border-gray-100">
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); handleReportClick(report._id); }}
+                                            className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#021d49] to-[#032a5e] hover:from-[#032a5e] hover:to-[#021d49] text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-sm"
+                                        >
+                                            <FileText className="w-4 h-4" />
+                                            <span>Read Report</span>
+                                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -348,6 +348,7 @@ const TechnicalReportsPage = () => {
                     </div>
                 </section>
             </div>
+            <Footer />
         </>
     );
 };

@@ -4,6 +4,7 @@ import { ArrowLeft, Calendar, Users, FileText, Mail } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
 import { useParams, useRouter } from 'next/navigation';
 import { getImpactStory } from '@/services/impactStoriesService';
+import Footer from '@/app/footer/Footer';
 
 const ImpactStoryDetailPage = () => {
     const { id } = useParams();
@@ -144,6 +145,7 @@ const ImpactStoryDetailPage = () => {
                     </div>
                 </section>
             </div>
+            <Footer />
         </>
     );
 };

@@ -1,20 +1,29 @@
 "use client";
-import { FileText, Calendar, ArrowRight, User } from 'lucide-react';
+import { FileText, Calendar, ArrowRight, User, Search } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
 import Link from "next/link";
 import { workingPaperSeriesService } from '@/services/workingPaperSeriesService';
 import React, { useState, useEffect } from 'react';
+import Footer from '@/app/footer/Footer';
 
 export default function WorkingPapersPage() {
     const [papers, setPapers] = useState<any[]>([]);
     const [expanded, setExpanded] = useState<{ [key: string]: boolean }>({});
+    const [searchTerm, setSearchTerm] = useState('');
     useEffect(() => {
         workingPaperSeriesService.getAll().then(setPapers).catch(() => setPapers([]));
     }, []);
 
     const today = new Date();
     today.setHours(23, 59, 59, 999);
-    const visiblePapers = papers.filter(p => !p.datePosted || new Date(p.datePosted) <= today);
+    const visiblePapers = papers
+        .filter(p => !p.datePosted || new Date(p.datePosted) <= today)
+        .filter(p =>
+            !searchTerm ||
+            (p.title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (Array.isArray(p.authors) ? p.authors.join(', ') : (p.authors || '')).toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (p.description || '').replace(/<[^>]+>/g, '').toLowerCase().includes(searchTerm.toLowerCase())
+        );
     const handleToggle = (id: string) => {
         setExpanded(prev => ({ ...prev, [id]: !prev[id] }));
     };
@@ -22,38 +31,35 @@ export default function WorkingPapersPage() {
         <>
             <Navbar />
             <div className="w-full bg-gradient-to-br from-slate-50 via-white to-stone-50 min-h-screen">
-                <section className="max-w-[1400px] mx-auto px-6 py-12">
-                    <div className="text-center mb-8">
-                        <div className="flex items-center justify-center gap-3 mb-4">
-                            <FileText className="w-12 h-12 text-[#021d49]" />
-                        </div>
-                        <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
-                            Working Paper{' '}
-                            <span className="bg-gradient-to-r from-[#021d49] to-[#021d49] bg-clip-text text-transparent">
-                                Series
-                            </span>
-                        </h1>
-                        <p className="text-lg text-gray-600 leading-relaxed max-w-3xl mx-auto">
-                            Preliminary research findings and analyses exploring critical issues in climate adaptation, agriculture, and sustainable development.
-                        </p>
-                    </div>
-                    <div className="max-w-4xl mx-auto mb-8">
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            <div className="bg-white rounded-xl p-4 shadow-md border border-gray-200 text-center">
-                                <div className="text-3xl font-bold text-[#021d49] mb-1">{papers.length}</div>
-                                <p className="text-sm text-gray-600">Working Papers</p>
+                {/* Compact Dark Navy Hero Banner */}
+                <section className="relative overflow-hidden bg-gradient-to-br from-[#021d49] via-[#032a5e] to-[#021d49] text-white">
+                    <div className="relative max-w-7xl mx-auto px-6 py-6">
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                            <div>
+                                <h1 className="text-2xl lg:text-3xl font-bold leading-tight">Working Paper Series</h1>
+                                <p className="text-sm text-blue-100 mt-1">Preliminary research findings and analyses on critical issues in climate adaptation and sustainable development</p>
                             </div>
-                            <div className="bg-white rounded-xl p-4 shadow-md border border-gray-200 text-center">
-                                <div className="text-3xl font-bold text-green-600 mb-1">{papers.length}</div>
-                                <p className="text-sm text-gray-600">Recent Publications</p>
-                            </div>
-                            <div className="bg-white rounded-xl p-4 shadow-md border border-gray-200 text-center col-span-2 md:col-span-1">
-                                <div className="text-3xl font-bold text-[#021d49] mb-1">{new Date().getFullYear()}</div>
-                                <p className="text-sm text-gray-600">Latest Year</p>
+                            <div className="w-full md:max-w-sm">
+                                <div className="bg-white/95 backdrop-blur-sm rounded-lg p-2 shadow-xl">
+                                    <div className="relative">
+                                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                                        <input
+                                            type="text"
+                                            placeholder="Search working papers..."
+                                            value={searchTerm}
+                                            onChange={(e) => { setSearchTerm(e.target.value); }}
+                                            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:border-[#021d49] focus:outline-none transition-all text-gray-800 text-sm"
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+                </section>
+
+                {/* Cards Grid */}
+                <section className="max-w-7xl mx-auto px-6 py-8">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {visiblePapers.map((paper: any) => (
                             <Link
                                 key={String(paper._id)}
@@ -178,6 +184,7 @@ export default function WorkingPapersPage() {
                     </div>
                 </section>
             </div>
+            <Footer />
         </>
     );
 }

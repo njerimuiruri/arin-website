@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Camera, Search, Filter, X, ChevronLeft, ChevronRight, Calendar, MapPin } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
 import { getPhotosVideos } from '@/services/photosVideosService';
+import Footer from '@/app/footer/Footer';
 
 const PhotoGalleryPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -251,6 +252,7 @@ const PhotoGalleryPage = () => {
                     </>
                 )}
             </div>
+            <Footer />
         </>
     );
 };

@@ -6,6 +6,7 @@ import Navbar from '@/app/navbar/Navbar';
 import { getAnnualReport } from '@/services/annualReportsService';
 import { cleanHtmlContent } from '@/lib/htmlUtils';
 import type { AnnualReport } from '@/services/annualReportsService';
+import Footer from '@/app/footer/Footer';
 
 interface HtmlRendererProps {
     content: string;
@@ -398,6 +399,7 @@ const AnnualReportDetailPage = () => {
                     </div>
                 </div>
             </div>
+            <Footer />
         </>
     );
 };

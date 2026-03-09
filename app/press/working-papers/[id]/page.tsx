@@ -2,6 +2,7 @@ import { FileText, Calendar, User } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
 import { workingPaperSeriesService } from '@/services/workingPaperSeriesService';
 import { notFound } from 'next/navigation';
+import Footer from '@/app/footer/Footer';
 
 export default async function WorkingPaperDetailPage({ params }: { params: { id: string } }) {
     let paper = null;
@@ -46,6 +47,7 @@ export default async function WorkingPaperDetailPage({ params }: { params: { id:
                     )}
                 </section>
             </div>
+            <Footer />
         </>
     );
 }

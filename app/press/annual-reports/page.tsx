@@ -1,10 +1,11 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowRight, Calendar, FileText, Download, Search, Filter, User, Loader } from 'lucide-react';
+import { ArrowRight, Calendar, FileText, Download, Search, Filter, Loader } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
 import { getAnnualReports } from '@/services/annualReportsService';
 import type { AnnualReport } from '@/services/annualReportsService';
+import Footer from '@/app/footer/Footer';
 
 const AnnualReportsPage = () => {
     const router = useRouter();
@@ -71,58 +72,59 @@ const AnnualReportsPage = () => {
     return (
         <>
             <Navbar />
-            <div className="w-full bg-gradient-to-br from-slate-50 via-white to-stone-50 min-h-screen">
-                {/* Hero Section */}
-                <section className="max-w-[1600px] mx-auto px-6 py-12">
-                    <div className="text-center mb-8">
-                        <div className="flex items-center justify-center gap-3 mb-4">
-                            <FileText className="w-12 h-12 text-[#021d49]" />
-                        </div>
-                        <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
-                            Annual{' '}
-                            <span className="bg-gradient-to-r from-[#021d49] to-[#021d49] bg-clip-text text-transparent">
-                                Reports
-                            </span>
-                        </h1>
+            <div className="w-full bg-linear-to-br from-slate-50 via-white to-stone-50 min-h-screen">
 
-                        <p className="text-lg text-gray-600 leading-relaxed max-w-3xl mx-auto">
-                            Explore ARIN's journey of impact, innovation, and achievement through our comprehensive annual reports
-                        </p>
-                    </div>
-
-                    {/* Search and Filter Section */}
-                    <div className="max-w-4xl mx-auto mb-8">
-                        <div className="bg-white rounded-xl p-4 shadow-lg border border-gray-200">
-                            <div className="grid md:grid-cols-2 gap-4">
-                                {/* Search Bar */}
-                                <div className="relative">
-                                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                                    <input
-                                        type="text"
-                                        placeholder="Search annual reports..."
-                                        value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
-                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#021d49] focus:outline-none transition-colors"
-                                    />
-                                </div>
-
-                                {/* Year Filter */}
-                                <div className="relative">
-                                    <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                                    <select
-                                        value={selectedYear}
-                                        onChange={(e) => setSelectedYear(e.target.value)}
-                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#021d49] focus:outline-none transition-colors appearance-none bg-white cursor-pointer"
-                                    >
-                                        {years.map(year => (
-                                            <option key={year} value={year}>{year}</option>
-                                        ))}
-                                    </select>
+                {/* Compact Dark Navy Hero Banner */}
+                <section className="relative overflow-hidden bg-linear-to-br from-[#021d49] via-[#032a5e] to-[#021d49] text-white">
+                    <div className="relative max-w-7xl mx-auto px-6 py-6">
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                            <div>
+                                <h1 className="text-2xl lg:text-3xl font-bold leading-tight">Annual Reports</h1>
+                                <p className="text-sm text-blue-100 mt-1">Explore ARIN's journey of impact, innovation, and achievement through our comprehensive annual reports</p>
+                            </div>
+                            <div className="w-full md:max-w-sm">
+                                <div className="bg-white/95 backdrop-blur-sm rounded-lg p-2 shadow-xl">
+                                    <div className="relative">
+                                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                                        <input
+                                            type="text"
+                                            placeholder="Search annual reports..."
+                                            value={searchTerm}
+                                            onChange={(e) => setSearchTerm(e.target.value)}
+                                            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:border-[#021d49] focus:outline-none transition-all text-gray-800 text-sm"
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </section>
 
+                {/* Slim Filter Bar */}
+                <div className="bg-white border-b border-gray-200 shadow-sm">
+                    <div className="max-w-7xl mx-auto px-6 py-3 flex flex-wrap items-center gap-3">
+                        <div className="flex items-center gap-2 text-sm text-gray-500 font-medium">
+                            <Filter className="w-4 h-4" />
+                            <span>Filter by Year:</span>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                            {years.map(year => (
+                                <button
+                                    key={year}
+                                    onClick={() => setSelectedYear(year)}
+                                    className={`px-3 py-1 rounded-full text-sm font-medium transition-all duration-200 ${selectedYear === year
+                                        ? 'bg-[#021d49] text-white shadow-sm'
+                                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                        }`}
+                                >
+                                    {year}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                <div className="max-w-7xl mx-auto px-6 py-8">
                     {/* Loading State */}
                     {loading && (
                         <div className="flex flex-col items-center justify-center py-16">
@@ -131,99 +133,96 @@ const AnnualReportsPage = () => {
                         </div>
                     )}
 
-                    {/* Reports Grid */}
+                    {/* Reports Grid - 3 columns */}
                     {!loading && (
-                        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {filteredReports.map((report) => (
                                 <div
                                     key={report._id}
-                                    className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-[#021d49] cursor-pointer group"
+                                    className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-[#021d49] cursor-pointer group flex flex-col"
                                     onClick={() => handleReportClick(report._id)}
                                 >
-                                    {/* Report Image */}
-                                    <div className="relative h-64 overflow-hidden bg-gradient-to-br from-gray-200 to-gray-300">
+                                    {/* Image */}
+                                    <div className="relative h-52 overflow-hidden shrink-0">
                                         {report.image ? (
-                                            <img
-                                                src={report.image}
-                                                alt={report.title}
-                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                                onError={(e) => {
-                                                    (e.target as HTMLImageElement).style.display = 'none';
-                                                }}
-                                            />
-                                        ) : null}
-                                        {/* Gradient Overlay */}
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
-
-                                        {/* Year Badge - Top Left */}
-                                        <div className="absolute top-4 left-4">
-                                            <span className="px-4 py-2 bg-gradient-to-r from-[#021d49] to-[#021d49] text-white font-bold text-lg uppercase tracking-wide rounded-lg shadow-xl">
+                                            <>
+                                                <img
+                                                    src={report.image}
+                                                    alt={report.title}
+                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                                    onError={(e) => {
+                                                        (e.target as HTMLImageElement).style.display = 'none';
+                                                    }}
+                                                />
+                                                <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent"></div>
+                                            </>
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-[#021d49] to-[#032a5e]">
+                                                <FileText className="w-16 h-16 text-white/20" />
+                                            </div>
+                                        )}
+                                        {/* Year Badge */}
+                                        <div className="absolute top-3 left-3">
+                                            <span className="px-2.5 py-1 bg-white/95 backdrop-blur-sm text-[#021d49] font-bold text-xs uppercase tracking-wide rounded-lg shadow-lg">
                                                 {report.year}
                                             </span>
                                         </div>
-
-                                        {/* Download Button - Top Right */}
+                                        {/* Download Button */}
                                         {report.availableResources && report.availableResources.length > 0 && (
                                             <button
                                                 onClick={(e) => handleDownloadPDF(e, report._id, report.title)}
-                                                className="absolute top-4 right-4 w-12 h-12 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-all duration-300 shadow-lg group/download"
+                                                className="absolute top-3 right-3 w-9 h-9 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-all duration-300 shadow-lg group/download"
                                                 aria-label="Download PDF"
                                             >
-                                                <Download className="w-5 h-5 text-[#021d49] group-hover/download:scale-110 transition-transform" />
+                                                <Download className="w-4 h-4 text-[#021d49] group-hover/download:scale-110 transition-transform" />
                                             </button>
                                         )}
-
-                                        {/* Title on Image - Bottom */}
-                                        <div className="absolute bottom-4 left-4 right-4">
-                                            <h3 className="text-2xl font-bold text-white leading-tight">
-                                                {report.title}
-                                            </h3>
-                                        </div>
                                     </div>
 
                                     {/* Content */}
-                                    <div className="p-6">
+                                    <div className="p-5 flex flex-col flex-1">
+                                        <h3 className="text-base font-bold text-gray-900 group-hover:text-[#021d49] transition-colors leading-tight mb-2">
+                                            {report.title}
+                                        </h3>
+
                                         {/* Date */}
-                                        <div className="flex items-center gap-2 mb-4 pb-4 border-b border-gray-200 text-sm text-gray-600">
+                                        <div className="flex items-center gap-2 mb-3 text-sm text-gray-500">
                                             <Calendar className="w-4 h-4 text-[#021d49]" />
                                             <span>{new Date(report.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                                         </div>
 
-                                        {/* Description/Excerpt */}
-                                        {/* Description/Excerpt */}
+                                        {/* Description */}
                                         <div
-                                            className="text-gray-600 leading-relaxed mb-4 line-clamp-3"
+                                            className="text-sm text-gray-600 leading-relaxed line-clamp-3 flex-1"
                                             dangerouslySetInnerHTML={{ __html: report.description }}
                                         />
 
                                         {/* Tags */}
-                                        <div className="flex flex-wrap gap-2 mb-6">
-                                            <span className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-semibold rounded-full">
+                                        <div className="flex flex-wrap gap-2 mt-3">
+                                            <span className="px-2.5 py-1 bg-gray-100 text-gray-700 text-xs font-semibold rounded-full">
                                                 Annual Reports
                                             </span>
                                             {report.category && (
-                                                <span className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-semibold rounded-full">
+                                                <span className="px-2.5 py-1 bg-gray-100 text-gray-700 text-xs font-semibold rounded-full">
                                                     {report.category}
                                                 </span>
                                             )}
                                         </div>
 
                                         {/* Action Buttons */}
-                                        <div className="grid grid-cols-2 gap-3">
+                                        <div className="pt-4 mt-4 border-t border-gray-100 grid grid-cols-2 gap-2">
                                             <button
                                                 onClick={(e) => { e.stopPropagation(); handleReportClick(report._id); }}
-                                                className="px-4 py-3 bg-gradient-to-r from-[#021d49] to-[#021d49] text-white font-semibold rounded-lg shadow-md hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2"
+                                                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-linear-to-r from-[#021d49] to-[#032a5e] text-white font-semibold rounded-lg shadow-md text-sm"
                                             >
-                                                <span>View</span>
-                                                <ArrowRight className="w-4 h-4" />
+                                                View <ArrowRight className="w-4 h-4" />
                                             </button>
                                             {report.availableResources && report.availableResources.length > 0 && (
                                                 <button
                                                     onClick={(e) => handleDownloadPDF(e, report._id, report.title)}
-                                                    className="px-4 py-3 bg-white border-2 border-[#021d49] text-[#021d49] font-semibold rounded-lg hover:bg-[#021d49] hover:text-white transition-all duration-200 flex items-center justify-center gap-2"
+                                                    className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white border-2 border-[#021d49] text-[#021d49] font-semibold rounded-lg text-sm hover:bg-[#021d49] hover:text-white transition-all duration-200"
                                                 >
-                                                    <Download className="w-4 h-4" />
-                                                    <span>PDF</span>
+                                                    <Download className="w-4 h-4" /> PDF
                                                 </button>
                                             )}
                                         </div>
@@ -241,11 +240,10 @@ const AnnualReportsPage = () => {
                             <p className="text-gray-600">Try adjusting your search or filter criteria</p>
                         </div>
                     )}
-                </section>
-
+                </div>
 
             </div>
-
+            <Footer />
         </>
     );
 };

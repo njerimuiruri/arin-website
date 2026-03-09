@@ -1,16 +1,17 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { BookOpen, Calendar, Search, Filter, ChevronLeft, ChevronRight, FileText, Users } from 'lucide-react';
+import { BookOpen, Calendar, Search, Filter, ChevronLeft, ChevronRight, FileText, Users, ArrowRight } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
 import { getBooks } from '@/services/booksService';
+import Footer from '@/app/footer/Footer';
 
 const BooksPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [currentPage, setCurrentPage] = useState(1);
-    const [books, setBooks] = useState([]);
+    const [books, setBooks] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string | null>(null);
     const booksPerPage = 6;
 
     useEffect(() => {
@@ -23,7 +24,7 @@ const BooksPage = () => {
             const data = await getBooks();
             setBooks(data);
             setError(null);
-        } catch (err) {
+        } catch (err: any) {
             setError(err.message);
             console.error('Failed to load books:', err);
         } finally {
@@ -52,12 +53,12 @@ const BooksPage = () => {
     const currentBooks = filteredBooks.slice(indexOfFirstBook, indexOfLastBook);
     const totalPages = Math.ceil(filteredBooks.length / booksPerPage);
 
-    const handlePageChange = (pageNumber) => {
+    const handlePageChange = (pageNumber: number) => {
         setCurrentPage(pageNumber);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    const handleBookClick = (bookId) => {
+    const handleBookClick = (bookId: string) => {
         window.location.href = `/press/books/${bookId}`;
     };
 
@@ -100,84 +101,67 @@ const BooksPage = () => {
         <>
             <Navbar />
 
-            <div className="w-full bg-gradient-to-br from-slate-50 via-white to-stone-50 min-h-screen">
-                {/* Hero Section */}
-                <section className="max-w-[1400px] mx-auto px-6 py-12">
-                    <div className="text-center mb-8">
-                        <div className="flex items-center justify-center gap-3 mb-4">
-                            <BookOpen className="w-12 h-12 text-[#021d49]" />
-                        </div>
-                        <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
-                            ARIN{' '}
-                            <span className="bg-gradient-to-r from-[#021d49] to-[#021d49] bg-clip-text text-transparent">
-                                Books
-                            </span>
-                        </h1>
+            <div className="w-full bg-linear-to-br from-slate-50 via-white to-stone-50 min-h-screen">
 
-                        <p className="text-lg text-gray-600 leading-relaxed max-w-3xl mx-auto">
-                            Explore our collection of research publications and books driving evidence-based policy and sustainable development across Africa
-                        </p>
-                    </div>
-
-                    {/* Quick Stats */}
-                    <div className="max-w-4xl mx-auto mb-8">
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            <div className="bg-white rounded-xl p-4 shadow-md border border-gray-200 text-center">
-                                <div className="text-3xl font-bold text-[#021d49] mb-1">{books.length}</div>
-                                <p className="text-sm text-gray-600">Total Publications</p>
+                {/* Compact Dark Navy Hero Banner */}
+                <section className="relative overflow-hidden bg-linear-to-br from-[#021d49] via-[#032a5e] to-[#021d49] text-white">
+                    <div className="relative max-w-7xl mx-auto px-6 py-6">
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                            <div>
+                                <h1 className="text-2xl lg:text-3xl font-bold leading-tight">ARIN Books</h1>
+                                <p className="text-sm text-blue-100 mt-1">Explore our collection of research publications and books driving evidence-based policy and sustainable development across Africa</p>
                             </div>
-                            <div className="bg-white rounded-xl p-4 shadow-md border border-gray-200 text-center">
-                                <div className="text-3xl font-bold text-green-600 mb-1">{books.length}</div>
-                                <p className="text-sm text-gray-600">Recent Releases</p>
-                            </div>
-                            <div className="bg-white rounded-xl p-4 shadow-md border border-gray-200 text-center col-span-2 md:col-span-1">
-                                <div className="text-3xl font-bold text-[#021d49] mb-1">Multiple</div>
-                                <p className="text-sm text-gray-600">Contributing Authors</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Search and Filter Section */}
-                    <div className="max-w-4xl mx-auto mb-8">
-                        <div className="bg-white rounded-xl p-4 shadow-lg border border-gray-200">
-                            <div className="grid md:grid-cols-2 gap-4">
-                                {/* Search Bar */}
-                                <div className="relative">
-                                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                                    <input
-                                        type="text"
-                                        placeholder="Search books and publications..."
-                                        value={searchTerm}
-                                        onChange={(e) => {
-                                            setSearchTerm(e.target.value);
-                                            setCurrentPage(1);
-                                        }}
-                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#021d49] focus:outline-none transition-colors"
-                                    />
-                                </div>
-
-                                {/* Category Filter */}
-                                <div className="relative">
-                                    <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                                    <select
-                                        value={selectedCategory}
-                                        onChange={(e) => {
-                                            setSelectedCategory(e.target.value);
-                                            setCurrentPage(1);
-                                        }}
-                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#021d49] focus:outline-none transition-colors appearance-none bg-white cursor-pointer"
-                                    >
-                                        {categories.map(category => (
-                                            <option key={category} value={category}>{category}</option>
-                                        ))}
-                                    </select>
+                            <div className="w-full md:max-w-sm">
+                                <div className="bg-white/95 backdrop-blur-sm rounded-lg p-2 shadow-xl">
+                                    <div className="relative">
+                                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                                        <input
+                                            type="text"
+                                            placeholder="Search books and publications..."
+                                            value={searchTerm}
+                                            onChange={(e) => {
+                                                setSearchTerm(e.target.value);
+                                                setCurrentPage(1);
+                                            }}
+                                            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:border-[#021d49] focus:outline-none transition-all text-gray-800 text-sm"
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </section>
 
-                    {/* Books List - Horizontal Card Layout */}
-                    <div className="space-y-6 max-w-6xl mx-auto">
+                {/* Slim Category Filter Bar */}
+                <div className="bg-white border-b border-gray-200 shadow-sm">
+                    <div className="max-w-7xl mx-auto px-6 py-3 flex flex-wrap items-center gap-3">
+                        <div className="flex items-center gap-2 text-sm text-gray-500 font-medium">
+                            <Filter className="w-4 h-4" />
+                            <span>Filter by Category:</span>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                            {categories.map(category => (
+                                <button
+                                    key={category}
+                                    onClick={() => {
+                                        setSelectedCategory(category);
+                                        setCurrentPage(1);
+                                    }}
+                                    className={`px-3 py-1 rounded-full text-sm font-medium transition-all duration-200 ${selectedCategory === category
+                                        ? 'bg-[#021d49] text-white shadow-sm'
+                                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                        }`}
+                                >
+                                    {category}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                <div className="max-w-7xl mx-auto px-6 py-8">
+                    {/* Books Grid - 3 columns */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {currentBooks.map((book) => {
                             const authorsDisplay = Array.isArray(book.authors)
                                 ? book.authors.join(', ')
@@ -189,92 +173,69 @@ const BooksPage = () => {
                             return (
                                 <div
                                     key={book._id || book.id}
-                                    className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-[#021d49] cursor-pointer group"
+                                    className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-[#021d49] cursor-pointer group flex flex-col"
                                     onClick={() => handleBookClick(book._id || book.id)}
                                 >
-                                    <div className="md:flex">
-                                        {/* Left Side - Book Cover Image */}
-                                        <div className="md:w-2/5 relative h-64 md:h-auto overflow-hidden bg-gradient-to-br from-[#021d49] to-[#021d49]">
-                                            {book.image ? (
-                                                <>
-                                                    <img
-                                                        src={book.image}
-                                                        alt={book.title}
-                                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                                    />
-                                                    {/* Gradient Overlay */}
-                                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-                                                </>
-                                            ) : (
-                                                <div className="w-full h-full flex items-center justify-center">
-                                                    <BookOpen className="w-24 h-24 text-white/30" />
-                                                </div>
-                                            )}
-
-                                            {/* Category Badge - Bottom Left */}
-                                            <div className="absolute bottom-4 left-4">
-                                                <span className="px-4 py-2 bg-white/90 text-[#021d49] font-bold text-sm uppercase tracking-wide rounded-lg shadow-xl">
-                                                    Book
-                                                </span>
+                                    {/* Image */}
+                                    <div className="relative h-52 overflow-hidden shrink-0">
+                                        {book.image ? (
+                                            <>
+                                                <img
+                                                    src={book.image}
+                                                    alt={book.title}
+                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                                />
+                                                <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent"></div>
+                                            </>
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-[#021d49] to-[#032a5e]">
+                                                <BookOpen className="w-16 h-16 text-white/20" />
                                             </div>
+                                        )}
+                                        <div className="absolute top-3 left-3">
+                                            <span className="px-2.5 py-1 bg-white/95 backdrop-blur-sm text-[#021d49] font-bold text-xs uppercase tracking-wide rounded-lg shadow-lg">
+                                                {book.category || 'Book'}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    {/* Content */}
+                                    <div className="p-5 flex flex-col flex-1">
+                                        <h3 className="text-base font-bold text-gray-900 group-hover:text-[#021d49] transition-colors leading-tight mb-2">
+                                            {book.title}
+                                        </h3>
+
+                                        {/* Authors */}
+                                        <div className="flex items-start gap-2 mb-2">
+                                            <Users className="w-4 h-4 text-[#021d49] shrink-0 mt-0.5" />
+                                            <p className="text-sm text-gray-600 line-clamp-1">{authorsDisplay}</p>
                                         </div>
 
-                                        {/* Right Side - Content */}
-                                        <div className="md:w-3/5 p-8">
-                                            {/* Header */}
-                                            <div className="mb-4">
-                                                <span className="inline-block px-3 py-1 bg-gradient-to-r from-[#021d49] to-[#021d49] text-white font-bold text-xs uppercase tracking-wide rounded-full mb-3">
-                                                    {book.category || 'Book'}
-                                                </span>
-                                                <h3 className="text-2xl font-bold text-gray-900 group-hover:text-[#021d49] transition-colors leading-tight mb-3">
-                                                    {book.title}
-                                                </h3>
-                                            </div>
+                                        {/* Date */}
+                                        <div className="flex items-center gap-2 mb-3 text-sm text-gray-500">
+                                            <Calendar className="w-4 h-4 text-[#021d49] shrink-0" />
+                                            <span>{dateDisplay}</span>
+                                        </div>
 
-                                            {/* Authors */}
-                                            <div className="mb-4 bg-gray-50 rounded-lg p-4">
-                                                <div className="flex items-start gap-2">
-                                                    <Users className="w-5 h-5 text-[#021d49] flex-shrink-0 mt-0.5" />
-                                                    <div>
-                                                        <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1">Authors</p>
-                                                        <p className="text-sm text-gray-700 leading-relaxed">
-                                                            {authorsDisplay}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        {/* Description */}
+                                        {book.description && (
+                                            <div
+                                                className="text-sm text-gray-600 leading-relaxed line-clamp-3 flex-1"
+                                                dangerouslySetInnerHTML={{ __html: book.description }}
+                                            />
+                                        )}
 
-                                            {/* Description - if available */}
-                                            {book.description && (
-                                                <div
-                                                    className="text-sm text-gray-600 leading-relaxed mb-4 line-clamp-3"
-                                                    dangerouslySetInnerHTML={{ __html: book.description }}
-                                                />
-                                            )}
-
-                                            {/* Metadata and Button Row */}
-                                            <div className="flex items-center justify-between gap-4 mt-6">
-                                                {/* Posted Info */}
-                                                <div className="flex-1">
-                                                    <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
-                                                        <Calendar className="w-4 h-4 text-[#021d49]" />
-                                                        <span>{dateDisplay}</span>
-                                                    </div>
-                                                </div>
-
-                                                {/* Button */}
-                                                <button
-                                                    onClick={(e) => { e.stopPropagation(); handleBookClick(book._id || book.id); }}
-                                                    className="px-6 py-3 bg-gradient-to-r from-[#021d49] to-[#021d49] hover:shadow-xl text-white font-semibold rounded-lg shadow-md flex items-center gap-2 justify-center transition-all duration-200 whitespace-nowrap"
-                                                >
-                                                    <FileText className="w-4 h-4" />
-                                                    <span>View Details</span>
-                                                </button>
-                                            </div>
+                                        <div className="pt-4 mt-4 border-t border-gray-100">
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); handleBookClick(book._id || book.id); }}
+                                                className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-linear-to-r from-[#021d49] to-[#032a5e] text-white font-semibold rounded-lg shadow-md text-sm"
+                                            >
+                                                View Details <ArrowRight className="w-4 h-4" />
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
-                            )
+                            );
                         })}
                     </div>
 
@@ -303,7 +264,7 @@ const BooksPage = () => {
                                     key={index + 1}
                                     onClick={() => handlePageChange(index + 1)}
                                     className={`px-4 py-2 rounded-lg font-semibold transition-all duration-200 ${currentPage === index + 1
-                                        ? 'bg-gradient-to-r from-[#021d49] to-[#021d49] text-white shadow-md'
+                                        ? 'bg-linear-to-r from-[#021d49] to-[#032a5e] text-white shadow-md'
                                         : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
                                         }`}
                                 >
@@ -320,25 +281,25 @@ const BooksPage = () => {
                             </button>
                         </div>
                     )}
-                </section>
+                </div>
 
                 {/* Why Explore ARIN Publications Section */}
-                <section className="max-w-[1400px] mx-auto px-6 pb-16 mt-12">
-                    <div className="bg-gradient-to-br from-[#021d49] via-gray-900 to-[#021d49] rounded-2xl p-10 text-white shadow-2xl">
+                <section className="max-w-7xl mx-auto px-6 pb-16 mt-12">
+                    <div className="bg-linear-to-br from-[#021d49] via-gray-900 to-[#021d49] rounded-2xl p-10 text-white shadow-2xl">
                         <h2 className="text-3xl font-bold mb-6 text-center">Why Explore ARIN Publications?</h2>
                         <div className="grid md:grid-cols-3 gap-8 mb-8">
                             <div className="text-center">
-                                <BookOpen className="w-10 h-10 text-[#021d49] mx-auto mb-4" />
+                                <BookOpen className="w-10 h-10 text-blue-300 mx-auto mb-4" />
                                 <h3 className="text-xl font-bold mb-2">Cutting-Edge Research</h3>
                                 <p className="text-gray-300 text-sm">Access the latest research on climate, governance, and sustainable development</p>
                             </div>
                             <div className="text-center">
-                                <Users className="w-10 h-10 text-[#021d49] mx-auto mb-4" />
+                                <Users className="w-10 h-10 text-blue-300 mx-auto mb-4" />
                                 <h3 className="text-xl font-bold mb-2">Expert Insights</h3>
                                 <p className="text-gray-300 text-sm">Learn from leading researchers and policy experts across Africa</p>
                             </div>
                             <div className="text-center">
-                                <FileText className="w-10 h-10 text-[#021d49] mx-auto mb-4" />
+                                <FileText className="w-10 h-10 text-blue-300 mx-auto mb-4" />
                                 <h3 className="text-xl font-bold mb-2">Evidence-Based Policy</h3>
                                 <p className="text-gray-300 text-sm">Discover research that shapes policy and drives real-world impact</p>
                             </div>
@@ -349,6 +310,7 @@ const BooksPage = () => {
                     </div>
                 </section>
             </div>
+            <Footer />
         </>
     );
 };

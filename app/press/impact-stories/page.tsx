@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { Heart, Search, Filter, ChevronLeft, ChevronRight, ArrowRight, MapPin, Users, Calendar } from 'lucide-react';
+import { Heart, Search, ChevronLeft, ChevronRight, ArrowRight, MapPin, Users, Calendar } from 'lucide-react';
 import { getImpactStories } from '@/services/impactStoriesService';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/app/navbar/Navbar';
+import Footer from '@/app/footer/Footer';
 
 const ImpactStoriesPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -57,191 +58,123 @@ const ImpactStoriesPage = () => {
         <>
             <Navbar />
             <div className="w-full bg-gradient-to-br from-slate-50 via-white to-stone-50 min-h-screen">
-                {/* Hero Section */}
-                <section className="max-w-[1400px] mx-auto px-6 py-12">
-                    <div className="text-center mb-8">
-                        <div className="flex items-center justify-center gap-3 mb-4">
-                            <Heart className="w-12 h-12 text-[#021d49]" />
-                        </div>
-                        <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
-                            Impact{' '}
-                            <span className="bg-gradient-to-r from-[#021d49] to-[#021d49] bg-clip-text text-transparent">
-                                Stories
-                            </span>
-                        </h1>
-                        <p className="text-lg text-gray-600 leading-relaxed max-w-3xl mx-auto">
-                            Real stories of transformation and resilience from communities across Africa benefiting from ARIN's research and programs
-                        </p>
-                    </div>
-
-                    {/* Quick Stats */}
-                    <div className="max-w-4xl mx-auto mb-8">
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            <div className="bg-white rounded-xl p-4 shadow-md border border-gray-200 text-center">
-                                <div className="text-3xl font-bold text-[#021d49] mb-1">{stories.length}</div>
-                                <p className="text-sm text-gray-600">Impact Stories</p>
+                {/* Compact Dark Navy Hero Banner */}
+                <section className="relative overflow-hidden bg-gradient-to-br from-[#021d49] via-[#032a5e] to-[#021d49] text-white">
+                    <div className="relative max-w-7xl mx-auto px-6 py-6">
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                            <div>
+                                <h1 className="text-2xl lg:text-3xl font-bold leading-tight">Impact Stories</h1>
+                                <p className="text-sm text-blue-100 mt-1">Real stories of transformation and resilience from communities across Africa</p>
                             </div>
-                            <div className="bg-white rounded-xl p-4 shadow-md border border-gray-200 text-center">
-                                <div className="text-3xl font-bold text-green-600 mb-1">
-                                    {(() => {
-                                        // Sum up all beneficiaries if available, else show '-'
-                                        const total = stories.reduce((acc, s) => {
-                                            // Accept numbers or strings like '5,000+' or '1000'
-                                            if (typeof s.beneficiaries === 'number') return acc + s.beneficiaries;
-                                            if (typeof s.beneficiaries === 'string') {
-                                                // Remove non-digits, parse as int
-                                                const num = parseInt(s.beneficiaries.replace(/[^\d]/g, ''));
-                                                if (!isNaN(num)) return acc + num;
-                                            }
-                                            return acc;
-                                        }, 0);
-                                        return total > 0 ? total.toLocaleString() : '-';
-                                    })()}
-                                </div>
-                                <p className="text-sm text-gray-600">Lives Impacted</p>
-                            </div>
-                            <div className="bg-white rounded-xl p-4 shadow-md border border-gray-200 text-center col-span-2 md:col-span-1">
-                                <div className="text-3xl font-bold text-[#021d49] mb-1">{
-                                    Array.from(new Set(stories.map(s => s.category).filter(Boolean))).length
-                                }</div>
-                                <p className="text-sm text-gray-600">Focus Areas</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Search and Filter */}
-                    <div className="max-w-4xl mx-auto mb-8">
-                        <div className="bg-white rounded-xl p-4 shadow-lg border border-gray-200">
-                            <div className="grid md:grid-cols-2 gap-4">
-                                <div className="relative">
-                                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                                    <input
-                                        type="text"
-                                        placeholder="Search impact stories..."
-                                        value={searchTerm}
-                                        onChange={(e) => {
-                                            setSearchTerm(e.target.value);
-                                            setCurrentPage(1);
-                                        }}
-                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#021d49] focus:outline-none transition-colors"
-                                    />
-                                </div>
-                                <div className="relative">
-                                    <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                                    <select
-                                        value={selectedCategory}
-                                        onChange={(e) => {
-                                            setSelectedCategory(e.target.value);
-                                            setCurrentPage(1);
-                                        }}
-                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#021d49] focus:outline-none transition-colors appearance-none bg-white cursor-pointer"
-                                    >
-                                        {categories.map(cat => (
-                                            <option key={cat} value={cat}>{cat}</option>
-                                        ))}
-                                    </select>
+                            <div className="w-full md:max-w-sm">
+                                <div className="bg-white/95 backdrop-blur-sm rounded-lg p-2 shadow-xl">
+                                    <div className="relative">
+                                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                                        <input
+                                            type="text"
+                                            placeholder="Search impact stories..."
+                                            value={searchTerm}
+                                            onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
+                                            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:border-[#021d49] focus:outline-none transition-all text-gray-800 text-sm"
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </section>
 
-                    {/* Stories List - Horizontal Card Layout */}
-                    <div className="space-y-6 max-w-6xl mx-auto">
-                        {currentStories.map((story: any, idx: number) => (
-                            <div
-                                key={story._id || story.id || idx}
-                                className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-[#021d49] cursor-pointer group"
-                                onClick={() => handleStoryClick(story._id || story.id)}
+                {/* Category Filter Bar */}
+                <div className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-10">
+                    <div className="max-w-7xl mx-auto px-6 py-3 flex flex-wrap gap-2">
+                        {categories.map(cat => (
+                            <button
+                                key={cat}
+                                onClick={() => { setSelectedCategory(cat); setCurrentPage(1); }}
+                                className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-200 ${selectedCategory === cat
+                                    ? 'bg-[#021d49] text-white shadow-md'
+                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                    }`}
                             >
-                                <div className="md:flex">
-                                    {/* Left Side - Image */}
-                                    <div className="md:w-2/5 relative h-64 md:h-auto overflow-hidden">
-                                        {story.image ? (
-                                            <img
-                                                src={story.image.startsWith('http') ? story.image : `https://api.demo.arin-africa.org${story.image}`}
-                                                alt={story.title}
-                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                            />
-                                        ) : (
-                                            <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">No image</div>
-                                        )}
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-
-                                        {/* Category Badge */}
-                                        <div className="absolute bottom-4 left-4">
-                                            <span className="px-4 py-2 bg-[#021d49] text-white font-bold text-sm uppercase tracking-wide rounded-lg shadow-xl">
-                                                {story.category}
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    {/* Right Side - Content */}
-                                    <div className="md:w-3/5 p-8">
-                                        {/* Header */}
-                                        <div className="mb-4">
-                                            <h3 className="text-2xl font-bold text-gray-900 group-hover:text-[#021d49] transition-colors leading-tight mb-3">
-                                                {story.title}
-                                            </h3>
-                                        </div>
-
-                                        {/* Metadata */}
-                                        <div className="grid grid-cols-2 gap-3 mb-4 bg-gray-50 rounded-lg p-4">
-                                            <div className="flex items-center gap-2 text-sm">
-                                                <MapPin className="w-4 h-4 text-[#021d49] shrink-0" />
-                                                <span className="text-gray-700 font-medium">{story.location}</span>
-                                            </div>
-                                            <div className="flex items-center gap-2 text-sm">
-                                                <Calendar className="w-4 h-4 text-[#021d49] shrink-0" />
-                                                <span className="text-gray-600">{story.date ? (new Date(story.date)).toLocaleDateString() : <span className="italic text-gray-400">No date</span>}</span>
-                                            </div>
-                                            <div className="flex items-center gap-2 text-sm col-span-2">
-                                                <Users className="w-4 h-4 text-[#021d49] shrink-0" />
-                                                <span className="text-gray-700 font-medium">{story.beneficiaries}</span>
-                                            </div>
-                                        </div>
-
-                                        {/* Excerpt */}
-                                        <p className="text-sm text-gray-600 leading-relaxed mb-4">
-                                            {story.excerpt || (story.description ? story.description.replace(/<[^>]+>/g, '').split(' ').slice(0, 30).join(' ') + (story.description.split(' ').length > 30 ? '...' : '') : '')}
-                                        </p>
-
-                                        {/* Impact Points */}
-                                        <div className="mb-4">
-                                            <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Key Impact:</h4>
-                                            <div className="flex flex-wrap gap-2">
-                                                {Array.isArray(story.impact) && story.impact.map((item: any, index: number) => (
-                                                    <span
-                                                        key={index}
-                                                        className="px-3 py-1 bg-green-50 text-green-700 text-xs font-semibold rounded-full border border-green-200"
-                                                    >
-                                                        ✓ {item}
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        </div>
-
-                                        {/* Button */}
-                                        <div className="flex items-center justify-end">
-                                            <button
-                                                onClick={(e) => { e.stopPropagation(); handleStoryClick(story._id || story.id); }}
-                                                className="px-6 py-3 bg-gradient-to-r from-[#021d49] to-[#021d49] hover:shadow-xl text-white font-semibold rounded-lg shadow-md flex items-center gap-2 justify-center transition-all duration-200 whitespace-nowrap"
-                                            >
-                                                <span>Read Full Story</span>
-                                                <ArrowRight className="w-4 h-4" />
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                                {cat}
+                            </button>
                         ))}
                     </div>
+                </div>
 
-                    {/* No Results */}
-                    {filteredStories.length === 0 && (
+                {/* Stories Grid */}
+                <div className="max-w-7xl mx-auto px-6 py-10">
+                    {loading ? (
+                        <div className="text-center py-16 text-lg text-gray-500">Loading stories...</div>
+                    ) : error ? (
+                        <div className="text-center py-16 text-red-600">{error}</div>
+                    ) : currentStories.length === 0 ? (
                         <div className="text-center py-16">
                             <Heart className="w-12 h-12 text-gray-300 mx-auto mb-3" />
                             <h3 className="text-xl font-bold text-gray-900 mb-2">No stories found</h3>
                             <p className="text-gray-600">Try adjusting your search or filter criteria</p>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+                            {currentStories.map((story, idx) => (
+                                <div
+                                    key={story._id || idx}
+                                    className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-[#021d49] cursor-pointer group flex flex-col"
+                                    onClick={() => handleStoryClick(story._id || story.id)}
+                                >
+                                    {/* Image */}
+                                    <div className="relative h-52 overflow-hidden shrink-0">
+                                        {story.image ? (
+                                            <>
+                                                <img
+                                                    src={story.image.startsWith('http') ? story.image : `https://api.demo.arin-africa.org${story.image}`}
+                                                    alt={story.title}
+                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                                />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+                                            </>
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#021d49] to-[#032a5e]">
+                                                <Heart className="w-16 h-16 text-white/20" />
+                                            </div>
+                                        )}
+                                        {story.category && (
+                                            <div className="absolute top-3 left-3">
+                                                <span className="px-2.5 py-1 bg-white/95 backdrop-blur-sm text-[#021d49] font-bold text-xs uppercase tracking-wide rounded-lg shadow-lg">{story.category}</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                    {/* Content */}
+                                    <div className="p-5 flex flex-col flex-1">
+                                        <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#021d49] transition-colors leading-tight mb-2 line-clamp-2">{story.title}</h3>
+                                        <div className="flex flex-wrap gap-3 mb-3 text-xs text-gray-500">
+                                            {story.location && (
+                                                <div className="flex items-center gap-1">
+                                                    <MapPin className="w-3.5 h-3.5 text-[#021d49]" />
+                                                    <span>{story.location}</span>
+                                                </div>
+                                            )}
+                                            {story.date && (
+                                                <div className="flex items-center gap-1">
+                                                    <Calendar className="w-3.5 h-3.5 text-[#021d49]" />
+                                                    <span>{new Date(story.date).toLocaleDateString()}</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <p className="text-gray-600 text-sm leading-relaxed line-clamp-3 flex-1">
+                                            {story.excerpt || (story.description ? story.description.replace(/<[^>]+>/g, '').split(' ').slice(0, 25).join(' ') + '...' : '')}
+                                        </p>
+                                        <div className="pt-4 mt-4 border-t border-gray-100">
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); handleStoryClick(story._id || story.id); }}
+                                                className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#021d49] to-[#032a5e] hover:from-[#032a5e] hover:to-[#021d49] text-white font-semibold rounded-lg shadow-md text-sm"
+                                            >
+                                                <span>Read Full Story</span><ArrowRight className="w-4 h-4" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     )}
 
@@ -276,7 +209,7 @@ const ImpactStoriesPage = () => {
                             </button>
                         </div>
                     )}
-                </section>
+                </div>
 
                 {/* Why Impact Stories Matter Section */}
                 <section className="max-w-[1400px] mx-auto px-6 pb-16 mt-12">
@@ -305,6 +238,7 @@ const ImpactStoriesPage = () => {
                     </div>
                 </section>
             </div>
+            <Footer />
         </>
     );
 };

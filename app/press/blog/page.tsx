@@ -4,6 +4,7 @@ import { PenTool, Calendar, Search, Filter, ChevronLeft, ChevronRight, ArrowRigh
 import { useRouter } from 'next/navigation';
 import { getBlogs } from '@/services/blogsService';
 import Navbar from '@/app/navbar/Navbar';
+import Footer from '@/app/footer/Footer';
 
 interface Blog {
     _id?: string;
@@ -84,19 +85,27 @@ const BlogsPage = () => {
             <Navbar />
 
             {/* Hero Section */}
-            <section className="bg-gradient-to-br from-[#021d49] via-[#032a5e] to-[#021d49] text-white py-20">
-                <div className="max-w-7xl mx-auto px-6">
-                    <div className="text-center max-w-3xl mx-auto">
-                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm font-semibold mb-6">
-                            <PenTool className="w-4 h-4" />
-                            <span>ARIN Blog</span>
+            <section className="bg-gradient-to-br from-[#021d49] via-[#032a5e] to-[#021d49] text-white">
+                <div className="max-w-7xl mx-auto px-6 py-6">
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div>
+                            <h1 className="text-2xl lg:text-3xl font-bold leading-tight">ARIN Blog</h1>
+                            <p className="text-sm text-blue-100 mt-1">Explore our latest thoughts, research updates, and stories from the field</p>
                         </div>
-                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-                            Insights & Stories
-                        </h1>
-                        <p className="text-lg md:text-xl text-white/90 leading-relaxed">
-                            Explore our latest thoughts, research updates, and stories from the field
-                        </p>
+                        <div className="w-full md:max-w-sm">
+                            <div className="bg-white/95 backdrop-blur-sm rounded-lg p-2 shadow-xl">
+                                <div className="relative">
+                                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                                    <input
+                                        type="text"
+                                        placeholder="Search blogs..."
+                                        value={searchTerm}
+                                        onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
+                                        className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:border-[#021d49] focus:outline-none transition-all text-gray-800 text-sm"
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -104,55 +113,22 @@ const BlogsPage = () => {
             {/* Main Content */}
             <section className="py-16 bg-gray-50">
                 <div className="max-w-7xl mx-auto px-6">
-                    {/* Search and Filter Bar */}
-                    <div className="mb-12 space-y-6">
-                        {/* Search */}
-                        <div className="relative max-w-2xl mx-auto">
-                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                            <input
-                                type="text"
-                                placeholder="Search blogs by title, content, or team..."
-                                value={searchTerm}
-                                onChange={(e) => {
-                                    setSearchTerm(e.target.value);
-                                    setCurrentPage(1);
-                                }}
-                                className="w-full pl-12 pr-4 py-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#021d49] focus:border-transparent outline-none transition-all"
-                            />
-                            {searchTerm && (
-                                <button
-                                    onClick={() => setSearchTerm('')}
-                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                                >
-                                    <X className="w-5 h-5" />
-                                </button>
-                            )}
-                        </div>
-
-                        {/* Category Filter */}
-                        <div className="flex items-center justify-center gap-3 flex-wrap">
-                            <Filter className="w-5 h-5 text-gray-600" />
-                            {categories.map((category) => (
-                                <button
-                                    key={category}
-                                    onClick={() => {
-                                        setSelectedCategory(category);
-                                        setCurrentPage(1);
-                                    }}
-                                    className={`px-4 py-2 rounded-full font-semibold text-sm transition-all ${selectedCategory === category
-                                        ? 'bg-[#021d49] text-white shadow-lg'
-                                        : 'bg-white text-gray-700 hover:bg-gray-100'
-                                        }`}
-                                >
-                                    {category}
-                                </button>
-                            ))}
-                        </div>
-
-                        {/* Results Count */}
-                        <p className="text-center text-gray-600">
-                            Showing <span className="font-semibold text-[#021d49]">{filteredBlogs.length}</span> blog{filteredBlogs.length !== 1 ? 's' : ''}
-                        </p>
+                    {/* Filter Bar */}
+                    <div className="mb-8 flex items-center gap-3 flex-wrap">
+                        <Filter className="w-4 h-4 text-gray-500" />
+                        {categories.map((category) => (
+                            <button
+                                key={category}
+                                onClick={() => { setSelectedCategory(category); setCurrentPage(1); }}
+                                className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${selectedCategory === category
+                                    ? 'bg-[#021d49] text-white shadow-md'
+                                    : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+                                    }`}
+                            >
+                                {category}
+                            </button>
+                        ))}
+                        <span className="ml-auto text-xs text-gray-500">{filteredBlogs.length} blog{filteredBlogs.length !== 1 ? 's' : ''}</span>
                     </div>
 
                     {/* Loading State */}
@@ -280,6 +256,7 @@ const BlogsPage = () => {
                     )}
                 </div>
             </section>
+            <Footer />
         </>
     );
 };

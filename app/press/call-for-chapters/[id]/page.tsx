@@ -4,6 +4,7 @@ import { useRouter, useParams } from "next/navigation";
 import { getCallById } from "@/services/callForBooksService";
 import { BookOpen, Calendar, AlertCircle, ArrowLeft, FileText, Tag, Clock, Share2, Bell } from "lucide-react";
 import Navbar from "@/app/navbar/Navbar";
+import Footer from "@/app/footer/Footer";
 
 const CallForBookDetailsPage = () => {
     const router = useRouter();
@@ -81,6 +82,7 @@ const CallForBookDetailsPage = () => {
                         </button>
                     </div>
                 </div>
+                <Footer />
             </>
         );
     }
@@ -386,6 +388,7 @@ const CallForBookDetailsPage = () => {
                     </div>
                 </div>
             </div>
+            <Footer />
         </>
     );
 };

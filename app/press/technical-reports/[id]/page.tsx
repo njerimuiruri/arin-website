@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { technicalReportsService, TechnicalReport } from "@/services/technicalReportsService";
 import Navbar from "@/app/navbar/Navbar";
 import { Calendar, FileText, User, ArrowLeft, BookOpen, Download, ExternalLink, Tag, Clock } from "lucide-react";
+import Footer from "@/app/footer/Footer";
 
 export default function TechnicalReportDetailPage() {
     const params = useParams();
@@ -346,6 +347,7 @@ export default function TechnicalReportDetailPage() {
                 </div>
 
             </div>
+            <Footer />
         </>
     );
 }

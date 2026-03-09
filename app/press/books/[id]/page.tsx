@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { getBook } from "@/services/booksService";
 import { ArrowLeft, Calendar, Users, Download, BookOpen } from "lucide-react";
 import Navbar from "@/app/navbar/Navbar";
+import Footer from "@/app/footer/Footer";
 
 interface Book {
     _id?: string;
@@ -320,6 +321,7 @@ export default function BookDetailPage() {
                     </div>
                 </div>
             )}
+            <Footer />
         </>
     );
 }

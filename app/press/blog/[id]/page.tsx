@@ -4,6 +4,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { Calendar, Users, ArrowLeft, Tag, Share2 } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
 import { getBlogById } from '@/services/blogsService';
+import Footer from '@/app/footer/Footer';
 
 interface Blog {
     _id?: string;
@@ -195,6 +196,7 @@ export default function BlogDetailPage() {
                     </button>
                 </div>
             </section>
+            <Footer />
         </>
     );
 }

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Navbar from '@/app/navbar/Navbar';
 import { Mail, Calendar, User } from 'lucide-react';
+import Footer from "@/app/footer/Footer";
 
 
 interface Newsletter {
@@ -69,6 +70,7 @@ export default function NewsletterDetailPage() {
                     </div>
                 </div>
             </div>
+            <Footer />
         </>
     );
 }

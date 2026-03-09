@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Mail, Calendar, Search, Filter, ChevronLeft, ChevronRight, ArrowRight, User } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
+import Footer from '@/app/footer/Footer';
 
 const NewslettersPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -34,7 +35,6 @@ const NewslettersPage = () => {
         const matchesSearch = (newsletter.title?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
             (newsletter.description?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
             (newsletter.authors?.join(' ').toLowerCase() || '').includes(searchTerm.toLowerCase());
-        // If you have category, filter by it, else always true
         const matchesCategory = selectedCategory === 'All' || newsletter.category === selectedCategory;
         const matchesDate = !newsletter.datePosted || new Date(newsletter.datePosted) <= today;
         return matchesSearch && matchesCategory && matchesDate;
@@ -59,155 +59,129 @@ const NewslettersPage = () => {
         <>
             <Navbar />
             <div className="w-full bg-linear-to-br from-slate-50 via-white to-stone-50 min-h-screen">
-                {/* Hero Section */}
-                <section className="max-w-350 mx-auto px-6 py-12">
-                    <div className="text-center mb-8">
-                        <div className="flex items-center justify-center gap-3 mb-4">
-                            <Mail className="w-12 h-12 text-[#021d49]" />
-                        </div>
-                        <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
-                            ARIN{' '}
-                            <span className="bg-linear-to-r from-[#021d49] to-[#021d49] bg-clip-text text-transparent">
-                                Newsletters
-                            </span>
-                        </h1>
 
-                        <p className="text-lg text-gray-600 leading-relaxed max-w-3xl mx-auto">
-                            Stay connected with ARIN's latest research, insights, events, and network updates through our regular newsletters
-                        </p>
-                    </div>
-
-                    {/* Quick Stats */}
-                    <div className="max-w-4xl mx-auto mb-8">
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            <div className="bg-white rounded-xl p-4 shadow-md border border-gray-200 text-center">
-                                <div className="text-3xl font-bold text-[#021d49] mb-1">{newsletters.length}</div>
-                                <p className="text-sm text-gray-600">Newsletters</p>
+                {/* Compact Dark Navy Hero Banner */}
+                <section className="relative overflow-hidden bg-linear-to-br from-[#021d49] via-[#032a5e] to-[#021d49] text-white">
+                    <div className="relative max-w-7xl mx-auto px-6 py-6">
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                            <div>
+                                <h1 className="text-2xl lg:text-3xl font-bold leading-tight">ARIN Newsletters</h1>
+                                <p className="text-sm text-blue-100 mt-1">Stay connected with ARIN's latest research, insights, events, and network updates through our regular newsletters</p>
                             </div>
-                            <div className="bg-white rounded-xl p-4 shadow-md border border-gray-200 text-center">
-                                <div className="text-3xl font-bold text-green-600 mb-1">{newsletters.length}</div>
-                                <p className="text-sm text-gray-600">Recent Issues</p>
-                            </div>
-                            <div className="bg-white rounded-xl p-4 shadow-md border border-gray-200 text-center col-span-2 md:col-span-1">
-                                <div className="text-3xl font-bold text-[#021d49] mb-1">Monthly</div>
-                                <p className="text-sm text-gray-600">Updates</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Search and Filter Section */}
-                    <div className="max-w-4xl mx-auto mb-8">
-                        <div className="bg-white rounded-xl p-4 shadow-lg border border-gray-200">
-                            <div className="grid md:grid-cols-2 gap-4">
-                                {/* Search Bar */}
-                                <div className="relative">
-                                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                                    <input
-                                        type="text"
-                                        placeholder="Search newsletters..."
-                                        value={searchTerm}
-                                        onChange={(e) => {
-                                            setSearchTerm(e.target.value);
-                                            setCurrentPage(1);
-                                        }}
-                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#021d49] focus:outline-none transition-colors"
-                                    />
-                                </div>
-
-                                {/* Category Filter */}
-                                <div className="relative">
-                                    <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                                    <select
-                                        value={selectedCategory}
-                                        onChange={(e) => {
-                                            setSelectedCategory(e.target.value);
-                                            setCurrentPage(1);
-                                        }}
-                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#021d49] focus:outline-none transition-colors appearance-none bg-white cursor-pointer"
-                                    >
-                                        {categories.map(category => (
-                                            <option key={category} value={category}>{category}</option>
-                                        ))}
-                                    </select>
+                            <div className="w-full md:max-w-sm">
+                                <div className="bg-white/95 backdrop-blur-sm rounded-lg p-2 shadow-xl">
+                                    <div className="relative">
+                                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                                        <input
+                                            type="text"
+                                            placeholder="Search newsletters..."
+                                            value={searchTerm}
+                                            onChange={(e) => {
+                                                setSearchTerm(e.target.value);
+                                                setCurrentPage(1);
+                                            }}
+                                            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:border-[#021d49] focus:outline-none transition-all text-gray-800 text-sm"
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </section>
 
-                    {/* Newsletters List - Horizontal Card Layout */}
-                    <div className="space-y-6 max-w-6xl mx-auto">
+                {/* Slim Category Filter Bar */}
+                <div className="bg-white border-b border-gray-200 shadow-sm">
+                    <div className="max-w-7xl mx-auto px-6 py-3 flex flex-wrap items-center gap-3">
+                        <div className="flex items-center gap-2 text-sm text-gray-500 font-medium">
+                            <Filter className="w-4 h-4" />
+                            <span>Filter by Category:</span>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                            {categories.map(category => (
+                                <button
+                                    key={category}
+                                    onClick={() => {
+                                        setSelectedCategory(category);
+                                        setCurrentPage(1);
+                                    }}
+                                    className={`px-3 py-1 rounded-full text-sm font-medium transition-all duration-200 ${selectedCategory === category
+                                        ? 'bg-[#021d49] text-white shadow-sm'
+                                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                        }`}
+                                >
+                                    {category}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                <div className="max-w-7xl mx-auto px-6 py-8">
+                    {/* Newsletters Grid - 3 columns */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {currentNewsletters.map((newsletter) => (
                             <div
                                 key={newsletter._id}
-                                className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-[#021d49] cursor-pointer group"
+                                className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-[#021d49] cursor-pointer group flex flex-col"
                                 onClick={() => handleNewsletterClick(newsletter._id)}
                             >
-                                <div className="md:flex">
-                                    {/* Left Side - Newsletter Image */}
-                                    <div className="md:w-2/5 relative h-64 md:h-auto overflow-hidden bg-linear-to-br from-[#021d49] to-[#021d49]">
-                                        {newsletter.hasImage ? (
-                                            <>
-                                                <img
-                                                    src={newsletter.image}
-                                                    alt={newsletter.title}
-                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                                />
-                                                {/* Gradient Overlay */}
-                                                <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent"></div>
-                                            </>
-                                        ) : (
-                                            <div className="w-full h-full flex items-center justify-center">
-                                                <Mail className="w-24 h-24 text-white/30" />
+                                {/* Image */}
+                                <div className="relative h-52 overflow-hidden shrink-0">
+                                    {newsletter.hasImage ? (
+                                        <>
+                                            <img
+                                                src={newsletter.image}
+                                                alt={newsletter.title}
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                            />
+                                            <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent"></div>
+                                        </>
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-[#021d49] to-[#032a5e]">
+                                            <Mail className="w-16 h-16 text-white/20" />
+                                        </div>
+                                    )}
+                                    <div className="absolute top-3 left-3">
+                                        <span className="px-2.5 py-1 bg-white/95 backdrop-blur-sm text-[#021d49] font-bold text-xs uppercase tracking-wide rounded-lg shadow-lg">
+                                            Newsletter
+                                        </span>
+                                    </div>
+                                </div>
+
+                                {/* Content */}
+                                <div className="p-5 flex flex-col flex-1">
+                                    {newsletter.category && (
+                                        <span className="inline-block px-2.5 py-1 bg-linear-to-r from-[#021d49] to-[#032a5e] text-white font-bold text-xs uppercase tracking-wide rounded-full mb-2 self-start">
+                                            {newsletter.category}
+                                        </span>
+                                    )}
+                                    <h3 className="text-base font-bold text-gray-900 group-hover:text-[#021d49] transition-colors leading-tight mb-2">
+                                        {newsletter.title}
+                                    </h3>
+                                    <div className="flex flex-col gap-1 mb-3">
+                                        {newsletter.authors && newsletter.authors.length > 0 && (
+                                            <div className="flex items-center gap-2 text-sm text-gray-600">
+                                                <User className="w-4 h-4 text-[#021d49] shrink-0" />
+                                                <span className="line-clamp-1">{newsletter.authors.join(', ')}</span>
                                             </div>
                                         )}
-
-                                        {/* Category Badge - Bottom Left */}
-                                        <div className="absolute bottom-4 left-4">
-                                            <span className="px-4 py-2 bg-white/90 text-[#021d49] font-bold text-sm uppercase tracking-wide rounded-lg shadow-xl">
-                                                Newsletter
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    {/* Right Side - Content */}
-                                    <div className="md:w-3/5 p-8">
-                                        {/* Header */}
-                                        <div className="mb-4">
-                                            <span className="inline-block px-3 py-1 bg-linear-to-r from-[#021d49] to-[#021d49] text-white font-bold text-xs uppercase tracking-wide rounded-full mb-3">
-                                                {newsletter.category}
-                                            </span>
-                                            <h3 className="text-2xl font-bold text-gray-900 group-hover:text-[#021d49] transition-colors leading-tight mb-3">
-                                                {newsletter.title}
-                                            </h3>
-                                        </div>
-                                        <div className="mb-4 bg-gray-50 rounded-lg p-4">
-                                            <div className="flex flex-col gap-2">
-                                                {newsletter.authors && newsletter.authors.length > 0 && (
-                                                    <div className="flex items-center gap-2 text-sm">
-                                                        <User className="w-4 h-4 text-[#021d49] shrink-0" />
-                                                        <span className="text-gray-700">{newsletter.authors.join(', ')}</span>
-                                                    </div>
-                                                )}
-                                                {newsletter.datePosted && (
-                                                    <div className="flex items-center gap-2 text-sm">
-                                                        <Calendar className="w-4 h-4 text-[#021d49] shrink-0" />
-                                                        <span className="text-gray-600">{new Date(newsletter.datePosted).toLocaleDateString()}</span>
-                                                    </div>
-                                                )}
+                                        {newsletter.datePosted && (
+                                            <div className="flex items-center gap-2 text-sm text-gray-500">
+                                                <Calendar className="w-4 h-4 text-[#021d49] shrink-0" />
+                                                <span>{new Date(newsletter.datePosted).toLocaleDateString()}</span>
                                             </div>
-                                        </div>
-                                        <p className="text-sm text-gray-600 leading-relaxed mb-4">
-                                            {newsletter.description ? newsletter.description.replace(/<[^>]*>/g, '').slice(0, 180) + (newsletter.description.replace(/<[^>]*>/g, '').length > 180 ? '...' : '') : ''}
-                                        </p>
-                                        <div className="flex items-center justify-end">
-                                            <button
-                                                onClick={(e) => { e.stopPropagation(); handleNewsletterClick(newsletter.id); }}
-                                                className="px-6 py-3 bg-linear-to-r from-[#021d49] to-[#021d49] hover:shadow-xl text-white font-semibold rounded-lg shadow-md flex items-center gap-2 justify-center transition-all duration-200 whitespace-nowrap"
-                                            >
-                                                <span>View Newsletter</span>
-                                                <ArrowRight className="w-4 h-4" />
-                                            </button>
-                                        </div>
+                                        )}
+                                    </div>
+                                    <p className="text-sm text-gray-600 leading-relaxed line-clamp-3 flex-1">
+                                        {newsletter.description ? newsletter.description.replace(/<[^>]*>/g, '').slice(0, 180) + (newsletter.description.replace(/<[^>]*>/g, '').length > 180 ? '...' : '') : ''}
+                                    </p>
+                                    <div className="pt-4 mt-4 border-t border-gray-100">
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); handleNewsletterClick(newsletter._id); }}
+                                            className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-linear-to-r from-[#021d49] to-[#032a5e] text-white font-semibold rounded-lg shadow-md text-sm"
+                                        >
+                                            View Newsletter <ArrowRight className="w-4 h-4" />
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -273,8 +247,9 @@ const NewslettersPage = () => {
                             </div>
                         </div>
                     )}
-                </section>
+                </div>
             </div>
+            <Footer />
         </>
     );
 };

@@ -1,16 +1,17 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { FileText, Calendar, Search, Filter, ChevronLeft, ChevronRight, Users, ArrowRight } from 'lucide-react';
+import { FileText, Calendar, Search, ChevronLeft, ChevronRight, Users, ArrowRight } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
 import { getJournalArticles } from '@/services/journalArticlesService';
+import Footer from '@/app/footer/Footer';
 
 const JournalArticlesPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [currentPage, setCurrentPage] = useState(1);
-    const [articles, setArticles] = useState([]);
+    const [articles, setArticles] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string | null>(null);
     const articlesPerPage = 6;
 
     useEffect(() => {
@@ -23,7 +24,7 @@ const JournalArticlesPage = () => {
             const data = await getJournalArticles();
             setArticles(data);
             setError(null);
-        } catch (err) {
+        } catch (err: any) {
             setError(err.message);
             console.error('Failed to load journal articles:', err);
         } finally {
@@ -53,12 +54,12 @@ const JournalArticlesPage = () => {
     const currentArticles = filteredArticles.slice(indexOfFirstArticle, indexOfLastArticle);
     const totalPages = Math.ceil(filteredArticles.length / articlesPerPage);
 
-    const handlePageChange = (pageNumber) => {
+    const handlePageChange = (pageNumber: number) => {
         setCurrentPage(pageNumber);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    const handleArticleClick = (articleId) => {
+    const handleArticleClick = (articleId: string) => {
         window.location.href = `/press/journal-articles/${articleId}`;
     };
 
@@ -101,83 +102,55 @@ const JournalArticlesPage = () => {
         <>
             <Navbar />
             <div className="w-full bg-gradient-to-br from-slate-50 via-white to-stone-50 min-h-screen">
-                {/* Hero Section */}
-                <section className="max-w-[1400px] mx-auto px-6 py-12">
-                    <div className="text-center mb-8">
-                        <div className="flex items-center justify-center gap-3 mb-4">
-                            <FileText className="w-12 h-12 text-[#021d49]" />
-                        </div>
-                        <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
-                            Journal{' '}
-                            <span className="bg-gradient-to-r from-[#021d49] to-[#021d49] bg-clip-text text-transparent">
-                                Articles
-                            </span>
-                        </h1>
-
-                        <p className="text-lg text-gray-600 leading-relaxed max-w-3xl mx-auto">
-                            Explore peer-reviewed research and scholarly articles advancing knowledge on climate, health, and sustainable development in Africa
-                        </p>
-                    </div>
-
-                    {/* Quick Stats */}
-                    <div className="max-w-4xl mx-auto mb-8">
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            <div className="bg-white rounded-xl p-4 shadow-md border border-gray-200 text-center">
-                                <div className="text-3xl font-bold text-[#021d49] mb-1">{articles.length}</div>
-                                <p className="text-sm text-gray-600">Published Articles</p>
+                {/* Compact Dark Navy Hero Banner */}
+                <section className="relative overflow-hidden bg-gradient-to-br from-[#021d49] via-[#032a5e] to-[#021d49] text-white">
+                    <div className="relative max-w-7xl mx-auto px-6 py-6">
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                            <div>
+                                <h1 className="text-2xl lg:text-3xl font-bold leading-tight">Journal Articles</h1>
+                                <p className="text-sm text-blue-100 mt-1">Peer-reviewed research and scholarly articles advancing knowledge on climate, health, and sustainable development in Africa</p>
                             </div>
-                            <div className="bg-white rounded-xl p-4 shadow-md border border-gray-200 text-center">
-                                <div className="text-3xl font-bold text-green-600 mb-1">{articles.length}</div>
-                                <p className="text-sm text-gray-600">Recent Publications</p>
-                            </div>
-                            <div className="bg-white rounded-xl p-4 shadow-md border border-gray-200 text-center col-span-2 md:col-span-1">
-                                <div className="text-3xl font-bold text-[#021d49] mb-1">Multiple</div>
-                                <p className="text-sm text-gray-600">Contributing Authors</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Search and Filter Section */}
-                    <div className="max-w-4xl mx-auto mb-8">
-                        <div className="bg-white rounded-xl p-4 shadow-lg border border-gray-200">
-                            <div className="grid md:grid-cols-2 gap-4">
-                                {/* Search Bar */}
-                                <div className="relative">
-                                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                                    <input
-                                        type="text"
-                                        placeholder="Search journal articles..."
-                                        value={searchTerm}
-                                        onChange={(e) => {
-                                            setSearchTerm(e.target.value);
-                                            setCurrentPage(1);
-                                        }}
-                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#021d49] focus:outline-none transition-colors"
-                                    />
-                                </div>
-
-                                {/* Category Filter */}
-                                <div className="relative">
-                                    <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                                    <select
-                                        value={selectedCategory}
-                                        onChange={(e) => {
-                                            setSelectedCategory(e.target.value);
-                                            setCurrentPage(1);
-                                        }}
-                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#021d49] focus:outline-none transition-colors appearance-none bg-white cursor-pointer"
-                                    >
-                                        {categories.map(category => (
-                                            <option key={category} value={category}>{category}</option>
-                                        ))}
-                                    </select>
+                            <div className="w-full md:max-w-sm">
+                                <div className="bg-white/95 backdrop-blur-sm rounded-lg p-2 shadow-xl">
+                                    <div className="relative">
+                                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                                        <input
+                                            type="text"
+                                            placeholder="Search journal articles..."
+                                            value={searchTerm}
+                                            onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
+                                            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:border-[#021d49] focus:outline-none transition-all text-gray-800 text-sm"
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </section>
 
-                    {/* Articles Grid Layout */}
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+                {/* Slim Filter Bar */}
+                <div className="bg-white border-b border-gray-200 shadow-sm">
+                    <div className="max-w-7xl mx-auto px-6 py-3">
+                        <div className="flex flex-wrap gap-2 items-center">
+                            {categories.map(category => (
+                                <button
+                                    key={category}
+                                    onClick={() => { setSelectedCategory(category); setCurrentPage(1); }}
+                                    className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${selectedCategory === category
+                                            ? 'bg-[#021d49] text-white shadow-sm'
+                                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                        }`}
+                                >
+                                    {category}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Articles Grid Layout */}
+                <section className="max-w-7xl mx-auto px-6 py-8">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {currentArticles.map((article) => {
                             const authorsDisplay = Array.isArray(article.authors)
                                 ? article.authors.join(', ')
@@ -342,6 +315,7 @@ const JournalArticlesPage = () => {
                     </div>
                 </section>
             </div>
+            <Footer />
 
         </>
     );

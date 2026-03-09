@@ -4,6 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import { getNewsBriefById } from "@/services/newsBriefsService";
 import Navbar from "@/app/navbar/Navbar";
 import { Calendar, Users, Download, FileText, ArrowLeft, Share2, Clock } from "lucide-react";
+import Footer from "@/app/footer/Footer";
 
 export default function NewsBriefDetailPage() {
     const params = useParams();
@@ -320,6 +321,7 @@ export default function NewsBriefDetailPage() {
                     </button>
                 </div>
             </div>
+            <Footer />
         </>
     );
 }

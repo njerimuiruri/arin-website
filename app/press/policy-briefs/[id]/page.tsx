@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import Navbar from "@/app/navbar/Navbar";
 import { Calendar, FileText, Lightbulb, ArrowLeft, Download, ExternalLink } from "lucide-react";
 import { policyBriefsService } from "@/services/policyBriefsService";
+import Footer from "@/app/footer/Footer";
 
 interface PolicyBrief {
     id: string;
@@ -163,6 +164,7 @@ const PolicyBriefViewPage = () => {
                     )}
                 </section>
             </div>
+            <Footer />
         </>
     );
 };

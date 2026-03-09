@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { getJournalArticle } from "@/services/journalArticlesService";
 import { ArrowLeft, Calendar, Users, Download, FileText, ExternalLink } from "lucide-react";
 import Navbar from "@/app/navbar/Navbar";
+import Footer from "@/app/footer/Footer";
 
 interface JournalArticle {
     _id?: string;
@@ -261,6 +262,7 @@ export default function JournalArticleDetailPage() {
                     </div>
                 </div>
             </div>
+            <Footer />
         </>
     );
 }
