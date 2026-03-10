@@ -218,9 +218,10 @@ export default function JournalArticleDetailPage() {
                                 </div>
                             </div>
                             <div className="grid gap-4">
-                                {article.availableResources.map((url, index) => {
+                                {article.availableResources.filter(Boolean).map((url, index) => {
                                     const fileName = url.split('/').pop() || `Resource ${index + 1}`;
-                                    const downloadUrl = url.startsWith('http') ? url : `https://api.demo.arin-africa.org${url}`;
+                                    const apiBase = process.env.NEXT_PUBLIC_API_URL || "https://api.demo.arin-africa.org";
+                                    const downloadUrl = url.startsWith('http') ? url : `${apiBase}${url}`;
 
                                     return (
                                         <a

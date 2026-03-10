@@ -7,12 +7,12 @@ import { useState, useEffect, useRef, useCallback } from "react";
 
 const slides = [
     { type: "image" as const, src: "/images/lreb.jpg", icon: Leaf, label: "Sustainable Development", tag: "01", href: "/about-us/focus-areas" },
-    { type: "image" as const, src: "/images/fgd1.jpg", icon: Zap, label: "Climate Change & Energy", tag: "02", href: "/about-us/focus-areas" },
+    { type: "image" as const, src: "/images/arin1.jpeg", icon: Zap, label: "Climate Change & Energy", tag: "02", href: "/about-us/focus-areas" },
     { type: "image" as const, src: "/images/lreb4.jpg", icon: Building2, label: "Cities & Resilience", tag: "03", href: "/about-us/focus-areas" },
     { type: "video" as const, src: "/videos/hero1.mp4", poster: "/images/sdg.jpeg", icon: Globe, label: "Agriculture & Forestry", tag: "04", href: "/about-us/focus-areas" },
     { type: "image" as const, src: "/images/geo.jpeg", icon: Pickaxe, label: "Mining, Trade & Industry", tag: "05", href: "/about-us/focus-areas" },
     { type: "video" as const, src: "/videos/hero2.mp4", poster: "/images/lreb.jpg", icon: FlaskConical, label: "Technology & Innovation", tag: "06", href: "/about-us/focus-areas" },
-    { type: "image" as const, src: "/images/fgd1.jpg", icon: HeartPulse, label: "Climate & Health", tag: "07", href: "/about-us/focus-areas" },
+    { type: "image" as const, src: "/images/arin1.jpeg", icon: HeartPulse, label: "Climate & Health", tag: "07", href: "/about-us/focus-areas" },
 ];
 
 const DURATION = 6000;

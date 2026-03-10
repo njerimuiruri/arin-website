@@ -4,6 +4,7 @@ import { BookOpen, Calendar, Search, ChevronLeft, ChevronRight, ArrowRight, Aler
 import Navbar from '@/app/navbar/Navbar';
 import { useRouter } from 'next/navigation';
 import Footer from '@/app/footer/Footer';
+import { getAllCalls } from '@/services/callForBooksService';
 
 interface CallForBook {
     _id?: string;
@@ -36,9 +37,7 @@ const CallForBooksPage = () => {
             setLoading(true);
             setError(null);
             try {
-                const res = await fetch("https://api.demo.arin-africa.org/api/call-for-books");
-                if (!res.ok) throw new Error("Failed to fetch calls");
-                const data = await res.json();
+                const data = await getAllCalls();
                 setCalls(data);
             } catch (err) {
                 setError((err as Error).message || "Failed to fetch data");
