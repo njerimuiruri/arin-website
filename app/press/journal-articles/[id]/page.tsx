@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { getJournalArticle } from "@/services/journalArticlesService";
-import { ArrowLeft, Calendar, Users, Download, FileText, ExternalLink } from "lucide-react";
+import { ArrowLeft, Calendar, Users, Download, FileText, ExternalLink, BookOpen, X } from "lucide-react";
 import Navbar from "@/app/navbar/Navbar";
 import Footer from "@/app/footer/Footer";
 
@@ -13,8 +13,10 @@ interface JournalArticle {
     title: string;
     description: string;
     authors?: string[];
+    date?: string;
     datePosted?: string;
     coverImage?: string;
+    resources?: string[];
     availableResources?: string[];
     year?: number;
 }
@@ -26,6 +28,8 @@ export default function JournalArticleDetailPage() {
     const [article, setArticle] = useState<JournalArticle | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [activeResourceUrl, setActiveResourceUrl] = useState<string | null>(null);
+    const [activeResourceName, setActiveResourceName] = useState<string>("");
 
     useEffect(() => {
         loadArticle();
@@ -112,9 +116,12 @@ export default function JournalArticleDetailPage() {
         ? article.authors.join(", ")
         : "Unknown Author";
 
-    const dateDisplay = article.datePosted
-        ? new Date(article.datePosted).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+    const rawDate = article.date || article.datePosted;
+    const dateDisplay = rawDate
+        ? new Date(rawDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
         : 'Date not available';
+
+    const resourceList = (article.resources || article.availableResources || []).filter(Boolean);
 
     return (
         <>
@@ -203,49 +210,64 @@ export default function JournalArticleDetailPage() {
                         </div>
                     </div>
 
-                    {/* Available Resources - Enhanced Design */}
-                    {article.availableResources && article.availableResources.length > 0 && (
+                    {/* Available Resources */}
+                    {resourceList.length > 0 && (
                         <div className="bg-gradient-to-br from-white to-slate-50 rounded-2xl shadow-xl border border-gray-200 p-10 mb-12">
                             <div className="flex items-center gap-4 mb-8">
                                 <div className="w-14 h-14 bg-[#021d49] rounded-xl flex items-center justify-center shadow-lg">
                                     <Download className="w-7 h-7 text-white" />
                                 </div>
                                 <div>
-                                    <h2 className="text-3xl font-bold text-gray-900">
-                                        Available Resources
-                                    </h2>
-                                    <p className="text-gray-600 text-sm mt-1">Download supporting materials and documents</p>
+                                    <h2 className="text-3xl font-bold text-gray-900">Available Resources</h2>
+                                    <p className="text-gray-600 text-sm mt-1">View or download supporting documents</p>
                                 </div>
                             </div>
                             <div className="grid gap-4">
-                                {article.availableResources.filter(Boolean).map((url, index) => {
-                                    const fileName = url.split('/').pop() || `Resource ${index + 1}`;
+                                {resourceList.map((url, index) => {
                                     const apiBase = process.env.NEXT_PUBLIC_API_URL || "https://api.demo.arin-africa.org";
-                                    const downloadUrl = url.startsWith('http') ? url : `${apiBase}${url}`;
+                                    const fullUrl = url.startsWith('http') ? url : `${apiBase}${url}`;
+                                    const fileName = decodeURIComponent(url.split('/').pop()?.split('?')[0] || `Resource ${index + 1}`);
+                                    const lower = url.toLowerCase();
+                                    const isPdf = lower.includes('.pdf');
+                                    const isWord = lower.includes('.doc');
+                                    const fileLabel = isPdf ? 'PDF Document' : isWord ? 'Word Document' : 'Document';
+                                    // Use Google Docs viewer for non-PDF files so they render in the iframe
+                                    const viewUrl = isPdf ? fullUrl : `https://docs.google.com/viewer?url=${encodeURIComponent(fullUrl)}&embedded=true`;
 
                                     return (
-                                        <a
+                                        <div
                                             key={index}
-                                            href={downloadUrl}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="group relative flex items-center gap-5 p-6 bg-white hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 rounded-xl border-2 border-gray-200 hover:border-[#021d49] transition-all shadow-md hover:shadow-xl"
+                                            className="flex items-center justify-between gap-4 p-6 bg-white rounded-xl border-2 border-gray-200 hover:border-[#021d49] transition-all shadow-md hover:shadow-xl"
                                         >
-                                            <div className="flex-shrink-0">
-                                                <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-[#021d49] to-[#14234d] rounded-xl shadow-lg group-hover:scale-110 transition-transform">
-                                                    <FileText className="w-8 h-8 text-white" />
+                                            <div className="flex items-center gap-5 flex-1 min-w-0">
+                                                <div className="flex-shrink-0 flex items-center justify-center w-14 h-14 bg-gradient-to-br from-[#021d49] to-[#14234d] rounded-xl shadow-lg">
+                                                    <FileText className="w-7 h-7 text-white" />
+                                                </div>
+                                                <div className="min-w-0">
+                                                    <p className="font-bold text-gray-900 text-base truncate">{fileName}</p>
+                                                    <p className="text-sm text-gray-500 mt-0.5">{fileLabel}</p>
                                                 </div>
                                             </div>
-                                            <div className="flex-grow">
-                                                <p className="font-bold text-gray-900 text-lg group-hover:text-[#021d49] transition-colors mb-1">
-                                                    {fileName}
-                                                </p>
-                                                <p className="text-sm text-gray-600 font-medium">PDF Document • Click to download</p>
+                                            <div className="flex items-center gap-2 flex-shrink-0">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => { setActiveResourceUrl(viewUrl); setActiveResourceName(fileName); }}
+                                                    className="inline-flex items-center gap-2 px-4 py-2 border border-[#021d49] text-[#021d49] rounded-lg font-medium hover:bg-[#021d49] hover:text-white transition-colors text-sm"
+                                                >
+                                                    <BookOpen className="w-4 h-4" />
+                                                    View
+                                                </button>
+                                                <a
+                                                    href={fullUrl}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-600 rounded-lg font-medium hover:bg-gray-100 transition-colors text-sm"
+                                                >
+                                                    <ExternalLink className="w-4 h-4" />
+                                                    Download
+                                                </a>
                                             </div>
-                                            <div className="flex-shrink-0">
-                                                <ExternalLink className="w-6 h-6 text-[#021d49] group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                                            </div>
-                                        </a>
+                                        </div>
                                     );
                                 })}
                             </div>
@@ -264,6 +286,35 @@ export default function JournalArticleDetailPage() {
                 </div>
             </div>
             <Footer />
+
+            {/* Inline Document Viewer Overlay */}
+            {activeResourceUrl && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+                    <div className="bg-white rounded-xl shadow-2xl w-[95vw] h-[90vh] max-w-5xl flex flex-col overflow-hidden">
+                        <div className="flex items-center justify-between px-5 py-3 border-b border-gray-200 bg-gray-50">
+                            <div className="flex items-center gap-3">
+                                <FileText className="w-5 h-5 text-[#021d49]" />
+                                <span className="font-semibold text-gray-900 text-sm truncate max-w-md">{activeResourceName}</span>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => setActiveResourceUrl(null)}
+                                className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-white hover:bg-gray-700 rounded-lg transition-colors"
+                            >
+                                <X className="w-4 h-4" />
+                                Close
+                            </button>
+                        </div>
+                        <div className="flex-1 bg-gray-100">
+                            <iframe
+                                src={activeResourceUrl}
+                                className="w-full h-full border-0"
+                                title={activeResourceName}
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     );
 }
