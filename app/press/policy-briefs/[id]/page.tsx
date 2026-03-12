@@ -97,8 +97,8 @@ const PolicyBriefViewPage = () => {
                 {/* ── Content ── */}
                 {!loading && !error && brief && (
                     <>
-                        {/* Hero */}
-                        <div className="relative w-full h-[220px] md:h-[300px] overflow-hidden">
+                        {/* Hero image — clean, no overlay */}
+                        <div className="relative w-full h-[260px] md:h-[380px] overflow-hidden bg-[#021d49]">
                             {(brief.image || brief.coverImage) ? (
                                 <img
                                     src={brief.image || brief.coverImage}
@@ -114,29 +114,28 @@ const PolicyBriefViewPage = () => {
                                 />
                             )}
 
-                            {/* gradient overlay */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-
-                            {/* back button */}
+                            {/* back button — subtle pill so it doesn't obscure image */}
                             <button
                                 onClick={() => window.history.back()}
-                                className="absolute top-6 left-6 flex items-center gap-2 text-white/80 hover:text-white text-sm transition-colors"
+                                className="absolute top-5 left-5 flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-black/30 hover:bg-black/50 backdrop-blur-sm rounded-full transition-colors"
                             >
-                                <ArrowLeft className="w-4 h-4" /> Back
+                                <ArrowLeft className="w-3.5 h-3.5" /> Back
                             </button>
+                        </div>
 
-                            {/* hero text */}
-                            <div className="absolute bottom-0 left-0 right-0 px-6 md:px-16 pb-10 max-w-4xl mx-auto">
+                        {/* Title block — sits below image on clean background */}
+                        <div className="bg-white border-b border-gray-200">
+                            <div className="max-w-3xl mx-auto px-6 md:px-8 py-7">
                                 {brief.category && (
-                                    <span className="inline-block mb-3 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-white/80 border border-white/25 rounded-full backdrop-blur-sm">
+                                    <span className="inline-block mb-3 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-[#021d49] bg-[#021d49]/8 rounded-full">
                                         {brief.category}
                                     </span>
                                 )}
-                                <h1 className="text-2xl md:text-4xl font-bold text-white leading-tight max-w-3xl">
+                                <h1 className="text-2xl md:text-3xl font-bold text-gray-900 leading-snug">
                                     {brief.title}
                                 </h1>
                                 {brief.datePosted && (
-                                    <div className="flex items-center gap-2 mt-3 text-white/55 text-sm">
+                                    <div className="flex items-center gap-2 mt-3 text-gray-400 text-sm">
                                         <Calendar className="w-4 h-4" />
                                         {new Date(brief.datePosted).toLocaleDateString(undefined, {
                                             year: "numeric", month: "long", day: "numeric",

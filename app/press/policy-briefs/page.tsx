@@ -1,252 +1,243 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { policyBriefsService } from '@/services/policyBriefsService';
-import { FileText, Calendar, Search, ChevronLeft, ChevronRight, ArrowRight, Lightbulb } from 'lucide-react';
+import { Calendar, Search, ChevronLeft, ChevronRight, ArrowRight, Lightbulb, FileText } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
 import Footer from '@/app/footer/Footer';
 
+const stripHtml = (html: string) => html ? html.replace(/<[^>]+>/g, '') : '';
+
+const truncate = (text: string, words: number) => {
+    const arr = text.trim().split(/\s+/);
+    return arr.length > words ? arr.slice(0, words).join(' ') + '…' : text;
+};
+
 const PolicyBriefsPage = () => {
-    const [searchTerm, setSearchTerm] = useState<string>('');
-    const [selectedCategory, setSelectedCategory] = useState<string>('All');
-    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('All');
+    const [currentPage, setCurrentPage] = useState(1);
     const briefsPerPage = 6;
     const [briefs, setBriefs] = useState<any[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const fetchBriefs = async () => {
-            try {
-                const data = await policyBriefsService.getAll();
-                setBriefs(data);
-            } catch (err: any) {
-                setError(err.message || 'Failed to load policy briefs');
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchBriefs();
+        policyBriefsService.getAll()
+            .then(data => setBriefs(data))
+            .catch(err => setError(err.message || 'Failed to load policy briefs'))
+            .finally(() => setLoading(false));
     }, []);
 
-    // Dynamically get categories from briefs
-    const categories = ['All', ...Array.from(new Set(briefs.map((b: any) => b.category).filter((c: any) => !!c)))];
+    const categories = ['All', ...Array.from(new Set(briefs.map(b => b.category).filter(Boolean))) as string[]];
 
     const today = new Date();
     today.setHours(23, 59, 59, 999);
 
-    const filteredBriefs = briefs.filter((brief: any) => {
-        const matchesSearch = (brief.title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-            (brief.excerpt || '').toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesCategory = selectedCategory === 'All' || brief.category === selectedCategory;
-        const matchesDate = !brief.datePosted || new Date(brief.datePosted) <= today;
-        return matchesSearch && matchesCategory && matchesDate;
+    const filtered = briefs.filter(b => {
+        const search = searchTerm.toLowerCase();
+        const matchSearch = (b.title || '').toLowerCase().includes(search) || (b.excerpt || '').toLowerCase().includes(search);
+        const matchCat = selectedCategory === 'All' || b.category === selectedCategory;
+        const matchDate = !b.datePosted || new Date(b.datePosted) <= today;
+        return matchSearch && matchCat && matchDate;
     });
 
-    // Pagination logic
-    const indexOfLastBrief = currentPage * briefsPerPage;
-    const indexOfFirstBrief = indexOfLastBrief - briefsPerPage;
-    const currentBriefs = filteredBriefs.slice(indexOfFirstBrief, indexOfLastBrief);
-    const totalPages = Math.ceil(filteredBriefs.length / briefsPerPage);
+    const totalPages = Math.ceil(filtered.length / briefsPerPage);
+    const paginated = filtered.slice((currentPage - 1) * briefsPerPage, currentPage * briefsPerPage);
 
-    const handlePageChange = (pageNumber: number) => {
-        setCurrentPage(pageNumber);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
-
-    const handleBriefClick = (briefId: string) => {
-        // TODO: Replace with Next.js router navigation
-        if (briefId) {
-            window.location.href = `/press/policy-briefs/${briefId}`;
-        }
-    };
+    const goToPage = (p: number) => { setCurrentPage(p); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+    const goTo = (id: string) => { if (id) window.location.href = `/press/policy-briefs/${id}`; };
 
     return (
         <>
             <Navbar />
-            <div className="w-full bg-gradient-to-br from-slate-50 via-white to-stone-50 min-h-screen">
-                {/* Compact Dark Navy Hero Banner */}
-                <section className="relative overflow-hidden bg-gradient-to-br from-[#021d49] via-[#032a5e] to-[#021d49] text-white">
-                    <div className="relative max-w-7xl mx-auto px-6 py-6">
-                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                            <div>
-                                <h1 className="text-2xl lg:text-3xl font-bold leading-tight">Policy Briefs</h1>
-                                <p className="text-sm text-blue-100 mt-1">Evidence-based policy recommendations and insights to inform decision-making across Africa</p>
-                            </div>
-                            <div className="w-full md:max-w-sm">
-                                <div className="bg-white/95 backdrop-blur-sm rounded-lg p-2 shadow-xl">
-                                    <div className="relative">
-                                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                                        <input
-                                            type="text"
-                                            placeholder="Search policy briefs..."
-                                            value={searchTerm}
-                                            onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
-                                            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:border-[#021d49] focus:outline-none transition-all text-gray-800 text-sm"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
+            <div className="min-h-screen bg-[#f5f4f0]">
+
+                {/* Hero */}
+                <section className="bg-[#021d49]">
+                    <div className="max-w-7xl mx-auto px-6 py-8 flex flex-col md:flex-row md:items-center gap-5">
+                        <div className="flex-1">
+                            <h1 className="text-2xl lg:text-3xl font-bold text-white">Policy Briefs</h1>
+                            <p className="text-blue-200 text-sm mt-1 max-w-lg">
+                                Evidence-based policy recommendations and insights to inform decision-making across Africa
+                            </p>
+                        </div>
+                        <div className="relative w-full md:w-80">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+                            <input
+                                type="text"
+                                placeholder="Search policy briefs..."
+                                value={searchTerm}
+                                onChange={e => { setSearchTerm(e.target.value); setCurrentPage(1); }}
+                                className="w-full pl-10 pr-4 py-2.5 bg-white rounded-lg text-sm text-gray-800 focus:outline-none"
+                            />
                         </div>
                     </div>
                 </section>
 
-                {/* Slim Filter Bar */}
-                <div className="bg-white border-b border-gray-200 shadow-sm">
-                    <div className="max-w-7xl mx-auto px-6 py-3">
-                        <div className="flex flex-wrap gap-2 items-center">
-                            {categories.map(category => (
-                                <button
-                                    key={category}
-                                    onClick={() => { setSelectedCategory(category); setCurrentPage(1); }}
-                                    className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${selectedCategory === category
-                                            ? 'bg-[#021d49] text-white shadow-sm'
-                                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                                        }`}
-                                >
-                                    {category}
-                                </button>
-                            ))}
-                        </div>
+                {/* Filter bar */}
+                <div className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
+                    <div className="max-w-7xl mx-auto px-6 py-3 flex flex-wrap gap-2">
+                        {categories.map(cat => (
+                            <button
+                                key={cat}
+                                onClick={() => { setSelectedCategory(cat); setCurrentPage(1); }}
+                                className={`px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wide transition-all ${selectedCategory === cat
+                                    ? 'bg-[#021d49] text-white'
+                                    : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                                    }`}
+                            >
+                                {cat}
+                            </button>
+                        ))}
                     </div>
                 </div>
 
-                {/* Policy Briefs Grid Layout */}
-                <section className="max-w-7xl mx-auto px-6 py-8">
+                {/* Grid */}
+                <section className="max-w-7xl mx-auto px-6 py-10">
+
                     {loading && (
-                        <div className="text-center py-16">
-                            <Lightbulb className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                            <h3 className="text-xl font-bold text-gray-900 mb-2">Loading policy briefs…</h3>
+                        <div className="flex flex-col items-center justify-center py-24 gap-3">
+                            <div className="w-8 h-8 rounded-full border-2 border-[#021d49] border-t-transparent animate-spin" />
+                            <p className="text-sm text-gray-400">Loading…</p>
                         </div>
                     )}
-                    {error && (
-                        <div className="text-center py-16">
-                            <Lightbulb className="w-12 h-12 text-red-300 mx-auto mb-3" />
-                            <h3 className="text-xl font-bold text-red-700 mb-2">{error}</h3>
+
+                    {error && <p className="text-center text-red-500 py-16 text-sm">{error}</p>}
+
+                    {!loading && !error && filtered.length === 0 && (
+                        <div className="text-center py-20">
+                            <Lightbulb className="w-10 h-10 text-gray-300 mx-auto mb-3" />
+                            <p className="text-gray-500 font-medium">No policy briefs found</p>
+                            <p className="text-gray-400 text-sm mt-1">Try adjusting your search or filter</p>
                         </div>
                     )}
-                    {!loading && !error && (
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {currentBriefs.map((brief) => {
-                                // Use image or coverImage for compatibility
-                                const coverImg = brief.image || brief.coverImage;
-                                // Strip HTML tags from description
-                                const stripHtml = (html: string) => html ? html.replace(/<[^>]+>/g, '') : '';
-                                const plainDesc = stripHtml(brief.description || '');
-                                // Truncate to 10 words
-                                const desc = plainDesc.split(' ').slice(0, 10).join(' ');
-                                // Format date
-                                let dateStr = '';
-                                if (brief.datePosted) {
-                                    const d = new Date(brief.datePosted);
-                                    dateStr = d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
-                                }
+
+                    {!loading && !error && paginated.length > 0 && (
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-7">
+                            {paginated.map(brief => {
+                                /*
+                                 * Try every possible field name the API might use for the image.
+                                 * Log it so we can confirm what's available.
+                                 */
+                                const img = brief.image || brief.coverImage || brief.cover_image || brief.thumbnail || null;
+                                const plain = stripHtml(brief.description || brief.excerpt || '');
+                                const snippet = truncate(plain, 20);
+                                const date = brief.datePosted
+                                    ? new Date(brief.datePosted).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
+                                    : '';
+                                const id = brief._id || brief.id;
+
                                 return (
-                                    <div
-                                        key={brief._id || brief.id}
-                                        className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-[#021d49] cursor-pointer group flex flex-col"
-                                        onClick={() => handleBriefClick(brief._id || brief.id)}
+                                    <article
+                                        key={id}
+                                        onClick={() => goTo(id)}
+                                        className="group bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-[#021d49]/30 hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col"
                                     >
-                                        {/* Brief Image */}
-                                        <div className="relative h-48 overflow-hidden bg-gradient-to-br from-[#021d49] to-[#021d49]">
-                                            {coverImg ? (
-                                                <>
-                                                    <img
-                                                        src={coverImg}
-                                                        alt={brief.title}
-                                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                                    />
-                                                    {/* Gradient Overlay */}
-                                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-                                                </>
-                                            ) : (
-                                                <div className="w-full h-full flex items-center justify-center">
-                                                    <Lightbulb className="w-16 h-16 text-white/30" />
+                                        {/* ── Image area ──
+                                            Taller slot (h-56) so the photo has room to breathe.
+                                            object-cover fills the space without cropping too aggressively.
+                                            No overlay at all — image is 100% visible.
+                                        */}
+                                        <div className="relative h-56 w-full shrink-0 overflow-hidden">
+                                            {img ? (
+                                                <img
+                                                    src={img}
+                                                    alt={brief.title || 'Policy brief cover'}
+                                                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                                                    onError={e => {
+                                                        // If image fails to load, hide it so fallback shows
+                                                        (e.currentTarget as HTMLImageElement).style.display = 'none';
+                                                    }}
+                                                />
+                                            ) : null}
+
+                                            {/* Fallback — only visible when there's no image */}
+                                            {!img && (
+                                                <div
+                                                    className="absolute inset-0 flex items-center justify-center bg-[#021d49]"
+                                                    style={{
+                                                        backgroundImage: "repeating-linear-gradient(45deg,rgba(255,255,255,.04) 0,rgba(255,255,255,.04) 1px,transparent 0,transparent 50%)",
+                                                        backgroundSize: "28px 28px",
+                                                    }}
+                                                >
+                                                    <Lightbulb className="w-12 h-12 text-white/20" />
                                                 </div>
                                             )}
 
-                                            {/* Badge */}
-                                            <div className="absolute top-4 right-4">
-                                                <span className="px-3 py-1 bg-white/90 text-[#021d49] font-bold text-xs uppercase tracking-wide rounded-full shadow-lg">
-                                                    Policy Brief
-                                                </span>
-                                            </div>
+                                            {/* Small badge — top-right corner only, minimal footprint */}
+                                            <span className="absolute top-3 right-3 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest bg-white/95 text-[#021d49] rounded-full shadow">
+                                                Policy Brief
+                                            </span>
                                         </div>
 
-                                        {/* Content */}
-                                        <div className="p-6 flex flex-col flex-grow">
-                                            {/* Category */}
-                                            <span className="inline-block px-3 py-1 bg-gradient-to-r from-[#021d49] to-[#021d49] text-white font-bold text-xs uppercase tracking-wide rounded-full mb-3 self-start">
-                                                {brief.category}
-                                            </span>
+                                        {/* ── Card body ── */}
+                                        <div className="flex flex-col flex-grow p-5">
+
+                                            {/* Category chip */}
+                                            {brief.category && (
+                                                <span className="self-start mb-2 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-[#021d49] bg-[#021d49]/8 rounded-full">
+                                                    {brief.category}
+                                                </span>
+                                            )}
 
                                             {/* Title */}
-                                            <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#021d49] transition-colors leading-tight mb-3 line-clamp-3">
+                                            <h3 className="text-[15px] font-bold text-gray-900 group-hover:text-[#021d49] leading-snug mb-2 line-clamp-3 transition-colors">
                                                 {brief.title}
                                             </h3>
 
                                             {/* Date */}
-                                            <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
-                                                <Calendar className="w-4 h-4 text-[#021d49]" />
-                                                <span>{dateStr}</span>
-                                            </div>
+                                            {date && (
+                                                <div className="flex items-center gap-1.5 text-xs text-gray-400 mb-3">
+                                                    <Calendar className="w-3.5 h-3.5" />
+                                                    {date}
+                                                </div>
+                                            )}
 
-                                            {/* Truncated Description (plain text, no HTML) */}
-                                            <div className="mb-4 flex-grow">
-                                                <p className="text-sm text-gray-600 leading-relaxed line-clamp-3">
-                                                    {desc}{plainDesc.split(' ').length > 10 ? '...' : ''}
-                                                </p>
-                                            </div>
+                                            {/* Snippet */}
+                                            <p className="text-sm text-gray-500 leading-relaxed flex-grow line-clamp-3">
+                                                {snippet}
+                                            </p>
 
-                                            {/* Button */}
+                                            {/* CTA */}
                                             <button
-                                                onClick={(e) => { e.stopPropagation(); handleBriefClick(brief._id || brief.id); }}
-                                                className="mt-auto w-full px-4 py-3 bg-gradient-to-r from-[#021d49] to-[#021d49] hover:shadow-xl text-white font-semibold rounded-lg shadow-md flex items-center gap-2 justify-center transition-all duration-200"
+                                                onClick={e => { e.stopPropagation(); goTo(id); }}
+                                                className="mt-5 flex items-center justify-center gap-2 py-2.5 w-full bg-[#021d49] hover:bg-[#032a6b] text-white text-sm font-semibold rounded-xl transition-colors"
                                             >
-                                                <span>read more</span>
-                                                <ArrowRight className="w-4 h-4" />
+                                                Read More <ArrowRight className="w-4 h-4" />
                                             </button>
                                         </div>
-                                    </div>
+                                    </article>
                                 );
                             })}
                         </div>
                     )}
-                    {!loading && !error && filteredBriefs.length === 0 && (
-                        <div className="text-center py-16">
-                            <Lightbulb className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                            <h3 className="text-xl font-bold text-gray-900 mb-2">No policy briefs found</h3>
-                            <p className="text-gray-600">Try adjusting your search or filter criteria</p>
-                        </div>
-                    )}
 
                     {/* Pagination */}
-                    {filteredBriefs.length > 0 && totalPages > 1 && (
+                    {totalPages > 1 && (
                         <div className="mt-12 flex justify-center items-center gap-2">
                             <button
-                                onClick={() => handlePageChange(currentPage - 1)}
+                                onClick={() => goToPage(currentPage - 1)}
                                 disabled={currentPage === 1}
-                                className={`p-2 rounded-lg ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-[#021d49] hover:text-white border border-gray-300'} transition-all duration-200`}
+                                className="p-2 rounded-lg border border-gray-300 bg-white text-gray-500 disabled:opacity-40 disabled:cursor-not-allowed hover:enabled:bg-[#021d49] hover:enabled:text-white transition-colors"
                             >
                                 <ChevronLeft className="w-5 h-5" />
                             </button>
-
-                            {[...Array(totalPages)].map((_, index) => (
+                            {[...Array(totalPages)].map((_, i) => (
                                 <button
-                                    key={index + 1}
-                                    onClick={() => handlePageChange(index + 1)}
-                                    className={`px-4 py-2 rounded-lg font-semibold transition-all duration-200 ${currentPage === index + 1
-                                        ? 'bg-gradient-to-r from-[#021d49] to-[#021d49] text-white shadow-md'
-                                        : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
+                                    key={i}
+                                    onClick={() => goToPage(i + 1)}
+                                    className={`w-9 h-9 rounded-lg text-sm font-semibold border transition-colors ${currentPage === i + 1
+                                        ? 'bg-[#021d49] text-white border-[#021d49]'
+                                        : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-100'
                                         }`}
                                 >
-                                    {index + 1}
+                                    {i + 1}
                                 </button>
                             ))}
-
                             <button
-                                onClick={() => handlePageChange(currentPage + 1)}
+                                onClick={() => goToPage(currentPage + 1)}
                                 disabled={currentPage === totalPages}
-                                className={`p-2 rounded-lg ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-[#021d49] hover:text-white border border-gray-300'} transition-all duration-200`}
+                                className="p-2 rounded-lg border border-gray-300 bg-white text-gray-500 disabled:opacity-40 disabled:cursor-not-allowed hover:enabled:bg-[#021d49] hover:enabled:text-white transition-colors"
                             >
                                 <ChevronRight className="w-5 h-5" />
                             </button>
@@ -254,28 +245,24 @@ const PolicyBriefsPage = () => {
                     )}
                 </section>
 
-                {/* Why Explore ARIN Policy Briefs Section */}
-                <section className="max-w-[1400px] mx-auto px-6 pb-16 mt-12">
-                    <div className="bg-gradient-to-br from-[#021d49] via-gray-900 to-[#021d49] rounded-2xl p-10 text-white shadow-2xl">
-                        <h2 className="text-3xl font-bold mb-6 text-center">Why Explore ARIN Policy Briefs?</h2>
+                {/* Why ARIN */}
+                <section className="max-w-7xl mx-auto px-6 pb-16">
+                    <div className="bg-[#021d49] rounded-2xl p-10 text-white">
+                        <h2 className="text-2xl font-bold mb-8 text-center">Why Explore ARIN Policy Briefs?</h2>
                         <div className="grid md:grid-cols-3 gap-8 mb-8">
-                            <div className="text-center">
-                                <Lightbulb className="w-10 h-10 text-[#021d49] mx-auto mb-4" />
-                                <h3 className="text-xl font-bold mb-2">Evidence-Based Policy</h3>
-                                <p className="text-gray-300 text-sm">Access research-backed policy recommendations for decision-makers</p>
-                            </div>
-                            <div className="text-center">
-                                <FileText className="w-10 h-10 text-[#021d49] mx-auto mb-4" />
-                                <h3 className="text-xl font-bold mb-2">Practical Insights</h3>
-                                <p className="text-gray-300 text-sm">Get actionable insights on complex policy challenges facing Africa</p>
-                            </div>
-                            <div className="text-center">
-                                <Calendar className="w-10 h-10 text-[#021d49] mx-auto mb-4" />
-                                <h3 className="text-xl font-bold mb-2">Timely Analysis</h3>
-                                <p className="text-gray-300 text-sm">Stay informed on current policy debates and emerging issues</p>
-                            </div>
+                            {[
+                                { icon: <Lightbulb className="w-8 h-8 text-blue-300" />, title: "Evidence-Based Policy", body: "Access research-backed policy recommendations for decision-makers" },
+                                { icon: <FileText className="w-8 h-8 text-blue-300" />, title: "Practical Insights", body: "Get actionable insights on complex policy challenges facing Africa" },
+                                { icon: <Calendar className="w-8 h-8 text-blue-300" />, title: "Timely Analysis", body: "Stay informed on current policy debates and emerging issues" },
+                            ].map(({ icon, title, body }) => (
+                                <div key={title} className="text-center">
+                                    <div className="flex justify-center mb-3">{icon}</div>
+                                    <h3 className="text-base font-bold mb-1">{title}</h3>
+                                    <p className="text-blue-200 text-sm leading-relaxed">{body}</p>
+                                </div>
+                            ))}
                         </div>
-                        <p className="text-gray-300 text-center max-w-3xl mx-auto leading-relaxed">
+                        <p className="text-blue-200 text-sm text-center max-w-2xl mx-auto leading-relaxed">
                             ARIN's policy briefs translate cutting-edge research into clear, actionable recommendations that inform policy dialogue and drive positive change across the continent.
                         </p>
                     </div>
