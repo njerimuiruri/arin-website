@@ -3,12 +3,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Navbar from "@/app/navbar/Navbar";
-import { Calendar, FileText, Lightbulb, ArrowLeft, Download, ExternalLink } from "lucide-react";
+import { Calendar, FileText, ArrowLeft, ExternalLink, BookOpen } from "lucide-react";
 import { policyBriefsService } from "@/services/policyBriefsService";
 import Footer from "@/app/footer/Footer";
 
 interface PolicyBrief {
     id: string;
+    _id?: string;
     title: string;
     category?: string;
     image?: string;
@@ -19,10 +20,35 @@ interface PolicyBrief {
     availableResources?: string[];
 }
 
+function getResourceFileName(url: string, index: number): string {
+    if (!url) return `Resource ${index + 1}`;
+    try {
+        const pathname = new URL(url).pathname;
+        const raw = pathname.split("/").pop() ?? "";
+        const decoded = decodeURIComponent(raw.split("?")[0]);
+        return decoded || `Resource ${index + 1}`;
+    } catch {
+        const raw = url.split("/").pop() ?? "";
+        return decodeURIComponent(raw.split("?")[0]) || `Resource ${index + 1}`;
+    }
+}
+
+function getViewUrl(url: string): string {
+    if (!url) return "";
+    return url.replace("/upload/fl_attachment/", "/upload/");
+}
+
+function isValidUrl(url: unknown): url is string {
+    if (typeof url !== "string" || !url.trim()) return false;
+    try { new URL(url); return true; } catch { return false; }
+}
+
 const PolicyBriefViewPage = () => {
-    // useParams returns Record<string, string> | null in Next.js 13+
     const params = useParams();
-    const id = typeof params === 'object' && params !== null && 'id' in params ? String((params as Record<string, string>).id) : '';
+    const id = typeof params === "object" && params !== null && "id" in params
+        ? String((params as Record<string, string>).id)
+        : "";
+
     const [brief, setBrief] = useState<PolicyBrief | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -40,130 +66,169 @@ const PolicyBriefViewPage = () => {
                 setLoading(false);
             }
         };
-        if (id && typeof id === 'string' && id.length > 0) fetchBrief();
+        if (id) fetchBrief();
     }, [id]);
 
-    const handleOpenResource = (url: string) => {
-        // Open the resource in a new tab for viewing
-        window.open(url, '_blank', 'noopener,noreferrer');
-    };
-
-    const getResourceFileName = (url: string, index: number) => {
-        // Extract the filename from the URL
-        const urlParts = url.split('/');
-        const fileName = urlParts[urlParts.length - 1];
-
-        // If it's a Cloudinary URL, try to get the original filename
-        if (url.includes('cloudinary.com')) {
-            // Extract the part after the last slash and before any query parameters
-            const cleanFileName = fileName.split('?')[0];
-            // Decode URL encoding
-            const decodedFileName = decodeURIComponent(cleanFileName);
-            return decodedFileName || `Resource ${index + 1}`;
-        }
-
-        return fileName || `Resource ${index + 1}`;
-    };
+    const resources = (brief?.availableResources ?? []).filter(isValidUrl);
 
     return (
         <>
             <Navbar />
-            <div className="w-full bg-gradient-to-br from-slate-50 via-white to-stone-50 min-h-screen">
-                <section className="max-w-3xl mx-auto px-6 py-12">
-                    <button
-                        className="mb-6 flex items-center gap-2 text-[#021d49] hover:underline"
-                        onClick={() => window.history.back()}
-                    >
-                        <ArrowLeft className="w-5 h-5" /> Back
-                    </button>
 
-                    {loading && (
-                        <div className="text-center py-16">
-                            <Lightbulb className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                            <h3 className="text-xl font-bold text-gray-900 mb-2">Loading policy brief…</h3>
+            <div className="min-h-screen bg-[#f5f4f0]">
+
+                {/* ── Loading ── */}
+                {loading && (
+                    <div className="flex items-center justify-center min-h-[60vh]">
+                        <div className="flex flex-col items-center gap-3">
+                            <div className="w-8 h-8 rounded-full border-2 border-[#021d49] border-t-transparent animate-spin" />
+                            <p className="text-sm text-gray-400 tracking-wide">Loading…</p>
                         </div>
-                    )}
-                    {error && (
-                        <div className="text-center py-16">
-                            <Lightbulb className="w-12 h-12 text-red-300 mx-auto mb-3" />
-                            <h3 className="text-xl font-bold text-red-700 mb-2">{error}</h3>
-                        </div>
-                    )}
-                    {!loading && !error && brief && (
-                        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
-                            <div className="mb-6">
-                                {(brief.image || brief.coverImage) ? (
-                                    <img
-                                        src={brief.image || brief.coverImage}
-                                        alt={brief.title || 'Policy Brief'}
-                                        className="w-full h-64 object-cover rounded-xl mb-4"
-                                    />
-                                ) : (
-                                    <div className="w-full h-64 flex items-center justify-center bg-gradient-to-br from-[#021d49] to-[#021d49] rounded-xl">
-                                        <Lightbulb className="w-16 h-16 text-white/30" />
-                                    </div>
+                    </div>
+                )}
+
+                {/* ── Error ── */}
+                {error && (
+                    <div className="flex items-center justify-center min-h-[60vh]">
+                        <p className="text-red-500 text-sm">{error}</p>
+                    </div>
+                )}
+
+                {/* ── Content ── */}
+                {!loading && !error && brief && (
+                    <>
+                        {/* Hero */}
+                        <div className="relative w-full h-[220px] md:h-[300px] overflow-hidden">
+                            {(brief.image || brief.coverImage) ? (
+                                <img
+                                    src={brief.image || brief.coverImage}
+                                    alt={brief.title}
+                                    className="w-full h-full object-cover"
+                                />
+                            ) : (
+                                <div className="w-full h-full bg-[#021d49]"
+                                    style={{
+                                        backgroundImage: "repeating-linear-gradient(45deg,rgba(255,255,255,.04) 0,rgba(255,255,255,.04) 1px,transparent 0,transparent 50%)",
+                                        backgroundSize: "32px 32px",
+                                    }}
+                                />
+                            )}
+
+                            {/* gradient overlay */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+
+                            {/* back button */}
+                            <button
+                                onClick={() => window.history.back()}
+                                className="absolute top-6 left-6 flex items-center gap-2 text-white/80 hover:text-white text-sm transition-colors"
+                            >
+                                <ArrowLeft className="w-4 h-4" /> Back
+                            </button>
+
+                            {/* hero text */}
+                            <div className="absolute bottom-0 left-0 right-0 px-6 md:px-16 pb-10 max-w-4xl mx-auto">
+                                {brief.category && (
+                                    <span className="inline-block mb-3 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-white/80 border border-white/25 rounded-full backdrop-blur-sm">
+                                        {brief.category}
+                                    </span>
                                 )}
-                                <span className="inline-block px-3 py-1 bg-gradient-to-r from-[#021d49] to-[#021d49] text-white font-bold text-xs uppercase tracking-wide rounded-full mb-3">
-                                    {brief.category || 'Uncategorized'}
-                                </span>
-                                <h1 className="text-3xl font-bold text-gray-900 mb-2">{brief.title || 'Untitled'}</h1>
-                                <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
-                                    <Calendar className="w-4 h-4 text-[#021d49]" />
-                                    <span>{brief.datePosted ? new Date(brief.datePosted).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : ''}</span>
-                                </div>
-                            </div>
-                            <div className="mb-6">
-                                <h2 className="text-lg font-semibold mb-2">Summary</h2>
-                                <p className="text-gray-700 leading-relaxed">{brief.excerpt ? brief.excerpt : 'No summary available.'}</p>
-                            </div>
-                            {brief.description && typeof brief.description === 'string' && brief.description.trim().length > 0 ? (
-                                <div className="mb-6">
-                                    <h2 className="text-lg font-semibold mb-2">Description</h2>
-                                    <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: brief.description }} />
-                                </div>
-                            ) : null}
-                            {Array.isArray(brief.availableResources) && brief.availableResources.length > 0 && (
-                                <div className="mb-6">
-                                    <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-200">
-                                        <div className="bg-green-100 p-2 rounded-lg">
-                                            <Download className="w-5 h-5 text-green-600" />
-                                        </div>
-                                        <h2 className="text-xl font-bold text-gray-900">Available Resources</h2>
-                                    </div>
-
-                                    <div className="space-y-3">
-                                        {brief.availableResources.map((url: string, idx: number) => {
-                                            const fileName = getResourceFileName(url, idx);
-                                            return (
-                                                <button
-                                                    key={idx}
-                                                    onClick={() => handleOpenResource(url)}
-                                                    className="w-full flex items-center justify-between gap-3 p-4 bg-gradient-to-r from-gray-50 to-green-50/50 hover:from-[#021d49] hover:to-[#032a5e] border border-gray-200 hover:border-[#021d49] rounded-xl transition-all duration-300 group"
-                                                >
-                                                    <div className="flex items-center gap-3 flex-1 min-w-0">
-                                                        <div className="bg-white p-2 rounded-lg shadow-sm group-hover:bg-white/20 transition-colors">
-                                                            <FileText className="w-5 h-5 text-[#021d49] group-hover:text-white transition-colors" />
-                                                        </div>
-                                                        <div className="flex-1 min-w-0 text-left">
-                                                            <span className="text-sm font-semibold text-gray-700 group-hover:text-white transition-colors block truncate">
-                                                                {fileName}
-                                                            </span>
-                                                            <span className="text-xs text-gray-500 group-hover:text-white/80 transition-colors">
-                                                                Click to view or download
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                    <ExternalLink className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors shrink-0" />
-                                                </button>
-                                            );
+                                <h1 className="text-2xl md:text-4xl font-bold text-white leading-tight max-w-3xl">
+                                    {brief.title}
+                                </h1>
+                                {brief.datePosted && (
+                                    <div className="flex items-center gap-2 mt-3 text-white/55 text-sm">
+                                        <Calendar className="w-4 h-4" />
+                                        {new Date(brief.datePosted).toLocaleDateString(undefined, {
+                                            year: "numeric", month: "long", day: "numeric",
                                         })}
                                     </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* ── Body ── */}
+                        <div className="max-w-3xl mx-auto px-6 md:px-8 py-12">
+
+                            {/* Excerpt / key message callout */}
+                            {brief.excerpt && (
+                                <div className="flex gap-4 mb-10 p-6 bg-[#021d49] rounded-2xl">
+                                    <BookOpen className="w-5 h-5 text-white/50 shrink-0 mt-0.5" />
+                                    <p className="text-white/90 text-base leading-relaxed italic">
+                                        {brief.excerpt}
+                                    </p>
                                 </div>
                             )}
+
+                            {/* Description — full justified, like a Word doc */}
+                            {brief.description && (
+                                <div
+                                    className="
+                                        text-[15px] leading-8 text-gray-700
+                                        [&>p]:text-justify [&>p]:mb-5
+                                        [&>h1]:text-2xl [&>h1]:font-bold [&>h1]:text-[#021d49] [&>h1]:mt-8 [&>h1]:mb-3
+                                        [&>h2]:text-xl  [&>h2]:font-bold [&>h2]:text-[#021d49] [&>h2]:mt-7 [&>h2]:mb-3
+                                        [&>h3]:text-lg  [&>h3]:font-semibold [&>h3]:text-[#021d49] [&>h3]:mt-6 [&>h3]:mb-2
+                                        [&>ul]:list-disc  [&>ul]:pl-6 [&>ul]:mb-5 [&>ul>li]:mb-1.5 [&>ul>li]:text-justify
+                                        [&>ol]:list-decimal [&>ol]:pl-6 [&>ol]:mb-5 [&>ol>li]:mb-1.5 [&>ol>li]:text-justify
+                                        [&>blockquote]:border-l-4 [&>blockquote]:border-[#021d49]/30 [&>blockquote]:pl-4 [&>blockquote]:italic [&>blockquote]:text-gray-500 [&>blockquote]:my-5
+                                        [&>img]:rounded-xl [&>img]:my-6 [&>img]:w-full
+                                        [&>strong]:font-semibold [&>strong]:text-gray-900
+                                        [&_a]:text-blue-600 [&_a]:underline
+                                    "
+                                    dangerouslySetInnerHTML={{ __html: brief.description }}
+                                />
+                            )}
+
+                            {/* ── Resources ── */}
+                            {resources.length > 0 && (
+                                <section className="mt-12 pt-10 border-t border-gray-300/60">
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-5">
+                                        Available Resources
+                                    </p>
+                                    <ul className="space-y-3">
+                                        {resources.map((url, idx) => {
+                                            const filename = getResourceFileName(url, idx);
+                                            const viewUrl = getViewUrl(url);
+                                            return (
+                                                <li key={idx}>
+                                                    <a
+                                                        href={viewUrl}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="group flex items-center gap-4 px-5 py-4 bg-white rounded-xl border border-gray-200 hover:border-[#021d49] hover:shadow-sm transition-all"
+                                                    >
+                                                        <div className="shrink-0 w-10 h-10 flex items-center justify-center rounded-lg bg-[#021d49]/8 group-hover:bg-[#021d49]/15 transition-colors">
+                                                            <FileText className="w-5 h-5 text-[#021d49]" />
+                                                        </div>
+                                                        <div className="flex-1 min-w-0">
+                                                            <p className="text-sm font-semibold text-gray-800 group-hover:text-[#021d49] truncate transition-colors">
+                                                                {filename}
+                                                            </p>
+                                                            <p className="text-xs text-gray-400 mt-0.5">PDF · Opens in new tab</p>
+                                                        </div>
+                                                        <ExternalLink className="w-4 h-4 text-gray-300 group-hover:text-[#021d49] transition-colors shrink-0" />
+                                                    </a>
+                                                </li>
+                                            );
+                                        })}
+                                    </ul>
+                                </section>
+                            )}
+
+                            {/* bottom back */}
+                            <div className="mt-12 pt-6 border-t border-gray-200">
+                                <button
+                                    onClick={() => window.history.back()}
+                                    className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-[#021d49] transition-colors"
+                                >
+                                    <ArrowLeft className="w-4 h-4" /> Back to all briefs
+                                </button>
+                            </div>
                         </div>
-                    )}
-                </section>
+                    </>
+                )}
             </div>
+
             <Footer />
         </>
     );

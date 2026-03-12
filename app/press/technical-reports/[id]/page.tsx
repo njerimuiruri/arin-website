@@ -6,6 +6,8 @@ import Navbar from "@/app/navbar/Navbar";
 import { Calendar, FileText, User, ArrowLeft, BookOpen, Download, ExternalLink, Tag, Clock } from "lucide-react";
 import Footer from "@/app/footer/Footer";
 
+const API_BASE_URL = (process.env.NEXT_PUBLIC_API_URL || 'https://api.demo.arin-africa.org') + '/api';
+
 export default function TechnicalReportDetailPage() {
     const params = useParams();
     const id = params.id as string;
@@ -14,30 +16,22 @@ export default function TechnicalReportDetailPage() {
     const [error, setError] = useState<string | null>(null);
     const [openingIdx, setOpeningIdx] = useState<number | null>(null);
 
-    // Fetch the raw bytes and re-wrap as application/pdf so the browser always
-    // opens the file inline in its PDF viewer, regardless of what Content-Type
-    // or Content-Disposition Cloudinary sends for the stored URL.
-    const openPdf = async (url: string, idx: number) => {
+    // Route the PDF through our backend proxy so there are no CORS issues
+    // and the browser always receives a proper application/pdf response.
+    const buildProxyUrl = (cloudinaryUrl: string, download = false) => {
+        const encoded = encodeURIComponent(cloudinaryUrl);
+        return `${API_BASE_URL}/technical-reports/resource-proxy?url=${encoded}${download ? '&download=true' : ''}`;
+    };
+
+    const openPdf = (url: string, idx: number) => {
         setOpeningIdx(idx);
-        try {
-            const res = await fetch(url);
-            if (!res.ok) throw new Error('fetch failed');
-            const blob = await res.blob();
-            const pdfBlob = new Blob([blob], { type: 'application/pdf' });
-            const blobUrl = URL.createObjectURL(pdfBlob);
-            const tab = window.open(blobUrl, '_blank');
-            // Revoke the object URL after the tab has had time to load it
-            setTimeout(() => URL.revokeObjectURL(blobUrl), 60_000);
-            if (!tab) {
-                // Popup blocked — fall back to direct navigation
-                window.location.href = blobUrl;
-            }
-        } catch {
-            // Network error or CORS — fall back to opening the URL directly
-            window.open(url, '_blank');
-        } finally {
-            setOpeningIdx(null);
+        const proxyUrl = buildProxyUrl(url);
+        const tab = window.open(proxyUrl, '_blank');
+        if (!tab) {
+            // Popup blocked — navigate in the current tab
+            window.location.href = proxyUrl;
         }
+        setOpeningIdx(null);
     };
 
     useEffect(() => {
@@ -264,24 +258,15 @@ export default function TechnicalReportDetailPage() {
 
                                     <div className="space-y-3">
                                         {resources.map((url, idx) => {
-                                            // Clean filename from URL
                                             const raw = typeof url === 'string' ? url : '';
                                             const filename = decodeURIComponent(
                                                 raw.split('/').pop()?.split('?')[0] ?? ''
                                             ) || `Document ${idx + 1}`;
 
-                                            // View URL — strip ?dl=1 (and any &dl=1) so Cloudinary
-                                            // serves the file with Content-Disposition: inline,
-                                            // which lets the browser open the PDF directly in a new tab.
-                                            const viewUrl = raw
-                                                .replace(/\?dl=1(&|$)/, '?')
-                                                .replace(/&dl=1/g, '')
-                                                .replace(/\?$/, '');
-
-                                            // Download URL — keep ?dl=1 so Cloudinary forces a save dialog
-                                            const downloadUrl = viewUrl.includes('?')
-                                                ? `${viewUrl}&dl=1`
-                                                : `${viewUrl}?dl=1`;
+                                            // Route through backend proxy — avoids CORS and ensures
+                                            // the browser receives a proper application/pdf response.
+                                            const viewProxyUrl = buildProxyUrl(raw);
+                                            const downloadProxyUrl = buildProxyUrl(raw, true);
 
                                             return (
                                                 <div
@@ -303,9 +288,9 @@ export default function TechnicalReportDetailPage() {
 
                                                     {/* Action row */}
                                                     <div className="grid grid-cols-2 divide-x divide-gray-200 border-t border-gray-200">
-                                                        {/* Open — fetches blob so browser always renders inline */}
+                                                        {/* Open inline via proxy */}
                                                         <button
-                                                            onClick={() => openPdf(viewUrl, idx)}
+                                                            onClick={() => openPdf(raw, idx)}
                                                             disabled={openingIdx === idx}
                                                             className="flex items-center justify-center gap-1.5 py-2.5 text-xs font-semibold text-[#021d49] hover:bg-[#021d49] hover:text-white transition-colors disabled:opacity-50 disabled:cursor-wait"
                                                         >
@@ -313,9 +298,9 @@ export default function TechnicalReportDetailPage() {
                                                             {openingIdx === idx ? 'Opening…' : 'Open'}
                                                         </button>
 
-                                                        {/* Download */}
+                                                        {/* Download via proxy */}
                                                         <a
-                                                            href={downloadUrl}
+                                                            href={downloadProxyUrl}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
                                                             className="flex items-center justify-center gap-1.5 py-2.5 text-xs font-semibold text-gray-600 hover:bg-gray-100 transition-colors"
