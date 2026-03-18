@@ -137,8 +137,8 @@ const JournalArticlesPage = () => {
                                     key={category}
                                     onClick={() => { setSelectedCategory(category); setCurrentPage(1); }}
                                     className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${selectedCategory === category
-                                            ? 'bg-[#021d49] text-white shadow-sm'
-                                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                        ? 'bg-[#021d49] text-white shadow-sm'
+                                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                         }`}
                                 >
                                     {category}
