@@ -97,10 +97,10 @@ const ContactPage = () => {
                                         <MapPin className="w-5 h-5 text-[#021d49] flex-shrink-0 mt-1" />
                                         <div>
                                             <p className="text-gray-700 leading-relaxed">
-                                                Africa Research & Impact Network, ACK Gardens House, 1st Floor,  1St Ngong Ave, Upperhill, Nairobi.
+                                                Africa Research & Impact Network, ACK Gardens House,   1St Ngong Ave, Upperhill, Nairobi.
                                             </p>
                                             <p className="text-gray-700 mt-2">
-                                                P.O Box 53358 – 00200. Nairobi, Kenya
+                                                P.O Box 53358 - 00200. Nairobi, Kenya
                                             </p>
                                         </div>
                                     </div>
@@ -297,7 +297,7 @@ const ContactPage = () => {
                 <section className="max-w-[1600px] mx-auto px-6 pb-16">
                     <div className="bg-white rounded-2xl overflow-hidden shadow-lg border border-gray-200 h-96">
                         <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.819364828129!2d36.8185!3d-1.2833!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMcKwMTYnNTkuOSJTIDM2wrA0OScwNi42IkU!5e0!3m2!1sen!2ske!4v1234567890"
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.804389283468!2d36.8084868735644!3d-1.2917381356291675!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f10c39d10ec01%3A0x8dd0cdd5ab1ce2e0!2sACK%20Garden%20House!5e0!3m2!1sen!2sus!4v1774512906348!5m2!1sen!2sus"
                             width="100%"
                             height="100%"
                             style={{ border: 0 }}
@@ -306,6 +306,7 @@ const ContactPage = () => {
                             referrerPolicy="no-referrer-when-downgrade"
                             title="ARIN Office Location"
                         ></iframe>
+
                     </div>
                 </section>
             </div>
