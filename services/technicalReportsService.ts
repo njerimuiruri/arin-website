@@ -10,6 +10,7 @@ export interface TechnicalReport {
   datePosted?: string;
   availableResources?: string[];
   year?: number;
+  category?: string;
 }
 
 export const technicalReportsService = {
