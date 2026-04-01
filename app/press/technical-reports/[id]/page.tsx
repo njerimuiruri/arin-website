@@ -305,6 +305,31 @@ export default function TechnicalReportDetailPage() {
                         {/* Sidebar */}
                         <div className="lg:col-span-1 space-y-5 lg:sticky lg:top-6">
 
+                            {/* Cover Image Card */}
+                            {report.image && (
+                                <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                                    <button
+                                        onClick={() => setImageModalOpen(true)}
+                                        className="relative w-full group block"
+                                        title="Click to view full-size"
+                                    >
+                                        <img
+                                            src={report.image}
+                                            alt={report.title}
+                                            className="w-full object-contain max-h-64 bg-[#021d49]"
+                                        />
+                                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all flex items-center justify-center">
+                                            <div className="bg-white/90 rounded-full p-2.5 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">
+                                                <ZoomIn className="w-5 h-5 text-gray-900" />
+                                            </div>
+                                        </div>
+                                    </button>
+                                    <p className="text-xs text-center text-gray-400 py-2 px-3 border-t border-gray-100">
+                                        Click image to enlarge
+                                    </p>
+                                </div>
+                            )}
+
                             {/* Report Details */}
                             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
                                 <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4">

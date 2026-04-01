@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { getNewsBriefById } from "@/services/newsBriefsService";
 import Navbar from "@/app/navbar/Navbar";
-import { Calendar, Users, Download, FileText, ArrowLeft, Share2, Clock } from "lucide-react";
+import { Calendar, Users, Download, FileText, ArrowLeft, Share2, ZoomIn, X, Eye } from "lucide-react";
 import Footer from "@/app/footer/Footer";
 
 export default function NewsBriefDetailPage() {
@@ -12,313 +12,207 @@ export default function NewsBriefDetailPage() {
     const id = params.id as string;
     const [brief, setBrief] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [imageModalOpen, setImageModalOpen] = useState(false);
 
     useEffect(() => {
-        async function fetchBrief() {
-            setLoading(true);
-            const data = await getNewsBriefById(id);
-            setBrief(data);
-            setLoading(false);
-        }
-        if (id) fetchBrief();
+        if (!id) return;
+        setLoading(true);
+        getNewsBriefById(id).then(data => { setBrief(data); setLoading(false); });
     }, [id]);
 
-    if (loading) {
-        return (
-            <>
-                <Navbar />
-                <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                    <div className="text-center">
-                        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[#021d49] mx-auto mb-4"></div>
-                        <p className="text-gray-600 text-lg">Loading news brief...</p>
-                    </div>
+    if (loading) return (
+        <>
+            <Navbar />
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <div className="text-center">
+                    <div className="w-12 h-12 border-4 border-[#021d49] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                    <p className="text-gray-500 font-medium">Loading news brief...</p>
                 </div>
-            </>
-        );
-    }
+            </div>
+        </>
+    );
 
-    if (!brief) {
-        return (
-            <>
-                <Navbar />
-                <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                    <div className="text-center max-w-md">
-                        <div className="bg-red-50 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6">
-                            <FileText className="w-10 h-10 text-red-500" />
-                        </div>
-                        <h2 className="text-2xl font-bold text-gray-900 mb-3">News Brief Not Found</h2>
-                        <p className="text-gray-600 mb-6">The news brief you're looking for doesn't exist or has been removed.</p>
-                        <button
-                            onClick={() => router.push('/press/news-briefs')}
-                            className="px-6 py-3 bg-[#021d49] text-white rounded-lg hover:bg-[#032a5e] transition-colors duration-200 inline-flex items-center gap-2"
-                        >
-                            <ArrowLeft className="w-4 h-4" />
-                            Back to News Briefs
-                        </button>
+    if (!brief) return (
+        <>
+            <Navbar />
+            <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+                <div className="text-center bg-white rounded-2xl shadow-sm border border-gray-200 p-10 max-w-md w-full">
+                    <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <FileText className="w-8 h-8 text-red-400" />
                     </div>
+                    <h2 className="text-xl font-bold text-gray-900 mb-2">News Brief Not Found</h2>
+                    <p className="text-gray-500 text-sm mb-6">The news brief you're looking for doesn't exist or has been removed.</p>
+                    <button onClick={() => router.push('/press/news-briefs')} className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#021d49] text-white text-sm font-semibold rounded-lg hover:bg-[#032a5e] transition-colors">
+                        <ArrowLeft className="w-4 h-4" /> Back to News Briefs
+                    </button>
                 </div>
-            </>
-        );
-    }
+            </div>
+        </>
+    );
 
     const heroImage = brief.image || brief.coverImage || brief.thumbnail;
+    const resources = (brief.availableResources ?? []).filter((u: any): u is string => typeof u === 'string' && u.trim().length > 0);
 
     return (
         <>
             <Navbar />
+            <div className="min-h-screen bg-gray-50">
 
-            {/* Hero Section with Prominent Image - Full Width */}
-            {heroImage ? (
-                <div className="relative bg-black w-full">
-                    {/* Full-width hero image */}
-                    <div className="relative h-[500px] md:h-[600px] w-full overflow-hidden">
-                        <img
-                            src={heroImage}
-                            alt={brief.title}
-                            className="w-full h-full object-cover"
-                        />
-                        {/* Gradient overlay for text readability */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent"></div>
-                    </div>
-
-                    {/* Content overlay */}
-                    <div className="absolute bottom-0 left-0 right-0 pb-12 pt-32">
-                        <div className="max-w-7xl mx-auto px-6 lg:px-12">
-                            {/* Back Button */}
-                            <button
-                                onClick={() => router.push('/press/news-briefs')}
-                                className="mb-6 inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors duration-200 group bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg"
-                            >
-                                <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-200" />
-                                <span className="font-medium">Back to News Briefs</span>
+                {/* Image Modal */}
+                {imageModalOpen && heroImage && (
+                    <div className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4" onClick={() => setImageModalOpen(false)}>
+                        <div className="relative max-w-5xl w-full" onClick={e => e.stopPropagation()}>
+                            <button onClick={() => setImageModalOpen(false)} className="absolute -top-12 right-0 bg-white/20 hover:bg-white/40 text-white rounded-full p-2.5 transition-colors">
+                                <X className="w-5 h-5" />
                             </button>
+                            <img src={heroImage} alt={brief.title} className="w-full h-auto max-h-[85vh] object-contain rounded-xl shadow-2xl" />
+                            <p className="text-white/60 text-xs text-center mt-3">Click outside to close</p>
+                        </div>
+                    </div>
+                )}
 
-                            {/* Category Badge */}
-                            <div className="mb-4">
-                                <span className="inline-flex items-center gap-2 px-4 py-2 bg-[#021d49] text-white rounded-full text-sm font-semibold tracking-wide shadow-lg">
-                                    <FileText className="w-4 h-4" />
-                                    NEWS BRIEF
-                                </span>
-                            </div>
-
-                            {/* Title */}
-                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight drop-shadow-2xl max-w-5xl">
-                                {brief.title}
-                            </h1>
-
-                            {/* Meta Information */}
-                            <div className="flex flex-wrap items-center gap-6 text-white">
-                                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-3 py-2 rounded-lg">
-                                    <Calendar className="w-5 h-5" />
-                                    <span className="font-medium">
-                                        {brief.datePosted ? new Date(brief.datePosted).toLocaleDateString('en-US', {
-                                            year: 'numeric',
-                                            month: 'long',
-                                            day: 'numeric'
-                                        }) : ''}
-                                    </span>
+                {/* Compact Hero Banner */}
+                <div className="bg-[#021d49] text-white">
+                    <div className="max-w-7xl mx-auto px-6 py-6 flex items-center gap-6">
+                        {heroImage && (
+                            <button onClick={() => setImageModalOpen(true)} className="shrink-0 w-20 h-24 rounded-lg overflow-hidden border-2 border-white/20 hover:border-white/60 transition-colors relative group" title="View full-size">
+                                <img src={heroImage} alt={brief.title} className="w-full h-full object-cover" />
+                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 flex items-center justify-center transition-all">
+                                    <ZoomIn className="w-4 h-4 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
                                 </div>
-
-                                {brief.authors && brief.authors.length > 0 && (
-                                    <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-3 py-2 rounded-lg">
-                                        <Users className="w-5 h-5" />
-                                        <span className="font-medium">{brief.authors.join(', ')}</span>
-                                    </div>
-                                )}
-
-                                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-3 py-2 rounded-lg">
-                                    <Clock className="w-5 h-5" />
-                                    <span className="font-medium">5 min read</span>
-                                </div>
+                            </button>
+                        )}
+                        <div className="flex-1 min-w-0">
+                            <button onClick={() => router.push('/press/news-briefs')} className="inline-flex items-center gap-1.5 text-white/60 hover:text-white text-xs mb-2 transition-colors">
+                                <ArrowLeft className="w-3.5 h-3.5" /> All News Briefs
+                            </button>
+                            <span className="inline-block px-2.5 py-0.5 bg-white/15 text-white/90 text-xs font-semibold uppercase tracking-wider rounded-full mb-2 ml-2">News Brief</span>
+                            <h1 className="text-lg md:text-2xl font-bold leading-snug mb-2 line-clamp-2">{brief.title}</h1>
+                            <div className="flex flex-wrap gap-3 text-xs text-white/70">
+                                {brief.datePosted && <span className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5" />{new Date(brief.datePosted).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>}
+                                {brief.authors?.length > 0 && <span className="flex items-center gap-1"><Users className="w-3.5 h-3.5" />{brief.authors.join(', ')}</span>}
                             </div>
                         </div>
                     </div>
                 </div>
-            ) : (
-                // Fallback hero without image
-                <div className="relative bg-gradient-to-br from-[#021d49] via-[#032a5e] to-[#021d49] w-full">
-                    <div className="max-w-7xl mx-auto px-6 lg:px-12 py-20">
-                        <button
-                            onClick={() => router.push('/press/news-briefs')}
-                            className="mb-8 inline-flex items-center gap-2 text-white/80 hover:text-white transition-colors duration-200 group"
-                        >
-                            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-200" />
-                            <span className="font-medium">Back to News Briefs</span>
-                        </button>
 
-                        <div className="mb-6">
-                            <span className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm text-white rounded-full text-sm font-semibold tracking-wide">
-                                <FileText className="w-4 h-4" />
-                                NEWS BRIEF
-                            </span>
-                        </div>
+                {/* Body */}
+                <div className="max-w-7xl mx-auto px-6 py-10">
+                    <div className="grid lg:grid-cols-4 gap-8 items-start">
 
-                        <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight max-w-5xl">
-                            {brief.title}
-                        </h1>
-
-                        <div className="flex flex-wrap items-center gap-6 text-gray-200">
-                            <div className="flex items-center gap-2">
-                                <Calendar className="w-5 h-5" />
-                                <span className="font-medium">
-                                    {brief.datePosted ? new Date(brief.datePosted).toLocaleDateString('en-US', {
-                                        year: 'numeric',
-                                        month: 'long',
-                                        day: 'numeric'
-                                    }) : ''}
-                                </span>
+                        {/* Main content */}
+                        <div className="lg:col-span-3">
+                            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 md:p-10 mb-8">
+                                <div
+                                    className="prose prose-base max-w-none
+                                        prose-headings:text-gray-900 prose-headings:font-bold
+                                        prose-h2:text-xl prose-h2:text-[#021d49] prose-h3:text-lg prose-h3:text-[#032a5e]
+                                        prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-5
+                                        prose-a:text-[#021d49] prose-a:no-underline hover:prose-a:underline
+                                        prose-ul:my-5 prose-ol:my-5 prose-li:text-gray-700
+                                        prose-img:rounded-xl prose-img:shadow-lg prose-img:my-6 prose-img:w-full
+                                        prose-blockquote:border-l-4 prose-blockquote:border-[#021d49] prose-blockquote:pl-5 prose-blockquote:italic prose-blockquote:text-gray-600 prose-blockquote:bg-gray-50 prose-blockquote:py-3 prose-blockquote:my-6"
+                                    dangerouslySetInnerHTML={{ __html: brief.description }}
+                                />
                             </div>
 
-                            {brief.authors && brief.authors.length > 0 && (
-                                <div className="flex items-center gap-2">
-                                    <Users className="w-5 h-5" />
-                                    <span className="font-medium">{brief.authors.join(', ')}</span>
+                            {/* Resources below description */}
+                            {resources.length > 0 && (
+                                <div id="resources" className="bg-linear-to-br from-[#021d49]/5 to-blue-50 rounded-2xl border border-gray-200 p-8 md:p-10 mb-8">
+                                    <div className="flex items-center gap-3 mb-6 pb-5 border-b border-gray-200">
+                                        <div className="bg-[#021d49] p-3 rounded-xl">
+                                            <FileText className="w-5 h-5 text-white" />
+                                        </div>
+                                        <div>
+                                            <h2 className="text-xl font-bold text-gray-900">Available Resources</h2>
+                                            <p className="text-sm text-gray-500 mt-0.5">Download related documents and materials</p>
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        {resources.map((url: string, idx: number) => {
+                                            const filename = decodeURIComponent(url.split('/').pop()?.split('?')[0] ?? '') || `Document ${idx + 1}`;
+                                            return (
+                                                <div key={idx} className="bg-white rounded-xl border border-gray-200 hover:border-[#021d49] shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group">
+                                                    <div className="bg-linear-to-r from-[#021d49]/5 to-blue-50 px-5 py-4 flex items-start gap-3">
+                                                        <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center shrink-0 group-hover:bg-red-200 transition-colors">
+                                                            <FileText className="w-5 h-5 text-red-600" />
+                                                        </div>
+                                                        <div className="min-w-0 flex-1">
+                                                            <p className="text-sm font-semibold text-gray-900 break-all leading-snug group-hover:text-[#021d49] transition-colors" title={filename}>{filename}</p>
+                                                            <p className="text-xs text-gray-500 mt-1">PDF Document</p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="grid grid-cols-2 divide-x divide-gray-200 border-t border-gray-200">
+                                                        <a href={url} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center justify-center gap-1.5 py-4 px-3 text-[#021d49] hover:bg-[#021d49] hover:text-white transition-all duration-200 font-semibold text-sm">
+                                                            <Eye className="w-4 h-4" /> Open
+                                                        </a>
+                                                        <a href={url} download className="flex flex-col items-center justify-center gap-1.5 py-4 px-3 text-gray-700 hover:bg-gray-100 transition-colors duration-200 font-semibold text-sm">
+                                                            <Download className="w-4 h-4" /> Download
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                    <div className="mt-6 pt-5 border-t border-gray-200 bg-white/60 rounded-lg px-4 py-3 text-sm text-gray-600 flex items-start gap-2">
+                                        <span className="text-blue-500 font-bold shrink-0">ℹ</span>
+                                        <span>Click <strong className="text-gray-800">"Open"</strong> to read in a new tab, or <strong className="text-gray-800">"Download"</strong> to save to your device.</span>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Sidebar */}
+                        <div className="lg:col-span-1 space-y-5 lg:sticky lg:top-6">
+                            {/* Cover Image Card */}
+                            {heroImage && (
+                                <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                                    <button onClick={() => setImageModalOpen(true)} className="relative w-full group block" title="Click to view full-size">
+                                        <img src={heroImage} alt={brief.title} className="w-full object-contain max-h-64 bg-[#021d49]" />
+                                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all flex items-center justify-center">
+                                            <div className="bg-white/90 rounded-full p-2.5 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">
+                                                <ZoomIn className="w-5 h-5 text-gray-900" />
+                                            </div>
+                                        </div>
+                                    </button>
+                                    <p className="text-xs text-center text-gray-400 py-2 px-3 border-t border-gray-100">Click image to enlarge</p>
                                 </div>
                             )}
 
-                            <div className="flex items-center gap-2">
-                                <Clock className="w-5 h-5" />
-                                <span className="font-medium">5 min read</span>
+                            {/* Brief Details */}
+                            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+                                <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4">Brief Details</h3>
+                                <dl className="space-y-3 text-sm">
+                                    {brief.datePosted && <div><dt className="text-gray-500 text-xs uppercase tracking-wide mb-0.5">Published</dt><dd className="text-gray-900 font-medium">{new Date(brief.datePosted).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</dd></div>}
+                                    {brief.authors?.length > 0 && <div><dt className="text-gray-500 text-xs uppercase tracking-wide mb-0.5">Authors</dt><dd className="text-gray-900 font-medium">{brief.authors.join(', ')}</dd></div>}
+                                </dl>
+                            </div>
+
+                            {/* Quick Actions */}
+                            <div className="bg-linear-to-br from-[#021d49] to-[#032a5e] rounded-2xl shadow-sm p-6 text-white">
+                                <h3 className="text-sm font-bold uppercase tracking-wider mb-4">Quick Actions</h3>
+                                <div className="space-y-2">
+                                    <button onClick={() => router.push('/press/news-briefs')} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-white/20 hover:bg-white/30 rounded-lg transition-colors text-sm font-semibold">
+                                        <ArrowLeft className="w-4 h-4" /> All News Briefs
+                                    </button>
+                                    {resources.length > 0 && (
+                                        <a href="#resources" className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-white text-[#021d49] rounded-lg hover:bg-blue-50 transition-colors text-sm font-semibold">
+                                            <FileText className="w-4 h-4" /> View Resources
+                                        </a>
+                                    )}
+                                    <button onClick={() => navigator.share?.({ title: brief.title, url: window.location.href })} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-white/20 hover:bg-white/30 rounded-lg transition-colors text-sm font-semibold">
+                                        <Share2 className="w-4 h-4" /> Share
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            )}
 
-            {/* Authors Section - Full Width with Subtle Background */}
-            {brief.authors && brief.authors.length > 0 && (
-                <div className="w-full bg-gradient-to-r from-gray-50 to-blue-50/30 border-y border-gray-200">
-                    <div className="max-w-7xl mx-auto px-6 lg:px-12 py-10">
-                        <div className="flex items-start gap-4">
-                            <div className="bg-gradient-to-br from-[#021d49] to-[#032a5e] rounded-full w-14 h-14 flex items-center justify-center flex-shrink-0 shadow-lg">
-                                <Users className="w-7 h-7 text-white" />
-                            </div>
-                            <div>
-                                <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                                    Written By
-                                </p>
-                                <p className="text-xl font-semibold text-gray-900">
-                                    {brief.authors.join(', ')}
-                                </p>
-                            </div>
-                        </div>
+                    <div className="mt-8">
+                        <button onClick={() => router.push('/press/news-briefs')} className="inline-flex items-center gap-2 px-6 py-3 bg-[#021d49] text-white font-semibold rounded-xl hover:bg-[#032a5e] transition-colors shadow-sm">
+                            <ArrowLeft className="w-4 h-4" /> Back to All News Briefs
+                        </button>
                     </div>
-                </div>
-            )}
-
-            {/* Main Content - Full Width White Background */}
-            <div className="w-full bg-white">
-                <div className="max-w-7xl mx-auto px-6 lg:px-12 py-16">
-                    {/* Article Content */}
-                    <div
-                        className="prose prose-lg max-w-none
-                            prose-headings:text-gray-900 prose-headings:font-bold
-                            prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6 prose-h2:text-[#021d49]
-                            prose-h3:text-2xl prose-h3:mt-10 prose-h3:mb-4 prose-h3:text-[#032a5e]
-                            prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-6 prose-p:text-lg
-                            prose-a:text-[#021d49] prose-a:font-semibold prose-a:no-underline hover:prose-a:underline
-                            prose-strong:text-gray-900 prose-strong:font-bold
-                            prose-ul:my-6 prose-ol:my-6
-                            prose-li:text-gray-700 prose-li:my-3 prose-li:text-lg
-                            prose-img:rounded-2xl prose-img:shadow-2xl prose-img:my-10 prose-img:border prose-img:border-gray-200 prose-img:w-full
-                            prose-blockquote:border-l-4 prose-blockquote:border-[#021d49] prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:text-gray-700 prose-blockquote:bg-gray-50 prose-blockquote:py-4 prose-blockquote:my-8 prose-blockquote:rounded-r-lg"
-                        dangerouslySetInnerHTML={{ __html: brief.description }}
-                    />
-                </div>
-            </div>
-
-            {/* Resources Section - Full Width with Gray Background */}
-            {brief.availableResources && brief.availableResources.length > 0 && (
-                <div className="w-full bg-gradient-to-br from-gray-100 via-gray-50 to-blue-50/20">
-                    <div className="max-w-7xl mx-auto px-6 lg:px-12 py-16">
-                        <div className="flex items-center gap-4 mb-10">
-                            <div className="bg-gradient-to-br from-[#021d49] to-[#032a5e] rounded-xl w-16 h-16 flex items-center justify-center shadow-lg">
-                                <Download className="w-8 h-8 text-white" />
-                            </div>
-                            <div>
-                                <h2 className="text-4xl font-bold text-gray-900">
-                                    Available Resources
-                                </h2>
-                                <p className="text-gray-600 mt-1 text-lg">Download related documents and materials</p>
-                            </div>
-                        </div>
-
-                        <div className="grid gap-5">
-                            {brief.availableResources.map((url: string, i: number) => {
-                                const fileName = url.split("/").pop() || `Resource ${i + 1}`;
-                                return (
-                                    <a
-                                        key={i}
-                                        href={url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center gap-5 p-6 bg-white rounded-xl border-2 border-gray-200 hover:border-[#021d49] hover:shadow-2xl transition-all duration-300 group"
-                                    >
-                                        <div className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-xl p-4 shadow-md group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
-                                            <FileText className="w-8 h-8 text-[#021d49]" />
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            <p className="font-semibold text-gray-900 truncate group-hover:text-[#021d49] transition-colors duration-200 text-xl">
-                                                {fileName}
-                                            </p>
-                                            <p className="text-base text-gray-500 mt-1">
-                                                Click to download or view
-                                            </p>
-                                        </div>
-                                        <Download className="w-7 h-7 text-gray-400 group-hover:text-[#021d49] group-hover:scale-110 transition-all duration-200 flex-shrink-0" />
-                                    </a>
-                                );
-                            })}
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* Share Section - Full Width with Brand Gradient */}
-            <div className="w-full bg-gradient-to-br from-[#021d49] via-[#032a5e] to-[#021d49] relative overflow-hidden">
-                {/* Decorative elements */}
-                <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full -mr-48 -mt-48"></div>
-                <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full -ml-32 -mb-32"></div>
-                <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-white/3 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
-
-                <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 py-20 text-white text-center">
-                    <div className="bg-white/10 backdrop-blur-sm w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl">
-                        <Share2 className="w-10 h-10" />
-                    </div>
-                    <h3 className="text-4xl md:text-5xl font-bold mb-5">Found this interesting?</h3>
-                    <p className="text-gray-200 mb-10 max-w-3xl mx-auto text-xl leading-relaxed">
-                        Share this news brief with your network and help spread awareness about ARIN's work.
-                    </p>
-                    <button
-                        onClick={() => {
-                            if (navigator.share) {
-                                navigator.share({
-                                    title: brief.title,
-                                    url: window.location.href
-                                });
-                            } else {
-                                navigator.clipboard.writeText(window.location.href);
-                                alert('Link copied to clipboard!');
-                            }
-                        }}
-                        className="px-12 py-5 bg-white text-[#021d49] font-bold rounded-xl hover:bg-gray-100 hover:scale-105 transition-all duration-200 inline-flex items-center gap-3 shadow-2xl text-xl"
-                    >
-                        <Share2 className="w-6 h-6" />
-                        Share This Article
-                    </button>
-                </div>
-            </div>
-
-            {/* Back to News Section - Full Width Light Background */}
-            <div className="w-full bg-gray-50 border-t border-gray-200">
-                <div className="max-w-7xl mx-auto px-6 lg:px-12 py-16 text-center">
-                    <button
-                        onClick={() => router.push('/press/news-briefs')}
-                        className="px-12 py-5 bg-white text-[#021d49] border-2 border-[#021d49] font-bold rounded-xl hover:bg-[#021d49] hover:text-white hover:scale-105 transition-all duration-300 inline-flex items-center gap-3 shadow-lg hover:shadow-2xl text-xl"
-                    >
-                        <ArrowLeft className="w-6 h-6" />
-                        Back to All News Briefs
-                    </button>
                 </div>
             </div>
             <Footer />
