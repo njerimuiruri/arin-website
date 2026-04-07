@@ -46,6 +46,11 @@ const JournalArticlesPage = () => {
         const matchesCategory = selectedCategory === 'All' || (article.category && article.category.includes(selectedCategory));
         const matchesDate = !article.datePosted || new Date(article.datePosted) <= today;
         return matchesSearch && matchesCategory && matchesDate;
+    }).sort((a, b) => {
+        const da = a.datePosted ? new Date(a.datePosted).getTime() : 0;
+        const db = b.datePosted ? new Date(b.datePosted).getTime() : 0;
+        if (db !== da) return db - da;
+        return (b._id || b.id || '').localeCompare(a._id || a.id || '');
     });
 
     // Pagination logic

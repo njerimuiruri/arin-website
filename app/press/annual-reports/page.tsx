@@ -50,6 +50,11 @@ const AnnualReportsPage = () => {
         const matchesYear = selectedYear === 'All' || report.year === selectedYear;
         const matchesDate = !report.date || new Date(report.date) <= today;
         return matchesSearch && matchesYear && matchesDate;
+    }).sort((a, b) => {
+        const da = a.date ? new Date(a.date).getTime() : 0;
+        const db = b.date ? new Date(b.date).getTime() : 0;
+        if (db !== da) return db - da;
+        return (b._id || '').localeCompare(a._id || '');
     });
 
     const handleReportClick = (reportId: string) => {

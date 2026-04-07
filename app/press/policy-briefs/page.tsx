@@ -23,7 +23,13 @@ const PolicyBriefsPage = () => {
 
     useEffect(() => {
         policyBriefsService.getAll()
-            .then(data => setBriefs(data))
+            .then(data => setBriefs([...data].sort((a, b) => {
+                const da = a.datePosted ? new Date(a.datePosted).getTime() : 0;
+                const db = b.datePosted ? new Date(b.datePosted).getTime() : 0;
+                if (db !== da) return db - da;
+                // fallback: newer MongoDB _id means later upload
+                return (b._id || '').localeCompare(a._id || '');
+            })))
             .catch(err => setError(err.message || 'Failed to load policy briefs'))
             .finally(() => setLoading(false));
     }, []);

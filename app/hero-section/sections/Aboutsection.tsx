@@ -1,14 +1,19 @@
 "use client";
 import { useState, useRef, useCallback } from "react";
 import {
-    ArrowRight, Play, X, FlaskConical, Users, Globe2, Lightbulb,
+    ArrowRight, Play, X,
+    Wind, Building2, Wheat, Pickaxe, Cpu, HeartPulse, Trees, SunMedium,
 } from "lucide-react";
 
-const features = [
-    { icon: FlaskConical, title: "Evidence-Based Research", desc: "Rigorous, peer-reviewed studies informing policy at national and continental levels." },
-    { icon: Globe2, title: "Pan-African Network", desc: "Connecting researchers, institutions, and governments across 25+ African nations." },
-    { icon: Users, title: "Capacity Building", desc: "Training and empowering the next generation of African research leaders." },
-    { icon: Lightbulb, title: "Policy Translation", desc: "Bridging the gap between research findings and real-world policy decisions." },
+const thematicAreas = [
+    { icon: SunMedium, title: "Sustainable Development", color: "#f59e0b", slug: "sustainable-development" },
+    { icon: Wind, title: "Climate Change & Energy", color: "#0ea5e9", slug: "climate-change-energy" },
+    { icon: Building2, title: "Cities & Resilience", color: "#8b5cf6", slug: "cities-resilience" },
+    { icon: Wheat, title: "Agriculture & Forestry", color: "#22c55e", slug: "agriculture-forestry" },
+    { icon: Pickaxe, title: "Mining, Trade & Industry", color: "#f97316", slug: "mining-trade-industry" },
+    { icon: Cpu, title: "Technology & Innovation", color: "#3b82f6", slug: "technology-innovation" },
+    { icon: HeartPulse, title: "Climate and Health", color: "#ef4444", slug: "climate-health" },
+    { icon: Trees, title: "Forests & Ecosystems", color: "#10b981", slug: "forests-ecosystems" },
 ];
 
 export default function AboutSection() {
@@ -22,48 +27,50 @@ export default function AboutSection() {
         <>
             <section className="ab2-section">
 
-                {/* ── Line art background ── */}
+                {/* ── Decorative background ── */}
                 <div className="ab2-art">
                     <div className="ab2-lines" />
                     <div className="ab2-vlines" />
-                    <div className="ab2-diag" />
                     <div className="ab2-lines-mask" />
                     <div className="ab2-orb1" />
                     <div className="ab2-orb2" />
+                    <div className="ab2-deco-word">ARIN</div>
                 </div>
 
                 <div className="ab2-grid">
 
-                    {/* ══ LEFT — video card (stretches full height) ══ */}
+                    {/* ══ LEFT — video column ══ */}
                     <div className="ab2-video-col">
+
+                        {/* Main video card — real photo + overlay */}
                         <div className="ab2-vid-card" onClick={() => setOpen(true)}>
 
-                            {/* ── Art layers inside card ── */}
-                            <div className="ab2-vid-grid" />
-                            <div className="ab2-vid-hatch" />
-                            <div className="ab2-vid-dots" />
-                            <div className="ab2-vid-cross-h" />
-                            <div className="ab2-vid-cross-v" />
+                            {/* Photo background */}
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                                src="/images/paafrica.jpg"
+                                alt="ARIN Conference"
+                                className="ab2-vid-photo"
+                            />
 
-                            {/* Concentric arcs bottom-left */}
+                            {/* Gradient overlay */}
+                            <div className="ab2-vid-overlay" />
+
+                            {/* Subtle art on top of photo */}
+                            <div className="ab2-vid-grid" />
                             <div className="ab2-vid-arc ab2-vid-arc1" />
                             <div className="ab2-vid-arc ab2-vid-arc2" />
                             <div className="ab2-vid-arc ab2-vid-arc3" />
-                            <div className="ab2-vid-arc ab2-vid-arc4" />
-
-                            {/* Corner arcs top-right */}
                             <div className="ab2-vid-arc ab2-vid-arc5" />
                             <div className="ab2-vid-arc ab2-vid-arc6" />
 
-                            <div className="ab2-vid-glow" />
-
                             {/* Glass stat chips */}
                             <div className="ab2-stat-chip ab2-chip-top">
-                                <div className="ab2-chip-num">25<span style={{ color: "#60a5fa" }}>+</span></div>
+                                <div className="ab2-chip-num">25<span style={{ color: "#34d399" }}>+</span></div>
                                 <div className="ab2-chip-lbl">Countries</div>
                             </div>
                             <div className="ab2-stat-chip ab2-chip-right">
-                                <div className="ab2-chip-num">500<span style={{ color: "#60a5fa" }}>+</span></div>
+                                <div className="ab2-chip-num">500<span style={{ color: "#34d399" }}>+</span></div>
                                 <div className="ab2-chip-lbl">Projects</div>
                             </div>
 
@@ -80,9 +87,27 @@ export default function AboutSection() {
                                 Watch Our Story
                             </div>
                         </div>
+
+                        {/* ── Proof strip — floats below the card ── */}
+                        <div className="ab2-proof-strip">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                                src="/images/arin1.jpeg"
+                                alt="ARIN Team"
+                                className="ab2-proof-thumb"
+                            />
+                            <div className="ab2-proof-text">
+                                <div className="ab2-proof-title">4th Annual Conference</div>
+                                <div className="ab2-proof-sub">Pan-African Research Summit</div>
+                            </div>
+                            <div className="ab2-proof-live">
+                                <span className="ab2-proof-dot" />
+                                Recorded
+                            </div>
+                        </div>
                     </div>
 
-                    {/* ══ RIGHT — text content ══ */}
+                    {/* ══ RIGHT — text + thematic areas ══ */}
                     <div>
                         <div className="ab2-eyebrow">
                             <div className="ab2-ey-dot" />
@@ -98,27 +123,36 @@ export default function AboutSection() {
                         <p className="ab2-body">
                             ARIN is Africa's premier research network — connecting scholars, institutions,
                             and policymakers to drive evidence-based solutions that shape millions of lives
-                            across the continent.
+                            across the continent through eight thematic disciplines.
                         </p>
 
-                        <div className="ab2-feats">
-                            {features.map((f, i) => {
-                                const FI = f.icon;
+                        {/* Thematic areas mini grid */}
+                        <div className="ab2-themes-label">Our Thematic Areas</div>
+                        <div className="ab2-themes-grid">
+                            {thematicAreas.map((area) => {
+                                const Icon = area.icon;
                                 return (
-                                    <div key={i} className="ab2-feat">
-                                        <div className="ab2-feat-ico"><FI /></div>
-                                        <div>
-                                            <div className="ab2-feat-title">{f.title}</div>
-                                            <div className="ab2-feat-desc">{f.desc}</div>
+                                    <a
+                                        key={area.slug}
+                                        href={`/about-us/focus-areas/${area.slug}`}
+                                        className="ab2-theme-chip"
+                                        style={{ "--chip-color": area.color } as React.CSSProperties}
+                                    >
+                                        <div
+                                            className="ab2-theme-ico"
+                                            style={{ background: area.color + "1a" }}
+                                        >
+                                            <Icon style={{ width: 13, height: 13, color: area.color }} />
                                         </div>
-                                    </div>
+                                        <span className="ab2-theme-name">{area.title}</span>
+                                    </a>
                                 );
                             })}
                         </div>
 
                         <div className="ab2-ctas">
-                            <a href="/about-us/mission" className="ab2-btn-p">
-                                Learn About ARIN <ArrowRight className="w-4 h-4" />
+                            <a href="/about-us/focus-areas" className="ab2-btn-p">
+                                Explore All Areas <ArrowRight className="w-4 h-4" />
                             </a>
                             <a href="/contact" className="ab2-btn-s">
                                 Get in Touch <ArrowRight className="w-3.5 h-3.5" />
@@ -135,11 +169,11 @@ export default function AboutSection() {
                         <button className="ab2-modal-close" onClick={() => setOpen(false)} aria-label="Close">
                             <X className="w-4 h-4 text-white" />
                         </button>
-                        <video
-                            src="/videos/about.mp4"
-                            controls
-                            autoPlay
-                            playsInline
+                        <iframe
+                            src="https://www.youtube.com/embed/K1MKlqB0uKk?start=15112&autoplay=1"
+                            title="ARIN — 4th Annual Conference"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
                         />
                     </div>
                 </div>
