@@ -19,12 +19,13 @@ import { ArrowUpRight } from "lucide-react";
 
 const calls = [
     {
-        status: "Call Open",
-        color: "#00c4b3",
+        status: "Deadline Passed",
+        color: "#9ca3af",
         title: "Spotlight Series 2026",
         sub: "Presenters & Moderators",
-        cta: "Apply",
-        href: "https://ee.kobotoolbox.org/single/b5423b283351f3f61595a92a17a66e00",
+        cta: "Closed",
+        href: null,
+        disabled: true,
     },
     {
         status: "Registration Open",
@@ -33,14 +34,16 @@ const calls = [
         sub: "Pan-African Platform",
         cta: "Register",
         href: "https://ee.kobotoolbox.org/single/81f9beab8ea9a72662b5c429f732f7f3",
+        disabled: false,
     },
     {
-        status: "Enrolment Open",
+        status: "Deadline Extended — 25 Apr",
         color: "#c084fc",
         title: "Learning Curve",
         sub: "Climate-Health Programme",
         cta: "Enrol",
         href: "https://ee.kobotoolbox.org/single/5b3703edf1a128aa20c66dff2fadd84f",
+        disabled: false,
     },
 ];
 
@@ -99,108 +102,87 @@ export default function CAPCHACallsOverlay() {
                         color: "rgba(255,255,255,0.35)",
                         whiteSpace: "nowrap",
                     }}>
-                        3 Open Calls
+                        2 Open Calls
                     </span>
                 </div>
 
                 {/* Call items */}
-                {calls.map((c, i) => (
-                    <a
-                        key={i}
-                        href={c.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{
-                            flex: 1,
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            gap: 12,
-                            padding: "12px 16px",
-                            borderRight: i < calls.length - 1 ? "1px solid rgba(255,255,255,0.08)" : "none",
-                            textDecoration: "none",
-                            transition: "background 0.18s",
-                        }}
-                        onMouseEnter={e => {
-                            (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.06)";
-                        }}
-                        onMouseLeave={e => {
-                            (e.currentTarget as HTMLElement).style.background = "transparent";
-                        }}
-                    >
-                        {/* Text */}
-                        <div style={{ minWidth: 0 }}>
-                            {/* Status */}
-                            <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 3 }}>
-                                <span style={{
-                                    width: 5, height: 5, borderRadius: "50%",
-                                    background: c.color,
-                                    display: "inline-block",
-                                    flexShrink: 0,
-                                    animation: `co-pulse 1.6s ${i * 0.25}s ease-in-out infinite`,
-                                }} />
-                                <span style={{
-                                    fontSize: "0.58rem",
-                                    fontFamily: "'DM Mono', monospace",
-                                    letterSpacing: "0.12em",
-                                    textTransform: "uppercase",
-                                    color: c.color,
-                                    fontWeight: 600,
-                                }}>
-                                    {c.status}
-                                </span>
+                {calls.map((c, i) => {
+                    if (c.disabled) return (
+                        <div
+                            key={i}
+                            style={{
+                                flex: 1,
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                gap: 12,
+                                padding: "12px 16px",
+                                borderRight: i < calls.length - 1 ? "1px solid rgba(255,255,255,0.08)" : "none",
+                                opacity: 0.5,
+                                cursor: "not-allowed",
+                            }}
+                        >
+                            <div style={{ minWidth: 0 }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 3 }}>
+                                    <span style={{ width: 5, height: 5, borderRadius: "50%", background: c.color, display: "inline-block", flexShrink: 0 }} />
+                                    <span style={{ fontSize: "0.58rem", fontFamily: "'DM Mono', monospace", letterSpacing: "0.12em", textTransform: "uppercase", color: c.color, fontWeight: 600 }}>
+                                        {c.status}
+                                    </span>
+                                </div>
+                                <p style={{ margin: 0, fontSize: "0.82rem", fontWeight: 700, color: "#ffffff", lineHeight: 1.2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", fontFamily: "'DM Sans', sans-serif" }}>
+                                    {c.title}
+                                </p>
+                                <p style={{ margin: "2px 0 0", fontSize: "0.65rem", color: "rgba(255,255,255,0.45)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", fontFamily: "'DM Sans', sans-serif" }}>
+                                    {c.sub}
+                                </p>
                             </div>
-
-                            {/* Title */}
-                            <p style={{
-                                margin: 0,
-                                fontSize: "0.82rem",
-                                fontWeight: 700,
-                                color: "#ffffff",
-                                lineHeight: 1.2,
-                                whiteSpace: "nowrap",
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                                fontFamily: "'DM Sans', sans-serif",
-                            }}>
-                                {c.title}
-                            </p>
-
-                            {/* Sub */}
-                            <p style={{
-                                margin: "2px 0 0",
-                                fontSize: "0.65rem",
-                                color: "rgba(255,255,255,0.45)",
-                                whiteSpace: "nowrap",
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                                fontFamily: "'DM Sans', sans-serif",
-                            }}>
-                                {c.sub}
-                            </p>
+                            <div style={{ display: "inline-flex", alignItems: "center", gap: 3, padding: "5px 12px", borderRadius: 99, border: `1px solid ${c.color}`, color: c.color, fontSize: "0.68rem", fontWeight: 700, fontFamily: "'DM Sans', sans-serif", whiteSpace: "nowrap", flexShrink: 0, letterSpacing: "0.02em" }}>
+                                {c.cta}
+                            </div>
                         </div>
-
-                        {/* CTA */}
-                        <div style={{
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: 3,
-                            padding: "5px 12px",
-                            borderRadius: 99,
-                            border: `1px solid ${c.color}`,
-                            color: c.color,
-                            fontSize: "0.68rem",
-                            fontWeight: 700,
-                            fontFamily: "'DM Sans', sans-serif",
-                            whiteSpace: "nowrap",
-                            flexShrink: 0,
-                            letterSpacing: "0.02em",
-                        }}>
-                            {c.cta}
-                            <ArrowUpRight style={{ width: 11, height: 11 }} />
-                        </div>
-                    </a>
-                ))}
+                    );
+                    return (
+                        <a
+                            key={i}
+                            href={c.href!}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                                flex: 1,
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                gap: 12,
+                                padding: "12px 16px",
+                                borderRight: i < calls.length - 1 ? "1px solid rgba(255,255,255,0.08)" : "none",
+                                textDecoration: "none",
+                                transition: "background 0.18s",
+                            }}
+                            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.06)"; }}
+                            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "transparent"; }}
+                        >
+                            <div style={{ minWidth: 0 }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 3 }}>
+                                    <span style={{ width: 5, height: 5, borderRadius: "50%", background: c.color, display: "inline-block", flexShrink: 0, animation: `co-pulse 1.6s ${i * 0.25}s ease-in-out infinite` }} />
+                                    <span style={{ fontSize: "0.58rem", fontFamily: "'DM Mono', monospace", letterSpacing: "0.12em", textTransform: "uppercase", color: c.color, fontWeight: 600 }}>
+                                        {c.status}
+                                    </span>
+                                </div>
+                                <p style={{ margin: 0, fontSize: "0.82rem", fontWeight: 700, color: "#ffffff", lineHeight: 1.2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", fontFamily: "'DM Sans', sans-serif" }}>
+                                    {c.title}
+                                </p>
+                                <p style={{ margin: "2px 0 0", fontSize: "0.65rem", color: "rgba(255,255,255,0.45)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", fontFamily: "'DM Sans', sans-serif" }}>
+                                    {c.sub}
+                                </p>
+                            </div>
+                            <div style={{ display: "inline-flex", alignItems: "center", gap: 3, padding: "5px 12px", borderRadius: 99, border: `1px solid ${c.color}`, color: c.color, fontSize: "0.68rem", fontWeight: 700, fontFamily: "'DM Sans', sans-serif", whiteSpace: "nowrap", flexShrink: 0, letterSpacing: "0.02em" }}>
+                                {c.cta}
+                                <ArrowUpRight style={{ width: 11, height: 11 }} />
+                            </div>
+                        </a>
+                    );
+                })}
             </div>
 
             <style>{`
