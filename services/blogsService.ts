@@ -11,6 +11,8 @@ export interface Blog {
   category: string;
   date: string;
   projectTeam: string[];
+  availableResources?: string[];
+  authors?: string[];
   createdAt?: string;
   updatedAt?: string;
 }

@@ -17,7 +17,6 @@ import CTASection from "./sections/CTASection";
 import AfricaPresenceMap from "./sections/AfricaPresenceMap";
 import ImpactStories from "./sections/impactstories";
 
-import { getEvents } from "@/services/eventsService";
 import { technicalReportsService } from "@/services/technicalReportsService";
 import { policyBriefsService } from "@/services/policyBriefsService";
 import { getNewsBriefs } from "@/services/newsBriefsService";
@@ -118,8 +117,7 @@ const latestProjects = [
 
 export default async function HeroSection() {
     // Fetch all data on the server
-    const [, techReports, policyBriefs, newsBriefs, researchProjects] = await Promise.allSettled([
-        getEvents(),
+    const [techReports, policyBriefs, newsBriefs, researchProjects] = await Promise.allSettled([
         technicalReportsService.getAll().catch(() => []),
         policyBriefsService.getAll().catch(() => []),
         getNewsBriefs().catch(() => []),

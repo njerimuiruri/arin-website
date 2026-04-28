@@ -2,6 +2,7 @@ import { fetchWithTimeout } from '../lib/fetchWithTimeout';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.demo.arin-africa.org";
 const BASE_URL = `${API_BASE_URL}/api/news-briefs`;
+const shouldLogErrors = process.env.NODE_ENV === 'development';
 
 
 export async function getNewsBriefs() {
@@ -10,7 +11,9 @@ export async function getNewsBriefs() {
     if (!res.ok) return [];
     return res.json();
   } catch (error) {
-    console.error('Failed to fetch news briefs:', error);
+    if (shouldLogErrors) {
+      console.error('Failed to fetch news briefs:', error);
+    }
     return [];
   }
 }
@@ -22,7 +25,9 @@ export async function getNewsBriefById(id) {
     if (!res.ok) return null;
     return res.json();
   } catch (error) {
-    console.error('Failed to fetch news brief:', error);
+    if (shouldLogErrors) {
+      console.error('Failed to fetch news brief:', error);
+    }
     return null;
   }
 }

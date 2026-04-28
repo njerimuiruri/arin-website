@@ -10,9 +10,10 @@ export async function fetchWithTimeout(resource: RequestInfo, options: any = {})
     clearTimeout(id);
     const error = e instanceof Error ? e : new Error('Unknown error occurred');
     
-    // Provide more detailed error information
     if (error.name === 'AbortError') {
-      throw new Error(`Request timeout after ${timeout}ms to ${resource}`);
+      const timeoutError = new Error(`Request timeout after ${timeout}ms to ${resource}`);
+      timeoutError.name = 'TimeoutError';
+      throw timeoutError;
     }
     
     // Only log errors in development mode

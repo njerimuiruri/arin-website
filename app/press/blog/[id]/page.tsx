@@ -1,10 +1,22 @@
 "use client";
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { Calendar, Users, ArrowLeft, Tag, Share2, ZoomIn, X } from 'lucide-react';
+import { Calendar, Users, ArrowLeft, Tag, Share2, ZoomIn, X, FileText } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
 import { getBlogById } from '@/services/blogsService';
 import Footer from '@/app/footer/Footer';
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.demo.arin-africa.org';
+
+function resolveResourceUrl(url: string): string {
+    if (!url) return url;
+    if (url.startsWith('http://') || url.startsWith('https://')) return url;
+    return `${API_BASE_URL}${url}`;
+}
+
+function getResourceFileName(url: string): string {
+    return url.split('/').pop() || url;
+}
 
 interface Blog {
     _id?: string;
@@ -14,6 +26,8 @@ interface Blog {
     category?: string;
     date?: string;
     projectTeam?: string[];
+    availableResources?: string[];
+    authors?: string[];
     createdAt?: string;
     updatedAt?: string;
 }
@@ -148,6 +162,31 @@ export default function BlogDetailPage() {
                                     {blog.date && <div><dt className="text-gray-500 text-xs uppercase tracking-wide mb-0.5">Date</dt><dd className="text-gray-900 font-medium">{new Date(blog.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</dd></div>}
                                     {blog.projectTeam && blog.projectTeam.length > 0 && <div><dt className="text-gray-500 text-xs uppercase tracking-wide mb-0.5">Team</dt><dd className="text-gray-900 font-medium">{blog.projectTeam.join(', ')}</dd></div>}
                                 </dl>
+                            </div>
+
+                            {/* Available Resources */}
+                            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+                                <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4 flex items-center gap-2">
+                                    <FileText className="w-4 h-4" /> Available Resources
+                                </h3>
+                                {blog.availableResources && blog.availableResources.length > 0 ? (
+                                    <div className="space-y-2">
+                                        {blog.availableResources.map((url, i) => (
+                                            <a
+                                                key={i}
+                                                href={resolveResourceUrl(url)}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-2 px-3 py-2.5 bg-gray-50 hover:bg-[#021d49] hover:text-white text-gray-700 rounded-lg transition-colors text-sm font-medium border border-gray-200 hover:border-[#021d49] group"
+                                            >
+                                                <FileText className="w-4 h-4 shrink-0 text-[#021d49] group-hover:text-white" />
+                                                <span className="truncate">{getResourceFileName(url)}</span>
+                                            </a>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <p className="text-sm text-gray-400 italic">No resources available for this post.</p>
+                                )}
                             </div>
 
                             {/* Quick Actions */}
