@@ -4,7 +4,6 @@ import {
     Globe, Zap, Leaf, Building2, FlaskConical, HeartPulse, Pickaxe,
 } from "lucide-react";
 import { useState, useEffect, useRef, useCallback } from "react";
-import CAPCHACallsStrip from "./CapchaCallsStrip";
 
 const slides = [
     { type: "image" as const, src: "/images/lreb.jpg", icon: Leaf, label: "Sustainable Development", tag: "01", href: "/about-us/focus-areas" },
@@ -115,10 +114,6 @@ const HeroSection = () => {
                         )}
                     </div>
                 </div>
-
-                {/* ── CAPCHA CALLS STRIP ── */}
-                {/* Sits between the top bar and the main content, anchored to the bottom */}
-                <CAPCHACallsStrip />
 
                 {/* ── MAIN CONTENT — bottom-left ── */}
                 <div className="px-6 sm:px-10 lg:px-20 pb-10 pointer-events-auto">
