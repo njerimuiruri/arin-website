@@ -1,9 +1,7 @@
-
 import { fetchWithTimeout } from '../lib/fetchWithTimeout';
+import { getApiUrl } from '../lib/apiConfig';
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL
-  ? `${process.env.NEXT_PUBLIC_API_URL}/api/journal-articles`
-  : "https://api.demo.arin-africa.org/api/journal-articles";
+const BASE_URL = getApiUrl('/journal-articles');
 
 
 export async function getJournalArticles() {

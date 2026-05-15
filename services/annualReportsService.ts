@@ -1,6 +1,7 @@
 import { fetchWithTimeout } from '../lib/fetchWithTimeout';
+import { API_CONFIG } from '../lib/apiConfig';
 
-const API_URL = 'https://api.demo.arin-africa.org/api';
+const API_URL = `${API_CONFIG.BASE_URL}/api`;
 
 export interface AnnualReport {
     _id: string;

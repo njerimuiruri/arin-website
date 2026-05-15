@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, Calendar, MessageSquare, Search, Filter } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
+import { API_CONFIG } from '@/lib/apiConfig';
 import { getPolicyDialogues } from '@/services/policyDialoguesService';
 
 const PolicyDialoguesPage = () => {
@@ -38,7 +39,7 @@ const PolicyDialoguesPage = () => {
 
     const buildImageUrl = (path: string) => {
         if (!path) return '';
-        return path.startsWith('http') ? path : `https://api.demo.arin-africa.org${path}`;
+        return path.startsWith('http') ? path : `${API_CONFIG.BASE_URL}${path}`;
     };
 
     const filteredDialogues = dialogues

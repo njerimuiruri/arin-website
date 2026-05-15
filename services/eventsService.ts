@@ -1,6 +1,7 @@
 import { fetchWithTimeout } from '../lib/fetchWithTimeout';
+import { getApiUrl } from '../lib/apiConfig';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ? `${process.env.NEXT_PUBLIC_API_URL}/api` : 'https://api.demo.arin-africa.org/api';
+const BASE_URL = getApiUrl('/events');
 const shouldLogErrors = process.env.NODE_ENV === 'development';
 
 export interface Event {
@@ -20,7 +21,7 @@ export interface Event {
 
 export async function getEvents(): Promise<Event[]> {
     try {
-        const res = await fetchWithTimeout(`${API_URL}/events`, {
+        const res = await fetchWithTimeout(BASE_URL, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
             timeout: 10000,
@@ -37,7 +38,7 @@ export async function getEvents(): Promise<Event[]> {
 
 export async function getEvent(id: string): Promise<Event | null> {
     try {
-        const res = await fetchWithTimeout(`${API_URL}/events/${id}`, {
+        const res = await fetchWithTimeout(`${BASE_URL}/${id}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
             timeout: 10000,

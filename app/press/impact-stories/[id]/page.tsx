@@ -5,6 +5,7 @@ import Navbar from '@/app/navbar/Navbar';
 import { useParams, useRouter } from 'next/navigation';
 import { getImpactStory } from '@/services/impactStoriesService';
 import Footer from '@/app/footer/Footer';
+import { API_CONFIG } from '@/lib/apiConfig';
 
 const ImpactStoryDetailPage = () => {
     const { id } = useParams();
@@ -31,7 +32,7 @@ const ImpactStoryDetailPage = () => {
 
     const buildImageUrl = (img?: string) => {
         if (!img) return '';
-        return img.startsWith('http') ? img : `https://api.demo.arin-africa.org${img}`;
+        return img.startsWith('http') ? img : `${API_CONFIG.BASE_URL}${img}`;
     };
 
     if (loading) return (

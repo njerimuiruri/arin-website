@@ -1,7 +1,7 @@
 import { fetchWithTimeout } from '../lib/fetchWithTimeout';
+import { getApiUrl } from '../lib/apiConfig';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.demo.arin-africa.org";
-const BASE_URL = `${API_BASE_URL}/api/policy-briefs`;
+const BASE_URL = getApiUrl('/policy-briefs');
 
 export interface PolicyBrief {
   _id?: string;

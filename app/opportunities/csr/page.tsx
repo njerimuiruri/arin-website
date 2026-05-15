@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, Search, Filter, Heart, Users, Briefcase, Calendar, User } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
+import { API_CONFIG } from '@/lib/apiConfig';
 
 interface Csr {
     _id: string;
@@ -24,7 +25,7 @@ const CSRPage = () => {
 
     const fetchCsrActivities = async () => {
         try {
-            const apiBaseUrl = (typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_API_BASE_URL : '') || 'https://api.demo.arin-africa.org';
+            const apiBaseUrl = API_CONFIG.BASE_URL;
             const response = await fetch(apiBaseUrl + '/api/csr', {
                 headers: { 'Content-Type': 'application/json' },
             });

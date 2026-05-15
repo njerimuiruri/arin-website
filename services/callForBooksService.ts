@@ -1,9 +1,7 @@
-
 import { fetchWithTimeout } from '../lib/fetchWithTimeout';
+import { getApiUrl } from '../lib/apiConfig';
 
-const BASE = process.env.NEXT_PUBLIC_API_URL
-    ? `${process.env.NEXT_PUBLIC_API_URL}/api/call-for-books`
-    : "https://api.demo.arin-africa.org/api/call-for-books";
+const BASE = getApiUrl('/call-for-books');
 
 
 export async function getAllCalls() {

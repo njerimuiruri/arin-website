@@ -4,6 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import Navbar from "@/app/navbar/Navbar";
 import { getCapacityProject } from "@/services/capacityBuildingService";
 import Footer from "@/app/footer/Footer";
+import { API_CONFIG } from '@/lib/apiConfig';
 
 
 type CapacityProject = {
@@ -33,12 +34,12 @@ const formatDate = (dateString: string) => {
 const buildImageUrl = (imagePath?: string) => {
     if (!imagePath) return null;
     if (imagePath.startsWith("http")) return imagePath;
-    return `https://api.demo.arin-africa.org${imagePath}`;
+    return `${API_CONFIG.BASE_URL}${imagePath}`;
 };
 
 const buildResourceUrl = (resourcePath: string) => {
     if (resourcePath.startsWith("http")) return resourcePath;
-    return `https://api.demo.arin-africa.org${resourcePath}`;
+    return `${API_CONFIG.BASE_URL}${resourcePath}`;
 };
 
 const extractTextFromHtml = (html: string, maxLength = 150) => {

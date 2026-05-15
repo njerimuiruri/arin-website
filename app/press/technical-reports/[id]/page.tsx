@@ -5,8 +5,9 @@ import { technicalReportsService, TechnicalReport } from "@/services/technicalRe
 import Navbar from "@/app/navbar/Navbar";
 import Footer from "@/app/footer/Footer";
 import { Calendar, FileText, User, ArrowLeft, BookOpen, Download, Tag, Clock, ZoomIn, X, Eye } from "lucide-react";
+import { API_CONFIG } from '@/lib/apiConfig';
 
-const API_BASE_URL = (process.env.NEXT_PUBLIC_API_URL || 'https://api.demo.arin-africa.org') + '/api';
+const API_BASE_URL = `${API_CONFIG.BASE_URL}/api`;
 
 export default function TechnicalReportDetailPage() {
     const params = useParams();

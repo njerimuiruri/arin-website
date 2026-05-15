@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowLeft, Calendar, Users, FileText, Mail, Tag, ExternalLink, Clock, ImageIcon } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
+import { API_CONFIG } from '@/lib/apiConfig';
 import { useParams, useRouter } from 'next/navigation';
 import { getResearchProject } from '@/services/researchProjectService';
 
@@ -29,7 +30,7 @@ const ProjectDetailPage = () => {
 
     const buildImageUrl = (img?: string) => {
         if (!img) return '';
-        return img.startsWith('http') ? img : `https://api.demo.arin-africa.org${img}`;
+        return img.startsWith('http') ? img : `${API_CONFIG.BASE_URL}${img}`;
     };
 
     const handleBack = () => router.back();

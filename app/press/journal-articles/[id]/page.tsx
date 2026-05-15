@@ -6,6 +6,7 @@ import { getJournalArticle } from "@/services/journalArticlesService";
 import { ArrowLeft, Calendar, Users, Download, FileText, BookOpen, X, ZoomIn, Eye } from "lucide-react";
 import Navbar from "@/app/navbar/Navbar";
 import Footer from "@/app/footer/Footer";
+import { API_CONFIG } from '@/lib/apiConfig';
 
 interface JournalArticle {
     _id?: string;
@@ -70,7 +71,7 @@ export default function JournalArticleDetailPage() {
     const authorsDisplay = article.authors && article.authors.length > 0 ? article.authors.join(", ") : "Unknown Author";
     const rawDate = article.date || article.datePosted;
     const dateDisplay = rawDate ? new Date(rawDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
-    const coverImageUrl = article.coverImage?.startsWith('http') ? article.coverImage : article.coverImage ? `https://api.demo.arin-africa.org${article.coverImage}` : '';
+    const coverImageUrl = article.coverImage?.startsWith('http') ? article.coverImage : article.coverImage ? `${API_CONFIG.BASE_URL}${article.coverImage}` : '';
     const resourceList = (article.resources || article.availableResources || []).filter((u): u is string => typeof u === 'string' && u.trim().length > 0);
 
     return (
@@ -147,7 +148,7 @@ export default function JournalArticleDetailPage() {
                                     </div>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         {resourceList.map((url, idx) => {
-                                            const fullUrl = url.startsWith('http') ? url : `https://api.demo.arin-africa.org${url}`;
+                                            const fullUrl = url.startsWith('http') ? url : `${API_CONFIG.BASE_URL}${url}`;
                                             const filename = decodeURIComponent(url.split('/').pop()?.split('?')[0] ?? '') || `Document ${idx + 1}`;
                                             const isPdf = url.toLowerCase().includes('.pdf');
                                             return (

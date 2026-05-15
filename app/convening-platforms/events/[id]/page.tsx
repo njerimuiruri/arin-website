@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, Calendar, Download, Clock, MapPin, FileText, Tag, Share2, Bell, ExternalLink } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
+import { API_CONFIG } from '@/lib/apiConfig';
 import { getEvent } from '@/services/eventsService';
 
 const EventDetailPage = () => {
@@ -50,7 +51,7 @@ const EventDetailPage = () => {
 
     const buildImageUrl = (img?: string) => {
         if (!img) return '';
-        return img.startsWith('http') ? img : `https://api.demo.arin-africa.org${img}`;
+        return img.startsWith('http') ? img : `${API_CONFIG.BASE_URL}${img}`;
     };
 
     const getCategoryColor = (category: string) => {
@@ -299,7 +300,7 @@ const EventDetailPage = () => {
 
                                         <div className="space-y-3">
                                             {event.availableResources.map((resource: string, idx: number) => {
-                                                const resourceUrl = resource.startsWith('http') ? resource : `https://api.demo.arin-africa.org${resource}`;
+                                                const resourceUrl = resource.startsWith('http') ? resource : `${API_CONFIG.BASE_URL}${resource}`;
                                                 const fileName = resource.split('/').pop() || `Resource ${idx + 1}`;
                                                 return (
                                                     <a

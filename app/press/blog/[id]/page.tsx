@@ -5,13 +5,12 @@ import { Calendar, Users, ArrowLeft, Tag, Share2, ZoomIn, X, FileText } from 'lu
 import Navbar from '@/app/navbar/Navbar';
 import { getBlogById } from '@/services/blogsService';
 import Footer from '@/app/footer/Footer';
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.demo.arin-africa.org';
+import { API_CONFIG } from '@/lib/apiConfig';
 
 function resolveResourceUrl(url: string): string {
     if (!url) return url;
     if (url.startsWith('http://') || url.startsWith('https://')) return url;
-    return `${API_BASE_URL}${url}`;
+    return `${API_CONFIG.BASE_URL}${url}`;
 }
 
 function getResourceFileName(url: string): string {

@@ -1,6 +1,7 @@
-const BASE_URL = "https://api.demo.arin-africa.org/api/teams";
-
 import { fetchWithTimeout } from '../lib/fetchWithTimeout';
+import { getApiUrl } from '../lib/apiConfig';
+
+const BASE_URL = getApiUrl('/teams');
 
 export async function getTeamMembers() {
   try {

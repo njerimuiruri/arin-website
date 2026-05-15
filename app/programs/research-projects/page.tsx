@@ -5,6 +5,7 @@ import Navbar from '@/app/navbar/Navbar';
 import { getResearchProjects } from '@/services/researchProjectService';
 import { useRouter } from 'next/navigation';
 import Footer from '@/app/footer/Footer';
+import { API_CONFIG } from '@/lib/apiConfig';
 
 const ResearchProjectsPage = () => {
     const router = useRouter();
@@ -38,7 +39,7 @@ const ResearchProjectsPage = () => {
     const stripHtml = (html: string) => html.replace(/<[^>]*>/g, '');
     const buildImageUrl = (img?: string) => {
         if (!img) return '';
-        return img.startsWith('http') ? img : `https://api.demo.arin-africa.org${img}`;
+        return img.startsWith('http') ? img : `${API_CONFIG.BASE_URL}${img}`;
     };
 
     const filteredProjects = projects.filter(project => {

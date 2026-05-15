@@ -5,6 +5,7 @@ import { FileText, Calendar, User, ArrowLeft, BookOpen, ZoomIn, X, Eye, Download
 import Navbar from '@/app/navbar/Navbar';
 import { workingPaperSeriesService } from '@/services/workingPaperSeriesService';
 import Footer from '@/app/footer/Footer';
+import { API_CONFIG } from '@/lib/apiConfig';
 
 export default function WorkingPaperDetailPage() {
     const params = useParams();
@@ -51,7 +52,7 @@ export default function WorkingPaperDetailPage() {
         </>
     );
 
-    const imageUrl = paper.image?.startsWith('http') ? paper.image : paper.image ? `https://api.demo.arin-africa.org${paper.image}` : '';
+    const imageUrl = paper.image?.startsWith('http') ? paper.image : paper.image ? `${API_CONFIG.BASE_URL}${paper.image}` : '';
     const resources = (paper.availableResources ?? []).filter((u: any): u is string => typeof u === 'string' && u.trim().length > 0);
 
     return (
@@ -127,7 +128,7 @@ export default function WorkingPaperDetailPage() {
                                     </div>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         {resources.map((url: string, idx: number) => {
-                                            const fullUrl = url.startsWith('http') ? url : `https://api.demo.arin-africa.org${url}`;
+                                            const fullUrl = url.startsWith('http') ? url : `${API_CONFIG.BASE_URL}${url}`;
                                             const filename = decodeURIComponent(url.split('/').pop()?.split('?')[0] ?? '') || `Document ${idx + 1}`;
                                             return (
                                                 <div key={idx} className="bg-white rounded-xl border border-gray-200 hover:border-[#021d49] shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group">

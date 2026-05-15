@@ -5,6 +5,7 @@ import Link from "next/link";
 import { workingPaperSeriesService } from '@/services/workingPaperSeriesService';
 import React, { useState, useEffect } from 'react';
 import Footer from '@/app/footer/Footer';
+import { API_CONFIG } from '@/lib/apiConfig';
 
 export default function WorkingPapersPage() {
     const [papers, setPapers] = useState<any[]>([]);
@@ -70,7 +71,7 @@ export default function WorkingPapersPage() {
                                     {paper.image ? (
                                         <>
                                             <img
-                                                src={paper.image.startsWith('http') ? paper.image : `https://api.demo.arin-africa.org${paper.image}`}
+                                                src={paper.image.startsWith('http') ? paper.image : `${API_CONFIG.BASE_URL}${paper.image}`}
                                                 alt={paper.title}
                                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                             />
@@ -132,7 +133,7 @@ export default function WorkingPapersPage() {
                                             <ul className="list-disc ml-4">
                                                 {paper.availableResources.map((url: string, idx: number) => (
                                                     <li key={idx}>
-                                                        <a href={url.startsWith('http') ? url : `https://api.demo.arin-africa.org${url}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline text-xs">Resource {idx + 1}</a>
+                                                        <a href={url.startsWith('http') ? url : `${API_CONFIG.BASE_URL}${url}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline text-xs">Resource {idx + 1}</a>
                                                     </li>
                                                 ))}
                                             </ul>

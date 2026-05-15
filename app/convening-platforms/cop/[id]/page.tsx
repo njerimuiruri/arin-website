@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, Calendar, Download, FileText } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
+import { API_CONFIG } from '@/lib/apiConfig';
 
 interface Cop {
     _id: string;
@@ -27,7 +28,7 @@ const CopDetailPage = () => {
         async function fetchCop() {
             if (!id) return;
             try {
-                const apiBaseUrl = (typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_API_BASE_URL : '') || 'https://api.demo.arin-africa.org';
+                const apiBaseUrl = API_CONFIG.BASE_URL;
                 const response = await fetch(`${apiBaseUrl}/api/cop/${id}`, {
                     headers: { 'Content-Type': 'application/json' },
                 });

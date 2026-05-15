@@ -4,6 +4,7 @@ import { FileText, Calendar, Search, ChevronLeft, ChevronRight, Users, ArrowRigh
 import Navbar from '@/app/navbar/Navbar';
 import { getJournalArticles } from '@/services/journalArticlesService';
 import Footer from '@/app/footer/Footer';
+import { API_CONFIG } from '@/lib/apiConfig';
 
 const JournalArticlesPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -175,7 +176,7 @@ const JournalArticlesPage = () => {
                                         {article.coverImage ? (
                                             <>
                                                 <img
-                                                    src={article.coverImage.startsWith('http') ? article.coverImage : `https://api.demo.arin-africa.org${article.coverImage}`}
+                                                    src={article.coverImage.startsWith('http') ? article.coverImage : `${API_CONFIG.BASE_URL}${article.coverImage}`}
                                                     alt={article.title}
                                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                                 />

@@ -1,4 +1,6 @@
-const API_BASE_URL = (process.env.NEXT_PUBLIC_API_URL || 'https://api.demo.arin-africa.org') + '/api';
+import { API_CONFIG } from '../lib/apiConfig';
+
+const API_BASE_URL = `${API_CONFIG.BASE_URL}/api`;
 
 export interface Newsletter {
 	_id?: string;

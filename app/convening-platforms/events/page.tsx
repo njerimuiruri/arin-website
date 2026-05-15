@@ -3,6 +3,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search, Calendar, MapPin, Clock } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
+import { API_CONFIG } from '@/lib/apiConfig';
 import { getEvents } from '@/services/eventsService';
 
 const EventsPage = () => {
@@ -53,7 +54,7 @@ const EventsPage = () => {
 
 	const buildImageUrl = (img?: string) => {
 		if (!img) return '';
-		return img.startsWith('http') ? img : `https://api.demo.arin-africa.org${img}`;
+		return img.startsWith('http') ? img : `${API_CONFIG.BASE_URL}${img}`;
 	};
 
 	const getCategoryColor = (category: string) => {

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, Calendar, Download, Share2, Clock, FileText, Users } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
+import { API_CONFIG } from '@/lib/apiConfig';
 import { getPolicyDialogue } from '@/services/policyDialoguesService';
 
 const PolicyDialogueDetailPage = () => {
@@ -41,7 +42,7 @@ const PolicyDialogueDetailPage = () => {
 
     const buildImageUrl = (img?: string) => {
         if (!img) return '';
-        return img.startsWith('http') ? img : `https://api.demo.arin-africa.org${img}`;
+        return img.startsWith('http') ? img : `${API_CONFIG.BASE_URL}${img}`;
     };
 
     const getStatusColor = (status: string) => {
@@ -218,7 +219,7 @@ const PolicyDialogueDetailPage = () => {
                                     </div>
                                     <div className="grid gap-3">
                                         {dialogue.availableResources.map((resource: string, idx: number) => {
-                                            const resourceUrl = resource.startsWith('http') ? resource : `https://api.demo.arin-africa.org${resource}`;
+                                            const resourceUrl = resource.startsWith('http') ? resource : `${API_CONFIG.BASE_URL}${resource}`;
                                             const fileName = resource.split('/').pop() || `Resource ${idx + 1}`;
                                             return (
                                                 <a

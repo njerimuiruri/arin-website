@@ -1,6 +1,7 @@
-
 import { fetchWithTimeout } from '../lib/fetchWithTimeout';
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL ? `${process.env.NEXT_PUBLIC_API_URL}/api/impact-stories` : "https://api.demo.arin-africa.org/api/impact-stories";
+import { getApiUrl } from '../lib/apiConfig';
+
+const BASE_URL = getApiUrl('/impact-stories');
 
 
 export async function getImpactStories() {

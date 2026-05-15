@@ -6,6 +6,7 @@ import { getBook } from "@/services/booksService";
 import { ArrowLeft, Calendar, Users, Download, BookOpen, FileText, Eye, ZoomIn, X } from "lucide-react";
 import Navbar from "@/app/navbar/Navbar";
 import Footer from "@/app/footer/Footer";
+import { API_CONFIG } from '@/lib/apiConfig';
 
 interface Book {
     _id?: string;
@@ -74,7 +75,7 @@ export default function BookDetailPage() {
         </>
     );
 
-    const imageUrl = book.image?.startsWith('http') ? book.image : book.image ? `https://api.demo.arin-africa.org${book.image}` : '';
+    const imageUrl = book.image?.startsWith('http') ? book.image : book.image ? `${API_CONFIG.BASE_URL}${book.image}` : '';
     const authorsDisplay = book.authors && book.authors.length > 0 ? book.authors.join(", ") : "Unknown Author";
     const dateDisplay = book.datePosted ? new Date(book.datePosted).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
     const resources = (book.availableResources ?? []).filter((u): u is string => typeof u === 'string' && u.trim().length > 0);
@@ -157,7 +158,7 @@ export default function BookDetailPage() {
                                     </div>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         {resources.map((url, idx) => {
-                                            const fullUrl = url.startsWith('http') ? url : `https://api.demo.arin-africa.org${url}`;
+                                            const fullUrl = url.startsWith('http') ? url : `${API_CONFIG.BASE_URL}${url}`;
                                             const filename = decodeURIComponent(url.split('/').pop()?.split('?')[0] ?? '') || `Document ${idx + 1}`;
                                             const fileLabel = getFileTypeLabel(url);
                                             return (

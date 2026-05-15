@@ -4,6 +4,7 @@ import { X, BookOpen, Users, ArrowUpRight, Briefcase, Mail, Linkedin } from "luc
 import { getTeamMembers } from "@/services/teamsService";
 import Navbar from "@/app/navbar/Navbar";
 import Footer from "@/app/footer/Footer";
+import { API_CONFIG } from '@/lib/apiConfig';
 
 type SecretariatMember = {
     _id: string;
@@ -29,7 +30,7 @@ const imgSrc = (image?: string) =>
     image
         ? image.startsWith("http")
             ? image
-            : `https://api.demo.arin-africa.org${image}`
+            : `${API_CONFIG.BASE_URL}${image}`
         : "";
 
 const fallback = (name: string) =>

@@ -1,6 +1,7 @@
-
 import { fetchWithTimeout } from '../lib/fetchWithTimeout';
-const BASE_URL = "https://api.demo.arin-africa.org/api/capacity-building";
+import { getApiUrl } from '../lib/apiConfig';
+
+const BASE_URL = getApiUrl('/capacity-building');
 
 
 export async function getCapacityProjects() {

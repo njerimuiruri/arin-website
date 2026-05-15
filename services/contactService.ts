@@ -1,6 +1,7 @@
 import { fetchWithTimeout } from '../lib/fetchWithTimeout';
+import { API_CONFIG } from '../lib/apiConfig';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.demo.arin-africa.org';
+const API_URL = API_CONFIG.BASE_URL;
 
 export interface ContactFormData {
   name: string;

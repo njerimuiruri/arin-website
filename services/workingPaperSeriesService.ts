@@ -1,6 +1,7 @@
-
 import { fetchWithTimeout } from '../lib/fetchWithTimeout';
-const API_BASE_URL = (process.env.NEXT_PUBLIC_API_URL || 'https://api.demo.arin-africa.org') + '/api';
+import { getApiUrl } from '../lib/apiConfig';
+
+const BASE_URL = getApiUrl('/working-paper-series');
 
 export interface WorkingPaperSeries {
   _id?: string;
@@ -15,13 +16,13 @@ export interface WorkingPaperSeries {
 
 export const workingPaperSeriesService = {
   async getAll(): Promise<WorkingPaperSeries[]> {
-    const response = await fetchWithTimeout(`${API_BASE_URL}/working-paper-series`, { timeout: 10000 });
+    const response = await fetchWithTimeout(BASE_URL, { timeout: 10000 });
     if (!response.ok) throw new Error('Failed to fetch working paper series');
     return response.json();
   },
 
   async getById(id: string): Promise<WorkingPaperSeries> {
-    const response = await fetchWithTimeout(`${API_BASE_URL}/working-paper-series/${id}`, { timeout: 10000 });
+    const response = await fetchWithTimeout(`${BASE_URL}/${id}`, { timeout: 10000 });
     if (!response.ok) throw new Error('Working paper series not found');
     return response.json();
   },

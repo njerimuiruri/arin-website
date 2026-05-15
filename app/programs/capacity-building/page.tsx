@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { getCapacityProjects } from '@/services/capacityBuildingService';
 import Navbar from '@/app/navbar/Navbar';
 import Footer from '@/app/footer/Footer';
+import { API_CONFIG } from '@/lib/apiConfig';
 
 // ==================== CAPACITY BUILDING LIST PAGE ====================
 const CapacityBuildingList = () => {
@@ -47,7 +48,7 @@ const CapacityBuildingList = () => {
     const buildImageUrl = (imagePath: string | undefined) => {
         if (!imagePath) return null;
         if (imagePath.startsWith('http')) return imagePath;
-        return `https://api.demo.arin-africa.org${imagePath}`;
+        return `${API_CONFIG.BASE_URL}${imagePath}`;
     };
 
     const extractTextFromHtml = (html: string, maxLength: number = 150) => {

@@ -6,6 +6,7 @@ import { getImpactStories } from '@/services/impactStoriesService';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/app/navbar/Navbar';
 import Footer from '@/app/footer/Footer';
+import { API_CONFIG } from '@/lib/apiConfig';
 
 const ImpactStoriesPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -127,7 +128,7 @@ const ImpactStoriesPage = () => {
                                         {story.image ? (
                                             <>
                                                 <img
-                                                    src={story.image.startsWith('http') ? story.image : `https://api.demo.arin-africa.org${story.image}`}
+                                                    src={story.image.startsWith('http') ? story.image : `${API_CONFIG.BASE_URL}${story.image}`}
                                                     alt={story.title}
                                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                                                 />

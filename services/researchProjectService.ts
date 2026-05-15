@@ -1,7 +1,7 @@
 import { fetchWithTimeout } from '../lib/fetchWithTimeout';
+import { getApiUrl } from '../lib/apiConfig';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.demo.arin-africa.org";
-const BASE_URL = `${API_BASE_URL}/api/research-projects`;
+const BASE_URL = getApiUrl('/research-projects');
 
 export async function getResearchProjects() {
   const res = await fetchWithTimeout(BASE_URL, { cache: 'no-store', timeout: 10000 });

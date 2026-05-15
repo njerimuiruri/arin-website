@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { API_CONFIG } from '../lib/apiConfig';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.demo.arin-africa.org';
+const API_URL = API_CONFIG.BASE_URL;
 
 export const getPhotosVideos = async () => {
   const { data } = await axios.get(`${API_URL}/photos-videos`);

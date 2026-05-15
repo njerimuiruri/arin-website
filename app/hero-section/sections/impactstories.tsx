@@ -4,6 +4,7 @@ import { ArrowRight, Calendar, MapPin } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
 import { getImpactStories } from '@/services/impactStoriesService';
+import { API_CONFIG } from '@/lib/apiConfig';
 import { useRouter } from 'next/navigation';
 
 const ImpactStories = () => {
@@ -64,7 +65,7 @@ const ImpactStories = () => {
                             {/* Image */}
                             <div className="relative h-56 overflow-hidden">
                                 <img
-                                    src={story.image?.startsWith('http') ? story.image : story.image ? `https://api.demo.arin-africa.org${story.image}` : '/api/placeholder/600/400'}
+                                    src={story.image?.startsWith('http') ? story.image : story.image ? `${API_CONFIG.BASE_URL}${story.image}` : '/api/placeholder/600/400'}
                                     alt={story.title}
                                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                 />
