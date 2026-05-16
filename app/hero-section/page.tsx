@@ -25,6 +25,7 @@ import { getResearchProjects } from "@/services/researchProjectService";
 import StatsSection from "./sections/StatsSection";
 import AboutSection from "./sections/Aboutsection";
 import PresenceSection from "./sections/Presencesection";
+import MerlSpotlightSection from "./sections/MerlSpotlightSection";
 
 const latestPosts = [
     {
@@ -141,6 +142,8 @@ export default async function HeroSection() {
             {/* <UpcomingEventsSection upcomingEvents={upcomingEvents} /> */}
             {/* <LatestProjectsSection latestProjects={latestProjects} /> */}
             {/* <ImpactStories /> */}
+
+            <MerlSpotlightSection />
 
             <LatestFromArinSection
                 newsBriefs={newsBriefs}

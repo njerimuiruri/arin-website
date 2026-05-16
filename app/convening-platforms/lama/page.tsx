@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Target, Users, Database, Wrench, MessageSquare, ExternalLink, Layers, TrendingUp, CheckCircle } from 'lucide-react';
+import { ArrowRight, Target, Users, Database, Wrench, MessageSquare, ExternalLink, Layers, TrendingUp, CheckCircle, Award, Globe, BarChart3, FileText } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
 
 const LAMAPage = () => {
@@ -170,6 +170,151 @@ const LAMAPage = () => {
                                             </div>
                                         </div>
                                         <p className="text-xs font-bold text-[#021d49] mt-1 animate-pulse">Click here!</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* ── Kenya MERL Partnership Section ── */}
+                <div className="max-w-7xl mx-auto px-6 pt-12 pb-0">
+                    <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+
+                        {/* Top accent bar */}
+                        <div style={{ height: 4, background: "linear-gradient(90deg, #021d49 0%, #00c4b3 100%)" }} />
+
+                        <div className="p-8 md:p-10">
+                            {/* Eyebrow */}
+                            <div className="flex items-center gap-2 mb-6">
+                                <div className="w-2 h-2 rounded-full bg-[#00c4b3]" />
+                                <span className="text-xs font-bold uppercase tracking-widest text-[#00c4b3]">
+                                    Partnership Milestone · 2025
+                                </span>
+                            </div>
+
+                            <div className="grid lg:grid-cols-3 gap-10 items-start">
+
+                                {/* Main content — 2 cols */}
+                                <div className="lg:col-span-2">
+                                    <h2 className="font-bold leading-tight text-[#021d49] mb-6" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: "clamp(1.6rem, 2.8vw, 2.3rem)" }}>
+                                        LAMA Engaged in Kenya's National Climate Monitoring,
+                                        Evaluation, Reporting &amp; Learning (MERL) Initiative
+                                    </h2>
+
+                                    {/* Exact paragraph — professionally formatted */}
+                                    <div className="border-l-4 border-[#00c4b3] pl-5 mb-8">
+                                        <p className="text-gray-700 leading-relaxed" style={{ fontSize: 15.5, lineHeight: 1.85 }}>
+                                            Kenya's Ministry of Environment, Climate Change, Natural Resources and Forestry (MECCF)
+                                            has formed a landmark multi-partner initiative — co-led with{" "}
+                                            <strong className="text-[#021d49]">SouthSouthNorth (SSN)</strong>,
+                                            the <strong className="text-[#021d49]">Climate and Development Knowledge Network (CDKN)</strong>,
+                                            and the <strong className="text-[#021d49]">World Resources Institute (WRI)</strong>,
+                                            with technical support from the{" "}
+                                            <strong className="text-[#021d49]">African Group of Negotiators Expert Support (AGNES)</strong>,
+                                            and with the strategic engagement of the{" "}
+                                            <strong className="text-[#021d49]">Africa Research and Impact Network (ARIN)</strong>{" "}
+                                            through its{" "}
+                                            <strong className="text-[#00c4b3]">Locally Led Adaptation Metrics for Africa (LAMA) Platform</strong>.
+                                            Together, this coalition is co-developing a standardised indicators handbook and a digital
+                                            Monitoring, Evaluation, Reporting, and Learning (MERL) tool. The MERL tool will leverage these
+                                            indicators to strengthen data collection, analysis, and reporting — ultimately promoting greater
+                                            transparency, accountability, and informed decision-making across Kenya's climate actions.
+                                        </p>
+                                    </div>
+
+                                    {/* Delivery cards */}
+                                    <div className="grid sm:grid-cols-2 gap-3 mb-8">
+                                        {[
+                                            { title: "Standardised Indicators Handbook", desc: "Co-developed with counties, civil society, and national government for locally-grounded climate measurement" },
+                                            { title: "Digital MERL Tool", desc: "Real-time climate action tracking, analysis, and transparent reporting across all 47 Kenya counties" },
+                                            { title: "Multi-Stakeholder Alignment", desc: "Connecting county authorities, national government, development partners, and community voices" },
+                                            { title: "Policy Integration", desc: "Aligned with NCCAPIII, NAP 2015–2030, and Kenya's updated Nationally Determined Contributions (NDCs)" },
+                                        ].map(({ title, desc }) => (
+                                            <div key={title} className="flex gap-3 p-4 rounded-xl bg-gray-50 border border-gray-100">
+                                                <div className="shrink-0 w-2 h-2 rounded-full bg-[#00c4b3] mt-2" />
+                                                <div>
+                                                    <p className="font-semibold text-sm text-[#021d49] mb-1">{title}</p>
+                                                    <p className="text-xs text-gray-500 leading-relaxed">{desc}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* CTAs */}
+                                    <div className="flex flex-wrap gap-3">
+                                        <a
+                                            href="https://cdkn.org/story/measuring-impact-kenyas-innovative-approach-tracking-and-reporting-climate-action-impact/"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-sm text-white bg-[#021d49] hover:bg-[#032a5e] transition-colors shadow-sm"
+                                        >
+                                            Read Full Story on CDKN <ExternalLink className="w-4 h-4" />
+                                        </a>
+                                        <a
+                                            href="https://lama-phi.vercel.app/"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-sm text-[#021d49] bg-white border border-gray-200 hover:border-[#021d49] transition-colors"
+                                        >
+                                            Explore LAMA Platform <ArrowRight className="w-4 h-4" />
+                                        </a>
+                                    </div>
+                                </div>
+
+                                {/* Right sidebar */}
+                                <div className="flex flex-col gap-4">
+
+                                    {/* Stats */}
+                                    <div className="rounded-xl border border-gray-100 bg-gray-50 p-5">
+                                        <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">Initiative at a Glance</p>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            {[
+                                                { v: "6", l: "Partner Orgs" },
+                                                { v: "47", l: "Kenya Counties" },
+                                                { v: "2025", l: "Launch Year" },
+                                                { v: "1st", l: "National MERL Tool" },
+                                            ].map(({ v, l }) => (
+                                                <div key={l}>
+                                                    <div className="font-bold text-[#021d49]" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: "1.9rem", lineHeight: 1 }}>{v}</div>
+                                                    <div className="text-xs mt-1 text-gray-500 uppercase tracking-wide">{l}</div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Partners */}
+                                    <div className="rounded-xl border border-gray-100 overflow-hidden">
+                                        <div className="bg-[#021d49] px-4 py-3">
+                                            <p className="text-xs font-bold uppercase tracking-widest text-white/60 m-0">Partners</p>
+                                        </div>
+                                        <div>
+                                            {[
+                                                { abbr: "ARIN/LAMA", name: "Africa Research & Impact Network", highlight: true },
+                                                { abbr: "MECCF", name: "Kenya Ministry of Environment", highlight: false },
+                                                { abbr: "SSN", name: "SouthSouthNorth", highlight: false },
+                                                { abbr: "CDKN", name: "Climate & Dev. Knowledge Network", highlight: false },
+                                                { abbr: "WRI", name: "World Resources Institute", highlight: false },
+                                                { abbr: "AGNES", name: "African Group of Negotiators", highlight: false },
+                                            ].map(({ abbr, name, highlight }) => (
+                                                <div key={abbr} className="flex items-start gap-3 px-4 py-3 border-b border-gray-50 last:border-0"
+                                                    style={{ borderLeft: highlight ? "3px solid #00c4b3" : "3px solid transparent", background: highlight ? "rgba(0,196,179,0.03)" : "white" }}>
+                                                    <span className="text-xs font-bold shrink-0 mt-0.5 min-w-[48px]"
+                                                        style={{ color: highlight ? "#00c4b3" : "#021d49" }}>{abbr}</span>
+                                                    <span className="text-xs text-gray-500 leading-snug">{name}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <div className="px-4 py-2.5 bg-gray-50 border-t border-gray-100">
+                                            <a
+                                                href="https://cdkn.org/story/measuring-impact-kenyas-innovative-approach-tracking-and-reporting-climate-action-impact/"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-xs text-[#021d49] underline"
+                                            >
+                                                Source: CDKN · Measuring Impact, Kenya 2025
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
