@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { FileText, Calendar, Search, ChevronLeft, ChevronRight, Users, ArrowRight } from 'lucide-react';
+import { FileText, Calendar, Search, ChevronLeft, ChevronRight, Users, ArrowRight, LayoutList, LayoutGrid } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
 import { getJournalArticles } from '@/services/journalArticlesService';
 import Footer from '@/app/footer/Footer';
@@ -13,6 +13,7 @@ const JournalArticlesPage = () => {
     const [articles, setArticles] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
     const articlesPerPage = 6;
 
     useEffect(() => {
@@ -154,101 +155,126 @@ const JournalArticlesPage = () => {
                     </div>
                 </div>
 
-                {/* Articles Grid Layout */}
+                {/* Articles Layout */}
                 <section className="max-w-7xl mx-auto px-6 py-8">
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {currentArticles.map((article) => {
-                            const authorsDisplay = Array.isArray(article.authors)
-                                ? article.authors.join(', ')
-                                : (article.authors || 'Unknown Author');
-                            const dateDisplay = article.datePosted
-                                ? new Date(article.datePosted).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-                                : 'Date not available';
 
-                            return (
-                                <div
-                                    key={article._id || article.id}
-                                    className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-[#021d49] cursor-pointer group flex flex-col"
-                                    onClick={() => handleArticleClick(article._id || article.id)}
-                                >
-                                    {/* Article Image */}
-                                    <div className="relative h-48 overflow-hidden bg-gradient-to-br from-[#021d49] to-[#021d49]">
-                                        {article.coverImage ? (
-                                            <>
-                                                <img
-                                                    src={article.coverImage.startsWith('http') ? article.coverImage : `${API_CONFIG.BASE_URL}${article.coverImage}`}
-                                                    alt={article.title}
-                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                                />
-                                                {/* Gradient Overlay */}
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-                                            </>
-                                        ) : (
-                                            <div className="w-full h-full flex items-center justify-center">
-                                                <FileText className="w-16 h-16 text-white/30" />
-                                            </div>
-                                        )}
+                    {/* Results + view toggle */}
+                    <div className="mb-5 flex items-center justify-between">
+                        <p className="text-sm text-gray-500">
+                            {filteredArticles.length} {filteredArticles.length === 1 ? 'article' : 'articles'} found
+                        </p>
+                        <div className="flex items-center bg-white border border-gray-200 rounded-lg p-1 shadow-sm">
+                            <button
+                                onClick={() => setViewMode('list')}
+                                title="List view"
+                                className={`p-1.5 rounded-md transition-all ${viewMode === 'list' ? 'bg-[#021d49] text-white' : 'text-gray-400 hover:text-gray-600'}`}
+                            >
+                                <LayoutList className="w-4 h-4" />
+                            </button>
+                            <button
+                                onClick={() => setViewMode('grid')}
+                                title="Grid view"
+                                className={`p-1.5 rounded-md transition-all ${viewMode === 'grid' ? 'bg-[#021d49] text-white' : 'text-gray-400 hover:text-gray-600'}`}
+                            >
+                                <LayoutGrid className="w-4 h-4" />
+                            </button>
+                        </div>
+                    </div>
 
-                                        {/* Category Badge */}
-                                        <div className="absolute top-4 right-4">
-                                            <span className="px-3 py-1 bg-white/90 text-[#021d49] font-bold text-xs uppercase tracking-wide rounded-full shadow-lg">
-                                                Article
-                                            </span>
+                    {/* Grid view */}
+                    {viewMode === 'grid' && (
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {currentArticles.map((article) => {
+                                const authorsDisplay = Array.isArray(article.authors) ? article.authors.join(', ') : (article.authors || 'Unknown Author');
+                                const dateDisplay = article.datePosted ? new Date(article.datePosted).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Date not available';
+                                return (
+                                    <div key={article._id || article.id} className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-[#021d49] cursor-pointer group flex flex-col" onClick={() => handleArticleClick(article._id || article.id)}>
+                                        <div className="relative h-48 overflow-hidden bg-gradient-to-br from-[#021d49] to-[#021d49]">
+                                            {article.coverImage ? (
+                                                <>
+                                                    <img src={article.coverImage.startsWith('http') ? article.coverImage : `${API_CONFIG.BASE_URL}${article.coverImage}`} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+                                                </>
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center"><FileText className="w-16 h-16 text-white/30" /></div>
+                                            )}
+                                            <div className="absolute top-4 right-4"><span className="px-3 py-1 bg-white/90 text-[#021d49] font-bold text-xs uppercase tracking-wide rounded-full shadow-lg">Article</span></div>
                                         </div>
-                                    </div>
-
-                                    {/* Content */}
-                                    <div className="p-6 flex flex-col flex-grow">
-                                        {/* Category */}
-                                        <span className="inline-block px-3 py-1 bg-gradient-to-r from-[#021d49] to-[#021d49] text-white font-bold text-xs uppercase tracking-wide rounded-full mb-3 self-start">
-                                            {article.category || 'Article'}
-                                        </span>
-
-                                        {/* Title */}
-                                        <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#021d49] transition-colors leading-tight mb-3 line-clamp-3">
-                                            {article.title}
-                                        </h3>
-
-                                        {/* Date */}
-                                        <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
-                                            <Calendar className="w-4 h-4 text-[#021d49]" />
-                                            <span>{dateDisplay}</span>
-                                        </div>
-
-                                        {/* Authors */}
-                                        <div className="mb-4 bg-gray-50 rounded-lg p-3 flex-grow">
-                                            <div className="flex items-start gap-2">
-                                                <Users className="w-4 h-4 text-[#021d49] flex-shrink-0 mt-0.5" />
-                                                <div className="flex-1">
-                                                    <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1">Authors</p>
-                                                    <p className="text-xs text-gray-700 leading-relaxed line-clamp-3">
-                                                        {authorsDisplay}
-                                                    </p>
+                                        <div className="p-6 flex flex-col flex-grow">
+                                            <span className="inline-block px-3 py-1 bg-gradient-to-r from-[#021d49] to-[#021d49] text-white font-bold text-xs uppercase tracking-wide rounded-full mb-3 self-start">{article.category || 'Article'}</span>
+                                            <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#021d49] transition-colors leading-tight mb-3 line-clamp-3">{article.title}</h3>
+                                            <div className="flex items-center gap-2 text-sm text-gray-600 mb-4"><Calendar className="w-4 h-4 text-[#021d49]" /><span>{dateDisplay}</span></div>
+                                            <div className="mb-4 bg-gray-50 rounded-lg p-3 flex-grow">
+                                                <div className="flex items-start gap-2">
+                                                    <Users className="w-4 h-4 text-[#021d49] flex-shrink-0 mt-0.5" />
+                                                    <div className="flex-1"><p className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1">Authors</p><p className="text-xs text-gray-700 leading-relaxed line-clamp-3">{authorsDisplay}</p></div>
                                                 </div>
                                             </div>
+                                            {article.description && <div className="text-sm text-gray-600 leading-relaxed mb-4 line-clamp-2" dangerouslySetInnerHTML={{ __html: article.description }} />}
+                                            <button onClick={(e) => { e.stopPropagation(); handleArticleClick(article._id || article.id); }} className="mt-auto w-full px-4 py-3 bg-gradient-to-r from-[#021d49] to-[#021d49] hover:shadow-xl text-white font-semibold rounded-lg shadow-md flex items-center gap-2 justify-center transition-all duration-200">
+                                                <span>Read more</span><ArrowRight className="w-4 h-4" />
+                                            </button>
                                         </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
 
-                                        {/* Description - if available */}
-                                        {article.description && (
-                                            <div
-                                                className="text-sm text-gray-600 leading-relaxed mb-4 line-clamp-2"
-                                                dangerouslySetInnerHTML={{ __html: article.description }}
-                                            />
-                                        )}
-
-                                        {/* Button */}
+                    {/* List view */}
+                    {viewMode === 'list' && (
+                        <div className="space-y-3">
+                            {currentArticles.map((article) => {
+                                const authorsDisplay = Array.isArray(article.authors) ? article.authors.join(', ') : (article.authors || 'Unknown Author');
+                                const dateDisplay = article.datePosted ? new Date(article.datePosted).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
+                                const imgSrc = article.coverImage ? (article.coverImage.startsWith('http') ? article.coverImage : `${API_CONFIG.BASE_URL}${article.coverImage}`) : null;
+                                return (
+                                    <div
+                                        key={article._id || article.id}
+                                        onClick={() => handleArticleClick(article._id || article.id)}
+                                        className="bg-white rounded-xl border border-gray-100 hover:border-[#021d49] shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer flex items-center gap-4 p-4 group"
+                                    >
+                                        {/* Thumbnail */}
+                                        <div className="w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden">
+                                            {imgSrc ? (
+                                                <img src={imgSrc} alt={article.title} className="w-full h-full object-cover" />
+                                            ) : (
+                                                <div className="w-full h-full bg-gradient-to-br from-[#021d49] to-[#032a5e] flex items-center justify-center">
+                                                    <FileText className="w-7 h-7 text-white/30" />
+                                                </div>
+                                            )}
+                                        </div>
+                                        {/* Content */}
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex items-center gap-2 mb-1 flex-wrap">
+                                                <span className="px-2 py-0.5 bg-[#021d49]/10 text-[#021d49] text-xs font-bold uppercase tracking-wide rounded">
+                                                    {article.category || 'Article'}
+                                                </span>
+                                                {dateDisplay && (
+                                                    <span className="flex items-center gap-1 text-xs text-gray-400">
+                                                        <Calendar className="w-3 h-3" /> {dateDisplay}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <h3 className="font-bold text-gray-900 group-hover:text-[#021d49] transition-colors leading-snug line-clamp-1 mb-0.5">
+                                                {article.title}
+                                            </h3>
+                                            <p className="text-xs text-gray-400 flex items-center gap-1 line-clamp-1">
+                                                <Users className="w-3 h-3 shrink-0" /> {authorsDisplay}
+                                            </p>
+                                        </div>
+                                        {/* CTA */}
                                         <button
                                             onClick={(e) => { e.stopPropagation(); handleArticleClick(article._id || article.id); }}
-                                            className="mt-auto w-full px-4 py-3 bg-gradient-to-r from-[#021d49] to-[#021d49] hover:shadow-xl text-white font-semibold rounded-lg shadow-md flex items-center gap-2 justify-center transition-all duration-200"
+                                            className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2 bg-[#021d49] hover:bg-[#032a5e] text-white text-sm font-semibold rounded-lg transition-colors"
                                         >
-                                            <span>read more</span>
-                                            <ArrowRight className="w-4 h-4" />
+                                            Read <ArrowRight className="w-4 h-4" />
                                         </button>
                                     </div>
-                                </div>
-                            )
-                        })}
-                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
 
                     {/* No Results Message */}
                     {filteredArticles.length === 0 && (

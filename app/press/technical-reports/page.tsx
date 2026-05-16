@@ -15,7 +15,7 @@ type TechnicalReport = {
     postedBy?: string;
     postedDate?: string;
 };
-import { FileText, Calendar, Search, Filter, ChevronLeft, ChevronRight, ArrowRight, User, BookOpen, Download, TrendingUp } from 'lucide-react';
+import { FileText, Calendar, Search, Filter, ChevronLeft, ChevronRight, ArrowRight, User, BookOpen, Download, TrendingUp, LayoutList, LayoutGrid } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
 import { cleanHtmlContent } from '@/lib/htmlUtils';
 import Footer from '@/app/footer/Footer';
@@ -28,6 +28,7 @@ const TechnicalReportsPage = () => {
     const reportsPerPage = 6;
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
 
     useEffect(() => {
         setLoading(true);
@@ -141,100 +142,138 @@ const TechnicalReportsPage = () => {
                         ))}
                     </div>
 
-                    {/* Results Counter */}
+                    {/* Results Counter + View Toggle */}
                     <div className="mb-6 flex items-center justify-between">
                         <h2 className="text-2xl font-bold text-gray-900">
                             {filteredReports.length === 0 ? 'No reports found' : `${filteredReports.length} ${filteredReports.length === 1 ? 'Report' : 'Reports'} Found`}
                         </h2>
-                        {filteredReports.length > 0 && (
-                            <p className="text-sm text-gray-500">
-                                Showing {indexOfFirstReport + 1}-{Math.min(indexOfLastReport, filteredReports.length)} of {filteredReports.length}
-                            </p>
-                        )}
+                        <div className="flex items-center gap-3">
+                            {filteredReports.length > 0 && (
+                                <p className="text-sm text-gray-500">
+                                    Showing {indexOfFirstReport + 1}–{Math.min(indexOfLastReport, filteredReports.length)} of {filteredReports.length}
+                                </p>
+                            )}
+                            <div className="flex items-center bg-white border border-gray-200 rounded-lg p-1 shadow-sm">
+                                <button
+                                    onClick={() => setViewMode('list')}
+                                    title="List view"
+                                    className={`p-1.5 rounded-md transition-all ${viewMode === 'list' ? 'bg-[#021d49] text-white' : 'text-gray-400 hover:text-gray-600'}`}
+                                >
+                                    <LayoutList className="w-4 h-4" />
+                                </button>
+                                <button
+                                    onClick={() => setViewMode('grid')}
+                                    title="Grid view"
+                                    className={`p-1.5 rounded-md transition-all ${viewMode === 'grid' ? 'bg-[#021d49] text-white' : 'text-gray-400 hover:text-gray-600'}`}
+                                >
+                                    <LayoutGrid className="w-4 h-4" />
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {currentReports.map((report) => (
-                            <div
-                                key={report._id}
-                                className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-[#021d49] cursor-pointer group flex flex-col"
-                                onClick={() => handleReportClick(report._id)}
-                            >
-                                {/* Image Section */}
-                                <div className="relative h-52 overflow-hidden flex-shrink-0">
-                                    {report.image ? (
-                                        <>
-                                            <img
-                                                src={report.image}
-                                                alt={report.title}
-                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                                            />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
-                                        </>
-                                    ) : (
-                                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#021d49] to-[#032a5e]">
-                                            <BookOpen className="w-16 h-16 text-white/20" />
+                    {/* Grid view */}
+                    {viewMode === 'grid' && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {currentReports.map((report) => (
+                                <div
+                                    key={report._id}
+                                    className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-[#021d49] cursor-pointer group flex flex-col"
+                                    onClick={() => handleReportClick(report._id)}
+                                >
+                                    <div className="relative h-52 overflow-hidden flex-shrink-0">
+                                        {report.image ? (
+                                            <>
+                                                <img src={report.image} alt={report.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+                                            </>
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#021d49] to-[#032a5e]">
+                                                <BookOpen className="w-16 h-16 text-white/20" />
+                                            </div>
+                                        )}
+                                        <div className="absolute top-3 left-3">
+                                            <span className="px-2.5 py-1 bg-white/95 backdrop-blur-sm text-[#021d49] font-bold text-xs uppercase tracking-wide rounded-lg shadow-lg">
+                                                {report.category || 'Technical Report'}
+                                            </span>
                                         </div>
-                                    )}
-
-                                    {/* Floating Category Badge */}
-                                    <div className="absolute top-3 left-3">
-                                        <span className="px-2.5 py-1 bg-white/95 backdrop-blur-sm text-[#021d49] font-bold text-xs uppercase tracking-wide rounded-lg shadow-lg">
-                                            {report.category || 'Technical Report'}
-                                        </span>
+                                    </div>
+                                    <div className="p-5 flex flex-col flex-1">
+                                        <div className="flex-1">
+                                            <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#021d49] transition-colors leading-tight mb-2 line-clamp-2">{report.title}</h3>
+                                            <div className="flex flex-wrap gap-3 mb-3 text-xs text-gray-500">
+                                                {report.postedBy && <div className="flex items-center gap-1"><User className="w-3.5 h-3.5 text-[#021d49]" /><span>{report.postedBy}</span></div>}
+                                                {report.postedDate && <div className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5 text-[#021d49]" /><span>{report.postedDate}</span></div>}
+                                            </div>
+                                            <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
+                                                {report.description ? (() => { const plain = cleanHtmlContent(report.description).replace(/<[^>]+>/g, ''); const words = plain.split(/\s+/); return words.slice(0, 25).join(' ') + (words.length > 25 ? '...' : ''); })() : ''}
+                                            </p>
+                                        </div>
+                                        <div className="pt-4 mt-4 border-t border-gray-100">
+                                            <button onClick={(e) => { e.stopPropagation(); handleReportClick(report._id); }} className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#021d49] to-[#032a5e] hover:from-[#032a5e] hover:to-[#021d49] text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-sm">
+                                                <FileText className="w-4 h-4" /><span>Read Report</span><ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
+                            ))}
+                        </div>
+                    )}
 
-                                {/* Content Section */}
-                                <div className="p-5 flex flex-col flex-1">
-                                    <div className="flex-1">
-                                        <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#021d49] transition-colors leading-tight mb-2 line-clamp-2">
+                    {/* List view */}
+                    {viewMode === 'list' && (
+                        <div className="space-y-3">
+                            {currentReports.map((report) => (
+                                <div
+                                    key={report._id}
+                                    onClick={() => handleReportClick(report._id)}
+                                    className="bg-white rounded-xl border border-gray-100 hover:border-[#021d49] shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer flex items-center gap-4 p-4 group"
+                                >
+                                    {/* Thumbnail */}
+                                    <div className="w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden">
+                                        {report.image ? (
+                                            <img src={report.image} alt={report.title} className="w-full h-full object-cover" />
+                                        ) : (
+                                            <div className="w-full h-full bg-gradient-to-br from-[#021d49] to-[#032a5e] flex items-center justify-center">
+                                                <BookOpen className="w-7 h-7 text-white/30" />
+                                            </div>
+                                        )}
+                                    </div>
+                                    {/* Meta + content */}
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex items-center gap-2 mb-1 flex-wrap">
+                                            <span className="px-2 py-0.5 bg-[#021d49]/10 text-[#021d49] text-xs font-bold uppercase tracking-wide rounded">
+                                                {report.category || 'Technical Report'}
+                                            </span>
+                                            {report.postedDate && (
+                                                <span className="flex items-center gap-1 text-xs text-gray-400">
+                                                    <Calendar className="w-3 h-3" /> {report.postedDate}
+                                                </span>
+                                            )}
+                                            {report.postedBy && (
+                                                <span className="flex items-center gap-1 text-xs text-gray-400">
+                                                    <User className="w-3 h-3" /> {report.postedBy}
+                                                </span>
+                                            )}
+                                        </div>
+                                        <h3 className="font-bold text-gray-900 group-hover:text-[#021d49] transition-colors leading-snug line-clamp-1 mb-1">
                                             {report.title}
                                         </h3>
-
-                                        {/* Metadata */}
-                                        <div className="flex flex-wrap gap-3 mb-3 text-xs text-gray-500">
-                                            {report.postedBy && (
-                                                <div className="flex items-center gap-1">
-                                                    <User className="w-3.5 h-3.5 text-[#021d49]" />
-                                                    <span>{report.postedBy}</span>
-                                                </div>
-                                            )}
-                                            {report.postedDate && (
-                                                <div className="flex items-center gap-1">
-                                                    <Calendar className="w-3.5 h-3.5 text-[#021d49]" />
-                                                    <span>{report.postedDate}</span>
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        {/* Description */}
-                                        <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
-                                            {report.description
-                                                ? (() => {
-                                                    const plain = cleanHtmlContent(report.description).replace(/<[^>]+>/g, '');
-                                                    const words = plain.split(/\s+/);
-                                                    return words.slice(0, 25).join(' ') + (words.length > 25 ? '...' : '');
-                                                })()
-                                                : ''}
+                                        <p className="text-sm text-gray-500 line-clamp-1">
+                                            {report.description ? cleanHtmlContent(report.description).replace(/<[^>]+>/g, '').split(/\s+/).slice(0, 20).join(' ') + '...' : ''}
                                         </p>
                                     </div>
-
-                                    {/* Action Button */}
-                                    <div className="pt-4 mt-4 border-t border-gray-100">
-                                        <button
-                                            onClick={(e) => { e.stopPropagation(); handleReportClick(report._id); }}
-                                            className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#021d49] to-[#032a5e] hover:from-[#032a5e] hover:to-[#021d49] text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-sm"
-                                        >
-                                            <FileText className="w-4 h-4" />
-                                            <span>Read Report</span>
-                                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                                        </button>
-                                    </div>
+                                    {/* CTA */}
+                                    <button
+                                        onClick={(e) => { e.stopPropagation(); handleReportClick(report._id); }}
+                                        className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2 bg-[#021d49] hover:bg-[#032a5e] text-white text-sm font-semibold rounded-lg transition-colors"
+                                    >
+                                        Read <ArrowRight className="w-4 h-4" />
+                                    </button>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
+                    )}
 
                     {/* No Results */}
                     {filteredReports.length === 0 && (

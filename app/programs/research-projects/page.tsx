@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useMemo, useState } from 'react';
-import { ArrowRight, Calendar, FileText, Search, Filter, X } from 'lucide-react';
+import { ArrowRight, Calendar, FileText, Search, Filter, X, LayoutList, LayoutGrid } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
 import { getResearchProjects } from '@/services/researchProjectService';
 import { useRouter } from 'next/navigation';
@@ -14,6 +14,7 @@ const ResearchProjectsPage = () => {
     const [projects, setProjects] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
 
     useEffect(() => {
         let mounted = true;
@@ -155,11 +156,27 @@ const ResearchProjectsPage = () => {
                             )}
                         </div>
 
-                        {/* Results Count */}
-                        <div className="mt-4 text-center">
+                        {/* Results Count + view toggle */}
+                        <div className="mt-4 flex items-center justify-between">
                             <p className="text-gray-600">
                                 Showing <span className="font-semibold text-[#021d49]">{filteredProjects.length}</span> of <span className="font-semibold">{projects.length}</span> projects
                             </p>
+                            <div className="flex items-center bg-white border border-gray-200 rounded-lg p-1 shadow-sm">
+                                <button
+                                    onClick={() => setViewMode('list')}
+                                    title="List view"
+                                    className={`p-1.5 rounded-md transition-all ${viewMode === 'list' ? 'bg-[#021d49] text-white' : 'text-gray-400 hover:text-gray-600'}`}
+                                >
+                                    <LayoutList className="w-4 h-4" />
+                                </button>
+                                <button
+                                    onClick={() => setViewMode('grid')}
+                                    title="Grid view"
+                                    className={`p-1.5 rounded-md transition-all ${viewMode === 'grid' ? 'bg-[#021d49] text-white' : 'text-gray-400 hover:text-gray-600'}`}
+                                >
+                                    <LayoutGrid className="w-4 h-4" />
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -180,8 +197,8 @@ const ResearchProjectsPage = () => {
                         </div>
                     )}
 
-                    {/* Projects Grid */}
-                    {!loading && !error && (
+                    {/* Projects — Grid view */}
+                    {!loading && !error && viewMode === 'grid' && (
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {filteredProjects.map((project) => {
                                 const imageUrl = buildImageUrl(project.coverImage);
@@ -191,14 +208,9 @@ const ResearchProjectsPage = () => {
                                         className="group bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 border-2 border-gray-100 hover:border-[#021d49] cursor-pointer overflow-hidden transform hover:-translate-y-1"
                                         onClick={() => handleProjectClick(project._id)}
                                     >
-                                        {/* Main Image */}
                                         {imageUrl ? (
                                             <div className="h-48 w-full bg-linear-to-br from-gray-100 to-gray-200 overflow-hidden relative">
-                                                <img
-                                                    src={imageUrl}
-                                                    alt={project.title || 'Project image'}
-                                                    className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                                />
+                                                <img src={imageUrl} alt={project.title || 'Project image'} className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500" />
                                                 <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                                             </div>
                                         ) : (
@@ -206,67 +218,86 @@ const ResearchProjectsPage = () => {
                                                 <FileText className="w-16 h-16 text-[#021d49]/30" />
                                             </div>
                                         )}
-
                                         <div className="p-6 space-y-4">
-                                            {/* Title */}
-                                            <h3 className="text-xl font-bold text-gray-900 group-hover:text-[#021d49] transition-colors leading-snug line-clamp-2 min-h-14">
-                                                {project.title}
-                                            </h3>
-
-                                            {/* Date and Category Row */}
+                                            <h3 className="text-xl font-bold text-gray-900 group-hover:text-[#021d49] transition-colors leading-snug line-clamp-2 min-h-14">{project.title}</h3>
                                             <div className="flex items-center justify-between gap-3 text-sm">
                                                 <div className="flex items-center gap-2 text-gray-600">
                                                     <Calendar className="w-4 h-4 text-[#021d49]" />
-                                                    <span className="font-medium">
-                                                        {project.date ? new Date(project.date).toLocaleDateString('en-US', {
-                                                            month: 'short',
-                                                            year: 'numeric'
-                                                        }) : 'N/A'}
-                                                    </span>
+                                                    <span className="font-medium">{project.date ? new Date(project.date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'N/A'}</span>
                                                 </div>
-
-                                                {project.category && (
-                                                    <span className="inline-block px-3 py-1 bg-[#021d49]/10 text-[#021d49] text-xs font-bold rounded-full border border-[#021d49]/20">
-                                                        {project.category}
-                                                    </span>
-                                                )}
+                                                {project.category && <span className="inline-block px-3 py-1 bg-[#021d49]/10 text-[#021d49] text-xs font-bold rounded-full border border-[#021d49]/20">{project.category}</span>}
                                             </div>
-
-                                            {/* Description */}
                                             <p className="text-sm text-gray-600 leading-relaxed line-clamp-3 min-h-18">
-                                                {stripHtml(project.description || 'No description available').slice(0, 150)}
-                                                {stripHtml(project.description || '').length > 150 ? '...' : ''}
+                                                {stripHtml(project.description || 'No description available').slice(0, 150)}{stripHtml(project.description || '').length > 150 ? '...' : ''}
                                             </p>
-
-                                            {/* Team Members */}
                                             {project.teamMembers && project.teamMembers.length > 0 && (
                                                 <div className="flex flex-wrap gap-2">
                                                     {project.teamMembers.slice(0, 3).map((member: string, idx: number) => (
-                                                        <span
-                                                            key={idx}
-                                                            className="inline-block px-3 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-full border border-blue-100"
-                                                        >
-                                                            {member}
-                                                        </span>
+                                                        <span key={idx} className="inline-block px-3 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-full border border-blue-100">{member}</span>
                                                     ))}
-                                                    {project.teamMembers.length > 3 && (
-                                                        <span className="inline-block px-3 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-full">
-                                                            +{project.teamMembers.length - 3} more
-                                                        </span>
-                                                    )}
+                                                    {project.teamMembers.length > 3 && <span className="inline-block px-3 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-full">+{project.teamMembers.length - 3} more</span>}
                                                 </div>
                                             )}
-
-                                            {/* CTA Button */}
-                                            <button
-                                                onClick={(e) => { e.stopPropagation(); handleProjectClick(project._id); }}
-                                                className="mt-4 w-full px-6 py-3 bg-[#021d49] text-white font-semibold rounded-xl shadow-md flex items-center gap-2 justify-center hover:bg-[#032d6b] transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-[#021d49]/30 group"
-                                                aria-label={`Read more about ${project.title}`}
-                                            >
-                                                <span>View Details</span>
-                                                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                            <button onClick={(e) => { e.stopPropagation(); handleProjectClick(project._id); }} className="mt-4 w-full px-6 py-3 bg-[#021d49] text-white font-semibold rounded-xl shadow-md flex items-center gap-2 justify-center hover:bg-[#032d6b] transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-[#021d49]/30 group" aria-label={`Read more about ${project.title}`}>
+                                                <span>View Details</span><ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                                             </button>
                                         </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
+
+                    {/* Projects — List view */}
+                    {!loading && !error && viewMode === 'list' && (
+                        <div className="space-y-3">
+                            {filteredProjects.map((project) => {
+                                const imageUrl = buildImageUrl(project.coverImage);
+                                const dateStr = project.date ? new Date(project.date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : '';
+                                return (
+                                    <div
+                                        key={project._id}
+                                        onClick={() => handleProjectClick(project._id)}
+                                        className="bg-white rounded-xl border border-gray-100 hover:border-[#021d49] shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer flex items-center gap-4 p-4 group"
+                                    >
+                                        {/* Thumbnail */}
+                                        <div className="w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden">
+                                            {imageUrl ? (
+                                                <img src={imageUrl} alt={project.title || 'Project'} className="w-full h-full object-cover" />
+                                            ) : (
+                                                <div className="w-full h-full bg-[#021d49]/10 flex items-center justify-center">
+                                                    <FileText className="w-7 h-7 text-[#021d49]/30" />
+                                                </div>
+                                            )}
+                                        </div>
+                                        {/* Content */}
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex items-center gap-2 mb-1 flex-wrap">
+                                                {project.category && (
+                                                    <span className="px-2 py-0.5 bg-[#021d49]/10 text-[#021d49] text-xs font-bold uppercase tracking-wide rounded">
+                                                        {project.category}
+                                                    </span>
+                                                )}
+                                                {dateStr && (
+                                                    <span className="flex items-center gap-1 text-xs text-gray-400">
+                                                        <Calendar className="w-3 h-3" /> {dateStr}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <h3 className="font-bold text-gray-900 group-hover:text-[#021d49] transition-colors leading-snug line-clamp-1 mb-0.5">
+                                                {project.title}
+                                            </h3>
+                                            <p className="text-sm text-gray-500 line-clamp-1">
+                                                {stripHtml(project.description || '').slice(0, 120)}
+                                            </p>
+                                        </div>
+                                        {/* CTA */}
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); handleProjectClick(project._id); }}
+                                            className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2 bg-[#021d49] hover:bg-[#032d6b] text-white text-sm font-semibold rounded-lg transition-colors"
+                                        >
+                                            View <ArrowRight className="w-4 h-4" />
+                                        </button>
                                     </div>
                                 );
                             })}

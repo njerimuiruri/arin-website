@@ -13,7 +13,7 @@ const highlights = [
     "Standardised climate indicators handbook",
     "Digital MERL data collection & reporting tool",
     "Strengthened transparency & accountability",
-    "Informed decision-making across Kenya's climate actions",
+    "Informed decision-making across Kenya\u2019s climate actions",
 ];
 
 export default function MerlSpotlightSection() {
@@ -73,7 +73,7 @@ export default function MerlSpotlightSection() {
                             color: "#475569",
                             marginBottom: 32,
                         }}>
-                            Kenya's Ministry of Environment, Climate Change, Natural Resources and Forestry (MECCF)
+                            Kenya&apos;s Ministry of Environment, Climate Change, Natural Resources and Forestry (MECCF)
                             has formed a landmark multi-partner initiative — co-led with{" "}
                             <strong style={{ color: "#0f172a", fontWeight: 600 }}>SouthSouthNorth (SSN)</strong>,{" "}
                             the <strong style={{ color: "#0f172a", fontWeight: 600 }}>Climate and Development Knowledge Network (CDKN)</strong>,
@@ -87,7 +87,7 @@ export default function MerlSpotlightSection() {
                             Together, this coalition is co-developing a standardised indicators handbook and a digital
                             Monitoring, Evaluation, Reporting, and Learning (MERL) tool. The MERL tool will leverage
                             these indicators to strengthen data collection, analysis, and reporting — ultimately promoting
-                            greater transparency, accountability, and informed decision-making across Kenya's climate actions.
+                            greater transparency, accountability, and "Informed decision-making across Kenya\u2019s climate actions".
                         </p>
 
                         {/* Deliverables */}

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { policyBriefsService } from '@/services/policyBriefsService';
-import { Calendar, Search, ChevronLeft, ChevronRight, ArrowRight, Lightbulb, FileText } from 'lucide-react';
+import { Calendar, Search, ChevronLeft, ChevronRight, ArrowRight, Lightbulb, FileText, LayoutList, LayoutGrid } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
 import Footer from '@/app/footer/Footer';
 
@@ -20,6 +20,7 @@ const PolicyBriefsPage = () => {
     const [briefs, setBriefs] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
 
     useEffect(() => {
         policyBriefsService.getAll()
@@ -98,7 +99,7 @@ const PolicyBriefsPage = () => {
                     </div>
                 </div>
 
-                {/* Grid */}
+                {/* Grid / List */}
                 <section className="max-w-7xl mx-auto px-6 py-10">
 
                     {loading && (
@@ -119,103 +120,124 @@ const PolicyBriefsPage = () => {
                     )}
 
                     {!loading && !error && paginated.length > 0 && (
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-7">
-                            {paginated.map(brief => {
-                                /*
-                                 * Try every possible field name the API might use for the image.
-                                 * Log it so we can confirm what's available.
-                                 */
-                                const img = brief.image || brief.coverImage || brief.cover_image || brief.thumbnail || null;
-                                const plain = stripHtml(brief.description || brief.excerpt || '');
-                                const snippet = truncate(plain, 20);
-                                const date = brief.datePosted
-                                    ? new Date(brief.datePosted).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
-                                    : '';
-                                const id = brief._id || brief.id;
-
-                                return (
-                                    <article
-                                        key={id}
-                                        onClick={() => goTo(id)}
-                                        className="group bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-[#021d49]/30 hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col"
+                        <>
+                            {/* Results count + view toggle */}
+                            <div className="mb-5 flex items-center justify-between">
+                                <p className="text-sm text-gray-500">
+                                    {filtered.length} {filtered.length === 1 ? 'brief' : 'briefs'} found
+                                </p>
+                                <div className="flex items-center bg-white border border-gray-200 rounded-lg p-1 shadow-sm">
+                                    <button
+                                        onClick={() => setViewMode('list')}
+                                        title="List view"
+                                        className={`p-1.5 rounded-md transition-all ${viewMode === 'list' ? 'bg-[#021d49] text-white' : 'text-gray-400 hover:text-gray-600'}`}
                                     >
-                                        {/* ── Image area ──
-                                            Taller slot (h-56) so the photo has room to breathe.
-                                            object-cover fills the space without cropping too aggressively.
-                                            No overlay at all — image is 100% visible.
-                                        */}
-                                        <div className="relative h-56 w-full shrink-0 overflow-hidden">
-                                            {img ? (
-                                                <img
-                                                    src={img}
-                                                    alt={brief.title || 'Policy brief cover'}
-                                                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
-                                                    onError={e => {
-                                                        // If image fails to load, hide it so fallback shows
-                                                        (e.currentTarget as HTMLImageElement).style.display = 'none';
-                                                    }}
-                                                />
-                                            ) : null}
+                                        <LayoutList className="w-4 h-4" />
+                                    </button>
+                                    <button
+                                        onClick={() => setViewMode('grid')}
+                                        title="Grid view"
+                                        className={`p-1.5 rounded-md transition-all ${viewMode === 'grid' ? 'bg-[#021d49] text-white' : 'text-gray-400 hover:text-gray-600'}`}
+                                    >
+                                        <LayoutGrid className="w-4 h-4" />
+                                    </button>
+                                </div>
+                            </div>
 
-                                            {/* Fallback — only visible when there's no image */}
-                                            {!img && (
-                                                <div
-                                                    className="absolute inset-0 flex items-center justify-center bg-[#021d49]"
-                                                    style={{
-                                                        backgroundImage: "repeating-linear-gradient(45deg,rgba(255,255,255,.04) 0,rgba(255,255,255,.04) 1px,transparent 0,transparent 50%)",
-                                                        backgroundSize: "28px 28px",
-                                                    }}
-                                                >
-                                                    <Lightbulb className="w-12 h-12 text-white/20" />
+                            {/* Grid view */}
+                            {viewMode === 'grid' && (
+                                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-7">
+                                    {paginated.map(brief => {
+                                        const img = brief.image || brief.coverImage || brief.cover_image || brief.thumbnail || null;
+                                        const plain = stripHtml(brief.description || brief.excerpt || '');
+                                        const snippet = truncate(plain, 20);
+                                        const date = brief.datePosted ? new Date(brief.datePosted).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : '';
+                                        const id = brief._id || brief.id;
+                                        return (
+                                            <article key={id} onClick={() => goTo(id)} className="group bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-[#021d49]/30 hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col">
+                                                <div className="relative h-56 w-full shrink-0 overflow-hidden">
+                                                    {img ? (
+                                                        <img src={img} alt={brief.title || 'Policy brief cover'} className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500" onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
+                                                    ) : null}
+                                                    {!img && (
+                                                        <div className="absolute inset-0 flex items-center justify-center bg-[#021d49]" style={{ backgroundImage: "repeating-linear-gradient(45deg,rgba(255,255,255,.04) 0,rgba(255,255,255,.04) 1px,transparent 0,transparent 50%)", backgroundSize: "28px 28px" }}>
+                                                            <Lightbulb className="w-12 h-12 text-white/20" />
+                                                        </div>
+                                                    )}
+                                                    <span className="absolute top-3 right-3 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest bg-white/95 text-[#021d49] rounded-full shadow">Policy Brief</span>
                                                 </div>
-                                            )}
-
-                                            {/* Small badge — top-right corner only, minimal footprint */}
-                                            <span className="absolute top-3 right-3 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest bg-white/95 text-[#021d49] rounded-full shadow">
-                                                Policy Brief
-                                            </span>
-                                        </div>
-
-                                        {/* ── Card body ── */}
-                                        <div className="flex flex-col flex-grow p-5">
-
-                                            {/* Category chip */}
-                                            {brief.category && (
-                                                <span className="self-start mb-2 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-[#021d49] bg-[#021d49]/8 rounded-full">
-                                                    {brief.category}
-                                                </span>
-                                            )}
-
-                                            {/* Title */}
-                                            <h3 className="text-[15px] font-bold text-gray-900 group-hover:text-[#021d49] leading-snug mb-2 line-clamp-3 transition-colors">
-                                                {brief.title}
-                                            </h3>
-
-                                            {/* Date */}
-                                            {date && (
-                                                <div className="flex items-center gap-1.5 text-xs text-gray-400 mb-3">
-                                                    <Calendar className="w-3.5 h-3.5" />
-                                                    {date}
+                                                <div className="flex flex-col flex-grow p-5">
+                                                    {brief.category && <span className="self-start mb-2 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-[#021d49] bg-[#021d49]/8 rounded-full">{brief.category}</span>}
+                                                    <h3 className="text-[15px] font-bold text-gray-900 group-hover:text-[#021d49] leading-snug mb-2 line-clamp-3 transition-colors">{brief.title}</h3>
+                                                    {date && <div className="flex items-center gap-1.5 text-xs text-gray-400 mb-3"><Calendar className="w-3.5 h-3.5" />{date}</div>}
+                                                    <p className="text-sm text-gray-500 leading-relaxed flex-grow line-clamp-3">{snippet}</p>
+                                                    <button onClick={e => { e.stopPropagation(); goTo(id); }} className="mt-5 flex items-center justify-center gap-2 py-2.5 w-full bg-[#021d49] hover:bg-[#032a6b] text-white text-sm font-semibold rounded-xl transition-colors">
+                                                        Read More <ArrowRight className="w-4 h-4" />
+                                                    </button>
                                                 </div>
-                                            )}
+                                            </article>
+                                        );
+                                    })}
+                                </div>
+                            )}
 
-                                            {/* Snippet */}
-                                            <p className="text-sm text-gray-500 leading-relaxed flex-grow line-clamp-3">
-                                                {snippet}
-                                            </p>
-
-                                            {/* CTA */}
-                                            <button
-                                                onClick={e => { e.stopPropagation(); goTo(id); }}
-                                                className="mt-5 flex items-center justify-center gap-2 py-2.5 w-full bg-[#021d49] hover:bg-[#032a6b] text-white text-sm font-semibold rounded-xl transition-colors"
+                            {/* List view */}
+                            {viewMode === 'list' && (
+                                <div className="space-y-3">
+                                    {paginated.map(brief => {
+                                        const img = brief.image || brief.coverImage || brief.cover_image || brief.thumbnail || null;
+                                        const plain = stripHtml(brief.description || brief.excerpt || '');
+                                        const snippet = truncate(plain, 20);
+                                        const date = brief.datePosted ? new Date(brief.datePosted).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : '';
+                                        const id = brief._id || brief.id;
+                                        return (
+                                            <div
+                                                key={id}
+                                                onClick={() => goTo(id)}
+                                                className="bg-white rounded-xl border border-gray-200 hover:border-[#021d49] shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer flex items-center gap-4 p-4 group"
                                             >
-                                                Read More <ArrowRight className="w-4 h-4" />
-                                            </button>
-                                        </div>
-                                    </article>
-                                );
-                            })}
-                        </div>
+                                                {/* Thumbnail */}
+                                                <div className="w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden">
+                                                    {img ? (
+                                                        <img src={img} alt={brief.title || 'Policy brief'} className="w-full h-full object-cover" onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
+                                                    ) : (
+                                                        <div className="w-full h-full bg-[#021d49] flex items-center justify-center">
+                                                            <Lightbulb className="w-7 h-7 text-white/20" />
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                {/* Content */}
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                                                        {brief.category && (
+                                                            <span className="px-2 py-0.5 bg-[#021d49]/10 text-[#021d49] text-xs font-bold uppercase tracking-wide rounded">
+                                                                {brief.category}
+                                                            </span>
+                                                        )}
+                                                        {date && (
+                                                            <span className="flex items-center gap-1 text-xs text-gray-400">
+                                                                <Calendar className="w-3 h-3" /> {date}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    <h3 className="font-bold text-gray-900 group-hover:text-[#021d49] transition-colors leading-snug line-clamp-1 mb-0.5">
+                                                        {brief.title}
+                                                    </h3>
+                                                    <p className="text-sm text-gray-500 line-clamp-1">{snippet}</p>
+                                                </div>
+                                                {/* CTA */}
+                                                <button
+                                                    onClick={e => { e.stopPropagation(); goTo(id); }}
+                                                    className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2 bg-[#021d49] hover:bg-[#032a6b] text-white text-sm font-semibold rounded-lg transition-colors"
+                                                >
+                                                    Read <ArrowRight className="w-4 h-4" />
+                                                </button>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
+                        </>
                     )}
 
                     {/* Pagination */}

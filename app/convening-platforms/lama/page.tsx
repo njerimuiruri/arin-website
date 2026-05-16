@@ -205,7 +205,7 @@ const LAMAPage = () => {
                                     {/* Exact paragraph — professionally formatted */}
                                     <div className="border-l-4 border-[#00c4b3] pl-5 mb-8">
                                         <p className="text-gray-700 leading-relaxed" style={{ fontSize: 15.5, lineHeight: 1.85 }}>
-                                            Kenya's Ministry of Environment, Climate Change, Natural Resources and Forestry (MECCF)
+                                            Kenya&apos;s Ministry of Environment, Climate Change, Natural Resources and Forestry (MECCF)
                                             has formed a landmark multi-partner initiative — co-led with{" "}
                                             <strong className="text-[#021d49]">SouthSouthNorth (SSN)</strong>,
                                             the <strong className="text-[#021d49]">Climate and Development Knowledge Network (CDKN)</strong>,
@@ -219,7 +219,7 @@ const LAMAPage = () => {
                                             Together, this coalition is co-developing a standardised indicators handbook and a digital
                                             Monitoring, Evaluation, Reporting, and Learning (MERL) tool. The MERL tool will leverage these
                                             indicators to strengthen data collection, analysis, and reporting — ultimately promoting greater
-                                            transparency, accountability, and informed decision-making across Kenya's climate actions.
+                                            transparency, accountability, and "Informed decision-making across Kenya\u2019s climate actions".
                                         </p>
                                     </div>
 
