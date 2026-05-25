@@ -13,16 +13,19 @@ const highlights = [
     "Standardised climate indicators handbook",
     "Digital MERL data collection & reporting tool",
     "Strengthened transparency & accountability",
-    "Informed decision-making across Kenya\u2019s climate actions",
+    "Informed decision-making across Kenya’s climate actions",
 ];
 
 export default function MerlSpotlightSection() {
     return (
-        <section style={{ background: "white", padding: "80px 24px", borderTop: "1px solid #f1f5f9" }}>
+        <section
+            className="py-16 md:py-20 px-6"
+            style={{ background: "white", borderTop: "1px solid #f1f5f9" }}
+        >
             <div style={{ maxWidth: 1200, margin: "0 auto" }}>
 
                 {/* Top label row */}
-                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 48 }}>
+                <div className="flex flex-wrap items-center gap-3 mb-10 md:mb-12">
                     <div style={{
                         display: "inline-flex", alignItems: "center", gap: 8,
                         padding: "6px 14px", borderRadius: 99,
@@ -39,7 +42,7 @@ export default function MerlSpotlightSection() {
                             Partnership Spotlight
                         </span>
                     </div>
-                    <div style={{ flex: 1, height: 1, background: "#f1f5f9" }} />
+                    <div className="hidden sm:block flex-1" style={{ height: 1, background: "#f1f5f9" }} />
                     <span style={{
                         fontFamily: "'Inter', sans-serif",
                         fontSize: 12, color: "#9ca3af",
@@ -48,8 +51,8 @@ export default function MerlSpotlightSection() {
                     </span>
                 </div>
 
-                {/* Main grid */}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 380px", gap: 64, alignItems: "start" }}>
+                {/* Main grid — stacks on mobile, side-by-side on lg+ */}
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-10 lg:gap-16 items-start">
 
                     {/* LEFT */}
                     <div>
@@ -87,7 +90,7 @@ export default function MerlSpotlightSection() {
                             Together, this coalition is co-developing a standardised indicators handbook and a digital
                             Monitoring, Evaluation, Reporting, and Learning (MERL) tool. The MERL tool will leverage
                             these indicators to strengthen data collection, analysis, and reporting — ultimately promoting
-                            greater transparency, accountability, and "Informed decision-making across Kenya\u2019s climate actions".
+                            greater transparency, accountability, and &quot;Informed decision-making across Kenya&apos;s climate actions&quot;.
                         </p>
 
                         {/* Deliverables */}
@@ -100,7 +103,7 @@ export default function MerlSpotlightSection() {
                             }}>
                                 Key Deliverables
                             </p>
-                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                                 {highlights.map((item) => (
                                     <div key={item} style={{
                                         display: "flex", alignItems: "flex-start", gap: 10,
@@ -242,11 +245,7 @@ export default function MerlSpotlightSection() {
                         </div>
 
                         {/* Stat strip below card */}
-                        <div style={{
-                            marginTop: 16,
-                            display: "grid", gridTemplateColumns: "1fr 1fr",
-                            gap: 12,
-                        }}>
+                        <div className="grid grid-cols-2 gap-3 mt-4">
                             {[
                                 { value: "6", label: "Partner organisations" },
                                 { value: "2025", label: "Initiative year" },

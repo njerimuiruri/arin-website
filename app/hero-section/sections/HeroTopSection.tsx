@@ -52,7 +52,7 @@ const HeroSection = () => {
     const isVideo = slide.type === "video";
 
     return (
-        <section className="relative w-full overflow-hidden" style={{ height: "100svh", minHeight: 640 }}>
+        <section className="relative w-full overflow-hidden" style={{ height: "100svh", minHeight: 640, borderBottomLeftRadius: "2.5rem", borderBottomRightRadius: "2.5rem" }}>
 
             {/* ─── background slides ─── */}
             {slides.map((s, i) => {

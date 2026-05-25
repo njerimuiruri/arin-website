@@ -182,7 +182,7 @@ function BioModal({
                 style={{
                     background: "white",
                     borderRadius: 24,
-                    maxWidth: 760, width: "100%",
+                    maxWidth: 960, width: "100%",
                     maxHeight: "90vh",
                     boxShadow: "0 40px 120px rgba(2,29,73,.32)",
                     animation: "tm-slideUp .3s cubic-bezier(.22,1,.36,1)",
@@ -193,7 +193,7 @@ function BioModal({
             >
                 {/* ── Left: portrait photo card ── */}
                 <div style={{
-                    width: 240,
+                    width: 280,
                     flexShrink: 0,
                     position: "relative",
                     background: "#021d49",

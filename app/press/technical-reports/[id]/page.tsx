@@ -15,7 +15,6 @@ export default function TechnicalReportDetailPage() {
     const [report, setReport] = useState<TechnicalReport | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [openingIdx, setOpeningIdx] = useState<number | null>(null);
     const [imageModalOpen, setImageModalOpen] = useState(false);
 
     const buildProxyUrl = (cloudinaryUrl: string, download = false) => {
@@ -23,15 +22,6 @@ export default function TechnicalReportDetailPage() {
         return `${API_BASE_URL}/technical-reports/resource-proxy?url=${encoded}${download ? '&download=true' : ''}`;
     };
 
-    const openPdf = (url: string, idx: number) => {
-        setOpeningIdx(idx);
-        const proxyUrl = buildProxyUrl(url);
-        const tab = window.open(proxyUrl, '_blank');
-        if (!tab) {
-            window.location.href = proxyUrl;
-        }
-        setOpeningIdx(null);
-    };
 
     useEffect(() => {
         if (!id) return;
@@ -268,14 +258,15 @@ export default function TechnicalReportDetailPage() {
 
                                                     {/* Action buttons */}
                                                     <div className="grid grid-cols-2 divide-x divide-gray-200 border-t border-gray-200">
-                                                        <button
-                                                            onClick={() => openPdf(url, idx)}
-                                                            disabled={openingIdx === idx}
-                                                            className="flex flex-col items-center justify-center gap-1.5 py-4 px-3 text-[#021d49] hover:bg-[#021d49] hover:text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-wait font-semibold text-sm"
+                                                        <a
+                                                            href={buildProxyUrl(url)}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="flex flex-col items-center justify-center gap-1.5 py-4 px-3 text-[#021d49] hover:bg-[#021d49] hover:text-white transition-all duration-200 font-semibold text-sm"
                                                         >
                                                             <Eye className="w-4 h-4" />
-                                                            {openingIdx === idx ? 'Opening…' : 'Open'}
-                                                        </button>
+                                                            Open
+                                                        </a>
 
                                                         <a
                                                             href={downloadProxyUrl}
