@@ -55,97 +55,99 @@ function TeamCard({
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
             style={{
-                position: "relative",
-                borderRadius: 20,
+                borderRadius: 18,
                 overflow: "hidden",
-                aspectRatio: "3/4",
                 cursor: "pointer",
+                background: "white",
                 boxShadow: hovered
-                    ? "0 24px 56px rgba(2,29,73,.22)"
-                    : "0 6px 24px rgba(2,29,73,.10)",
-                transform: hovered ? "translateY(-6px)" : "translateY(0)",
-                transition: "all .35s cubic-bezier(.22,1,.36,1)",
+                    ? "0 20px 52px rgba(2,29,73,.18)"
+                    : "0 2px 14px rgba(2,29,73,.08)",
+                transform: hovered ? "translateY(-5px)" : "translateY(0)",
+                transition: "all .32s cubic-bezier(.22,1,.36,1)",
+                border: "1px solid rgba(2,29,73,.07)",
+                display: "flex",
+                flexDirection: "column",
             }}
         >
-            {/* Photo */}
-            <img
-                src={imgSrc(member.image) || fallback(name)}
-                alt={name}
-                onError={e => {
-                    (e.currentTarget as HTMLImageElement).src = fallback(name);
-                }}
-                style={{
-                    width: "100%", height: "100%", objectFit: "cover",
-                    transform: hovered ? "scale(1.06)" : "scale(1)",
-                    transition: "transform .5s ease",
-                    display: "block",
-                }}
-            />
-
-            {/* Gradient overlay */}
+            {/* Photo — fully visible, no overlay */}
             <div style={{
-                position: "absolute", inset: 0,
-                background: "linear-gradient(to top, rgba(2,8,30,.86) 0%, rgba(2,8,30,.3) 50%, transparent 72%)",
-                opacity: hovered ? 1 : 0.88,
-                transition: "opacity .35s ease",
-            }} />
-
-            {/* Glass nameplate */}
-            <div style={{
-                position: "absolute",
-                bottom: 0, left: 0, right: 0,
-                padding: "0 16px 16px",
-                transform: hovered ? "translateY(0)" : "translateY(3px)",
-                transition: "transform .35s ease",
+                height: 280,
+                overflow: "hidden",
+                flexShrink: 0,
+                background: "#e8edf5",
             }}>
+                <img
+                    src={imgSrc(member.image) || fallback(name)}
+                    alt={name}
+                    onError={e => {
+                        (e.currentTarget as HTMLImageElement).src = fallback(name);
+                    }}
+                    style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        objectPosition: "center top",
+                        transform: hovered ? "scale(1.04)" : "scale(1)",
+                        transition: "transform .5s ease",
+                        display: "block",
+                    }}
+                />
+            </div>
+
+            {/* Info strip */}
+            <div style={{ padding: "18px 20px 20px", flex: 1, display: "flex", flexDirection: "column" }}>
+                {/* Animated accent bar */}
                 <div style={{
-                    background: "rgba(255,255,255,.1)",
-                    backdropFilter: "blur(18px)",
-                    WebkitBackdropFilter: "blur(18px)",
-                    border: "1px solid rgba(255,255,255,.18)",
-                    borderRadius: 14,
-                    padding: "12px 14px",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 10,
+                    height: 2,
+                    width: hovered ? "100%" : 36,
+                    background: "linear-gradient(to right, #021d49, #00c4b3)",
+                    borderRadius: 2,
+                    marginBottom: 14,
+                    transition: "width .35s ease",
+                }} />
+
+                <div style={{
+                    fontFamily: "'Cormorant Garamond', Georgia, serif",
+                    fontWeight: 700,
+                    fontSize: "1.08rem",
+                    color: "#021d49",
+                    lineHeight: 1.3,
+                    marginBottom: 5,
                 }}>
-                    {/* Name + role */}
-                    <div>
-                        <div style={{
-                            fontFamily: "'Cormorant Garamond', Georgia, serif",
-                            fontWeight: 700, fontSize: ".92rem",
-                            color: "white", lineHeight: 1.3,
-                            marginBottom: 3,
-                            wordBreak: "break-word",
-                        }}>
-                            {name}
-                        </div>
-                        <div style={{
-                            fontFamily: "'Inter', sans-serif",
-                            fontSize: 9.5, color: "rgba(255,255,255,.6)",
-                            letterSpacing: ".05em",
-                            wordBreak: "break-word",
-                        }}>
-                            {member.role}
-                        </div>
-                    </div>
-                    {/* Button */}
-                    <button style={{
-                        alignSelf: "flex-start",
-                        display: "inline-flex", alignItems: "center", gap: 4,
-                        padding: "6px 12px", borderRadius: 99,
-                        background: hovered ? "white" : "rgba(255,255,255,.15)",
-                        border: "1px solid rgba(255,255,255,.25)",
-                        color: hovered ? "#021d49" : "white",
-                        fontFamily: "'Inter', sans-serif",
-                        fontWeight: 600, fontSize: 10.5,
-                        cursor: "pointer",
-                        transition: "all .25s ease",
-                        whiteSpace: "nowrap",
-                    }}>
-                        View Bio <ArrowUpRight size={11} />
-                    </button>
+                    {name}
                 </div>
+
+                <div style={{
+                    fontFamily: "'Inter', sans-serif",
+                    fontSize: 10,
+                    color: "#00c4b3",
+                    letterSpacing: ".08em",
+                    textTransform: "uppercase",
+                    marginBottom: 18,
+                    flex: 1,
+                }}>
+                    {member.role}
+                </div>
+
+                <button style={{
+                    alignSelf: "flex-start",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 5,
+                    padding: "8px 16px",
+                    borderRadius: 99,
+                    background: hovered ? "#021d49" : "transparent",
+                    border: "1.5px solid rgba(2,29,73,.2)",
+                    color: hovered ? "white" : "#021d49",
+                    fontFamily: "'Inter', sans-serif",
+                    fontWeight: 600,
+                    fontSize: 11,
+                    cursor: "pointer",
+                    transition: "all .25s ease",
+                    whiteSpace: "nowrap",
+                }}>
+                    View Bio <ArrowUpRight size={11} />
+                </button>
             </div>
         </div>
     );
@@ -362,38 +364,33 @@ const SecretariatPage = () => {
 
             <div style={{ background: "#f8faff", minHeight: "100vh", paddingBottom: 96 }}>
 
-                {/* ── Page header ── */}
-                <div style={{ maxWidth: 1200, margin: "0 auto", padding: "36px 40px 0", textAlign: "center" }}>
-                    <div style={{
-                        display: "inline-flex", alignItems: "center", gap: 7,
-                        fontFamily: "'Space Mono', monospace",
-                        fontSize: 10, letterSpacing: ".14em", textTransform: "uppercase",
-                        color: "#021d49", background: "white",
-                        border: "1px solid rgba(2,29,73,.15)",
-                        borderRadius: 99, padding: "5px 14px", marginBottom: 12,
-                    }}>
-                        <span style={{
-                            width: 6, height: 6, borderRadius: "50%",
-                            background: "#00c4b3",
-                        }} />
-                        Our People
+                {/* ── Compact inline page header ── */}
+                <div style={{ maxWidth: 1200, margin: "0 auto", padding: "20px 40px 0" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
+                        <div style={{
+                            display: "inline-flex", alignItems: "center", gap: 7,
+                            fontFamily: "'Space Mono', monospace",
+                            fontSize: 10, letterSpacing: ".14em", textTransform: "uppercase",
+                            color: "#021d49", background: "white",
+                            border: "1px solid rgba(2,29,73,.15)",
+                            borderRadius: 99, padding: "5px 14px", flexShrink: 0,
+                        }}>
+                            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#00c4b3" }} />
+                            Our People
+                        </div>
+                        <h1 style={{
+                            fontFamily: "'Cormorant Garamond', Georgia, serif",
+                            fontWeight: 700, fontSize: "clamp(1.4rem, 2.4vw, 1.9rem)",
+                            color: "#021d49", lineHeight: 1.2, margin: 0,
+                        }}>
+                            Meet the{" "}
+                            <em style={{ fontStyle: "italic", color: "#00c4b3" }}>ARIN Team</em>
+                        </h1>
                     </div>
-
-                    <h1 style={{
-                        fontFamily: "'Cormorant Garamond', Georgia, serif",
-                        fontWeight: 700, fontSize: "clamp(2.2rem, 4vw, 3.2rem)",
-                        color: "#021d49", lineHeight: 1.1, marginBottom: 10,
-                    }}>
-                        Meet the{" "}
-                        <em style={{ fontStyle: "italic", color: "#00c4b3" }}>ARIN Team</em>
-                    </h1>
-                    <p style={{
-                        fontFamily: "'Inter', sans-serif",
-                        fontSize: 15, color: "#64748b", lineHeight: 1.8,
-                        maxWidth: 520, margin: "0 auto",
-                    }}>
-                        A diverse, passionate group of researchers, communicators, and administrators driving Africa's research transformation.
-                    </p>
+                    <div style={{
+                        height: 1, marginTop: 14,
+                        background: "linear-gradient(to right, rgba(2,29,73,.15), transparent)",
+                    }} />
                 </div>
 
                 {/* ── Loading ── */}
@@ -424,14 +421,14 @@ const SecretariatPage = () => {
 
                 {/* ── Categories ── */}
                 {!loading && members.length > 0 && orderedKeys.map((category, idx) => (
-                    <div key={category} style={{ maxWidth: 1200, margin: `${idx === 0 ? "32px" : "52px"} auto 0`, padding: "0 40px" }}>
+                    <div key={category} style={{ maxWidth: 1200, margin: `${idx === 0 ? "16px" : "40px"} auto 0`, padding: "0 40px" }}>
 
                         {/* Category heading */}
-                        <div style={{ marginBottom: 28 }}>
+                        <div style={{ marginBottom: 20 }}>
                             <h2 style={{
                                 fontFamily: "'Cormorant Garamond', Georgia, serif",
-                                fontWeight: 700, fontSize: "1.45rem",
-                                color: "#021d49", marginBottom: 10,
+                                fontWeight: 700, fontSize: "1.25rem",
+                                color: "#021d49", marginBottom: 8,
                             }}>
                                 {category}
                             </h2>
@@ -445,8 +442,9 @@ const SecretariatPage = () => {
                         {/* Cards */}
                         <div style={{
                             display: "grid",
-                            gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
-                            gap: 20,
+                            gridTemplateColumns: "repeat(auto-fit, minmax(240px, 300px))",
+                            justifyContent: "center",
+                            gap: 24,
                         }}>
                             {grouped[category].map(member => (
                                 <TeamCard
