@@ -153,7 +153,7 @@ export const minigrantFellows: MiniGrantFellow[] = [
     lastName: "Teresa Adhiambo",
     role: "SDG Fellow",
     category: "Fellows",
-    image: "",
+    image: "/img/sdg-fellows/rael-teresa.webp",
     bio: "Dr. Rael Teresa Adhiambo is an Environmental Scientist at Kenya's National Commission for Science, Technology and Innovation (NACOSTI), where she supports evidence-informed policymaking on climate change, environmental sustainability, and adaptation research. She holds a Ph.D. in Oceanography and Limnology, with her research exploring the impacts of climate change on tropical coastal ecosystems. Her work lies at the intersection of science and policy, advocating for justice-oriented adaptation strategies that elevate African research leadership, local knowledge systems, and inclusive governance. Through the ARIN Fellowship, she aims to strengthen the policy-research nexus to address SDG trade-offs and synergies in climate-smart livestock management in Kenya.",
   },
   {
@@ -162,7 +162,7 @@ export const minigrantFellows: MiniGrantFellow[] = [
     lastName: "Juma",
     role: "SDG Fellow",
     category: "Fellows",
-    image: "",
+    image: "/img/sdg-fellows/richard-juma.webp",
     bio: "Dr. Richard Juma is a career teacher/trainer with strong national and interdisciplinary work experience. His interests and experience include psychometrics, research, strategic management and leadership, especially with the inter-linkages between emerging and re-emerging issues in training, educational leadership and psychological research and wellness. He has specialist training in human capital management, strategic leadership, corporate governance, e-learning management systems, drug abuse, HIV testing and counseling. His career aspiration is to serve as a strategic academic leader, researcher and mentor contributing to psychological wellness within a holistic and impactful education system.",
   },
   {
@@ -171,7 +171,7 @@ export const minigrantFellows: MiniGrantFellow[] = [
     lastName: "Jerop Atuta",
     role: "SDG Fellow",
     category: "Fellows",
-    image: "",
+    image: "/img/sdg-fellows/jane.png",
     bio: "Jane Jerop Atuta is an Economist with the Government of Kenya responsible for guiding economic policy formulation, economic research and analysis, policy evaluation, and forecasting of economic projections. She is currently responsible for the coordination of SDGs to promote sustainable development through the formulation of evidence-based policies. She oversees the integration, monitoring, and national alignment of Sustainable Development Goals, leading policy analysis, preparing data-driven progress reports, and engaging with stakeholders across government, private sector, civil society, and international platforms. She earned both an MA in Economics and a Bachelor in Economics & Statistics from the University of Nairobi.",
   },
 
@@ -182,7 +182,7 @@ export const minigrantFellows: MiniGrantFellow[] = [
     lastName: "Kuria",
     role: "LEEPS Fellow",
     category: "Fellows",
-    image: "",
+    image: "/img/leeps/Kariuki.jpg",
     bio: "Dr. Joseph Kuria is currently a Research and Policy Analyst at the Parliamentary Research Services in the Parliament of Kenya. He serves on the Departmental Committee on Environment, Forestry, and Mining in the National Assembly. He has over ten years of experience providing technical support through evidence gathering, synthesis, analysis, and packaging it in a usable format for Hon. Members of Parliament, the House leadership, and other parliamentary staff. He holds a Doctorate in Biostatistics from Moi University and has published several research papers. He received a Mini-Grant from the LEEPS project to study the factors that influence the use of evidence in policymaking, aligned with his commitment to supporting Evidence-Informed Policy-Making (EIPM) in the Kenyan Parliament.",
   },
   {
@@ -191,7 +191,7 @@ export const minigrantFellows: MiniGrantFellow[] = [
     lastName: "Gueye",
     role: "LEEPS Fellow",
     category: "Fellows",
-    image: "",
+    image: "/img/leeps/fama.jpg",
     bio: "Dr. Fama Gueye is a Senegalese economist specializing in climate change, sustainable development, and environmental policy. She currently serves as a Lecturer in Economics and Sustainable Development at the Institute of Public Policy (IPP) of the University Cheikh Anta Diop (UCAD) in Dakar, Senegal. She is also the Deputy Director of the WASCAL Climate Change Economics (CCE) program at UCAD (2022-2025). She holds a Ph.D. in Climate Change Economics obtained through the WASCAL program, a Master's in Agricultural Policy and Economics via the PTCI in Burkina Faso, and a Certified in NDC Finance from Frankfurt School of Finance & Management. Her research contributions focus on sustainable development and environmental economics, natural resource management, and agricultural economics.",
   },
   {
@@ -200,7 +200,7 @@ export const minigrantFellows: MiniGrantFellow[] = [
     lastName: "Oduor",
     role: "LEEPS Fellow",
     category: "Fellows",
-    image: "",
+    image: "/img/leeps/jim.jpg",
     bio: "Jim Oduor is a skilled social research professional with experience in international development, climate change and adaptation as well as M&E, having worked in various capacities in research design and implementation, training and capacity building as well as program evaluation. Jim has experience in Climate Change and Adaptation, Agriculture and Food Security, Access to Environmental Justice, Disaster and Emergency Preparedness, Social Protection, Sexual and Gender Based Violence (SGBV), Gender Equality and Women Empowerment, WASH, and developing Environmental, Gender, and Social Impact Assessments (GESIA). Jim has worked in Kenya, Somalia and Somaliland on projects funded by UN partner Agencies, Mastercard Foundation, Bread for the World, and African Women's Development Fund. Jim is a PhD Student of Climate Change and Adaptation at the University of Nairobi's Institute of Climate Change and Adaptation (ICCA).",
   },
   {
@@ -209,7 +209,7 @@ export const minigrantFellows: MiniGrantFellow[] = [
     lastName: "BOUKARI",
     role: "LEEPS Fellow",
     category: "Fellows",
-    image: "",
+    image: "/img/leeps/maazou.jpg",
     bio: "Maanzou BOUKARI, a national of Benin, is an engineer specialized in Finance, Project Management, Sustainable Agricultural Value Chains, and Food Security. He holds four university degrees and has around seven years of experience implementing and monitoring development projects across multiple African countries as a consultant. He has trained in Project Management at Maastricht University, Climate Finance at Frankfurt School (Germany), Renewable Energy with the African Development Bank, Forest Landscape Restoration with FAO in collaboration with Yale University, and Farmer Organization Structuring at Wageningen University. Maanzou is currently the Executive Director of AGRICULTURAL EXPERTISE CENTER and serves as the Benin Focal Point for the African Research and Impact Network (ARIN).",
   },
   {
@@ -218,7 +218,7 @@ export const minigrantFellows: MiniGrantFellow[] = [
     lastName: "Obonyo",
     role: "LEEPS Fellow",
     category: "Fellows",
-    image: "",
+    image: "/img/leeps/amos.png",
     bio: "Amose Obonyo is an environmental scientist with multidisciplinary training in limnology, wetlands management, and environmental management. He holds an International Joint MSc in Limnology and Wetlands Management, an MSc in Environmental Science, and a BSc in Environmental Management and Conservation. His professional experience spans University teaching, agroforestry operations, forest management, field research, and graduate-level environmental projects. Amose's interests focus on land and ecosystem restoration, soil and biodiversity conservation, climate change mitigation, and evidence-informed policymaking, particularly within the African context. His long-term goal is to advance science-policy linkages that support effective environmental decision-making and sustainable development.",
   },
   {
@@ -227,7 +227,7 @@ export const minigrantFellows: MiniGrantFellow[] = [
     lastName: "Salawu",
     role: "LEEPS Fellow",
     category: "Fellows",
-    image: "",
+    image: "/img/leeps/ismaila.jpg",
     bio: "Ismaila Salawu is a PhD candidate in Public Policy at the University of Ibadan. He is currently a fellow at Cheetahs Policy Institute and the Africa Research and Impact Network (ARIN). He has previously worked as a Research and Policy Associate at Paradigm Leadership Support Initiative (PLSI) and held research roles at the Centre for Democracy and Development (CDD) and the Nigerian Institute of Social and Economic Research (NISER). Ismaila is an alumnus of YALI RLC Accra and a member of the Africa Evidence Network, and Society for Decision-making Under Deep Uncertainty. He holds a B.Tech in Operations Research, an MSc in Research and Public Policy and a certificate in public policy analysis.",
   },
   {
@@ -245,7 +245,7 @@ export const minigrantFellows: MiniGrantFellow[] = [
     lastName: "Onyilo",
     role: "LEEPS Fellow",
     category: "Fellows",
-    image: "",
+    image: "/img/leeps/peter.png",
     bio: "",
   },
   {
