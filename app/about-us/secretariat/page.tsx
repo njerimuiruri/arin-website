@@ -5,6 +5,7 @@ import { getTeamMembers } from "@/services/teamsService";
 import Navbar from "@/app/navbar/Navbar";
 import Footer from "@/app/footer/Footer";
 import { API_CONFIG } from '@/lib/apiConfig';
+import { minigrantFellows } from "@/data/minigrant-fellows";
 
 type SecretariatMember = {
     _id: string;
@@ -21,22 +22,38 @@ const CATEGORY_ORDER = [
     "Focal Points",
     "Secretariat",
     "Fellows",
-    "Senior Experts",
 ];
 
 const CATEGORY_LABELS: Record<string, string> = {
     "Executive Director": "Executive Director",
     "Focal Points": "Focal Points and their Assistants",
     "Secretariat": "Secretariat Staff",
-    "Fellows": "Fellows",
-    "Senior Experts": "Senior Experts",
+    "Fellows": "Mini-Grant Awardees",
+};
+
+// Map old DB category names → new canonical names so existing data displays correctly
+const CATEGORY_ALIASES: Record<string, string> = {
+    "Leadership": "Executive Director",
+    "Focal Point": "Focal Points",
+    "Administration": "Secretariat",
+    "Researchers": "Secretariat",
+    "Communication": "Secretariat",
+    "IT": "Secretariat",
+    "Finance": "Secretariat",
+};
+
+const normaliseCategory = (raw?: string): string => {
+    const trimmed = raw?.trim() || "";
+    return CATEGORY_ALIASES[trimmed] ?? trimmed;
 };
 
 const imgSrc = (image?: string) =>
     image
         ? image.startsWith("http")
-            ? image
-            : `${API_CONFIG.BASE_URL}${image}`
+            ? image                              // absolute URL — use as-is
+            : image.startsWith("/img/")
+                ? image                          // local public folder — use as-is
+                : `${API_CONFIG.BASE_URL}${image}` // backend upload path — prepend API base
         : "";
 
 const fallback = (name: string) =>
@@ -351,18 +368,20 @@ const SecretariatPage = () => {
         loadMembers();
     }, []);
 
-    /* group + order */
+    /* merge DB members with static mini-grant fellows */
+    const allMembers: SecretariatMember[] = [
+        ...members,
+        ...(minigrantFellows as SecretariatMember[]),
+    ];
+
+    /* group by category, normalising old DB values to new names */
     const grouped: Record<string, SecretariatMember[]> = {};
-    members.forEach(m => {
-        const cat = m.category?.trim() || "Uncategorized";
+    allMembers.forEach(m => {
+        const cat = normaliseCategory(m.category) || "Uncategorized";
         if (!grouped[cat]) grouped[cat] = [];
         grouped[cat].push(m);
     });
-    const orderedKeys = [
-        ...CATEGORY_ORDER.filter(c => grouped[c]),
-        ...Object.keys(grouped).filter(c => !CATEGORY_ORDER.includes(c) && c !== "Uncategorized"),
-        ...(grouped["Uncategorized"] ? ["Uncategorized"] : []),
-    ];
+    const orderedKeys = CATEGORY_ORDER.filter(c => grouped[c]);
 
     return (
         <>
@@ -416,7 +435,7 @@ const SecretariatPage = () => {
                 )}
 
                 {/* ── Empty ── */}
-                {!loading && members.length === 0 && (
+                {!loading && allMembers.length === 0 && (
                     <div style={{ textAlign: "center", padding: "80px 0" }}>
                         <Users size={48} style={{ color: "#cbd5e1", margin: "0 auto 12px" }} />
                         <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: "#94a3b8" }}>
@@ -426,7 +445,7 @@ const SecretariatPage = () => {
                 )}
 
                 {/* ── Categories ── */}
-                {!loading && members.length > 0 && orderedKeys.map((category, idx) => (
+                {!loading && allMembers.length > 0 && orderedKeys.map((category, idx) => (
                     <div key={category} style={{ maxWidth: 1200, margin: `${idx === 0 ? "16px" : "40px"} auto 0`, padding: "0 40px" }}>
 
                         {/* Category heading */}
@@ -461,39 +480,6 @@ const SecretariatPage = () => {
                             ))}
                         </div>
 
-                        {/* Fellows: link to full fellowship page */}
-                        {category === "Fellows" && (
-                            <div style={{ marginTop: 24, textAlign: "center" }}>
-                                <a
-                                    href="/programs/fellowships"
-                                    style={{
-                                        display: "inline-flex",
-                                        alignItems: "center",
-                                        gap: 6,
-                                        padding: "10px 22px",
-                                        borderRadius: 99,
-                                        background: "transparent",
-                                        border: "1.5px solid rgba(2,29,73,.25)",
-                                        color: "#021d49",
-                                        fontFamily: "'Inter', sans-serif",
-                                        fontWeight: 600,
-                                        fontSize: 13,
-                                        textDecoration: "none",
-                                        transition: "all .25s ease",
-                                    }}
-                                    onMouseEnter={e => {
-                                        (e.currentTarget as HTMLAnchorElement).style.background = "#021d49";
-                                        (e.currentTarget as HTMLAnchorElement).style.color = "white";
-                                    }}
-                                    onMouseLeave={e => {
-                                        (e.currentTarget as HTMLAnchorElement).style.background = "transparent";
-                                        (e.currentTarget as HTMLAnchorElement).style.color = "#021d49";
-                                    }}
-                                >
-                                    View all Fellows <ArrowUpRight size={13} />
-                                </a>
-                            </div>
-                        )}
                     </div>
                 ))}
             </div>
