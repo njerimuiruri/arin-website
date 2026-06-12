@@ -26,7 +26,7 @@ const CATEGORY_ORDER = [
 
 const CATEGORY_LABELS: Record<string, string> = {
     "Executive Director": "Executive Director",
-    "Focal Points": "Focal Points and their Assistants",
+    "Focal Points": "Regional Focal Points",
     "Secretariat": "Secretariat Staff",
     "Fellows": "Mini-Grant Awardees",
 };
