@@ -17,14 +17,20 @@ type SecretariatMember = {
 };
 
 const CATEGORY_ORDER = [
-    "Leadership",
-    "Focal Point",
-    "Administration",
-    "Researchers",
-    "Communication",
-    "IT",
-    "Finance",
+    "Executive Director",
+    "Focal Points",
+    "Secretariat",
+    "Fellows",
+    "Senior Experts",
 ];
+
+const CATEGORY_LABELS: Record<string, string> = {
+    "Executive Director": "Executive Director",
+    "Focal Points": "Focal Points and their Assistants",
+    "Secretariat": "Secretariat Staff",
+    "Fellows": "Fellows",
+    "Senior Experts": "Senior Experts",
+};
 
 const imgSrc = (image?: string) =>
     image
@@ -430,7 +436,7 @@ const SecretariatPage = () => {
                                 fontWeight: 700, fontSize: "1.25rem",
                                 color: "#021d49", marginBottom: 8,
                             }}>
-                                {category}
+                                {CATEGORY_LABELS[category] ?? category}
                             </h2>
                             <div style={{
                                 height: 2,
@@ -454,6 +460,40 @@ const SecretariatPage = () => {
                                 />
                             ))}
                         </div>
+
+                        {/* Fellows: link to full fellowship page */}
+                        {category === "Fellows" && (
+                            <div style={{ marginTop: 24, textAlign: "center" }}>
+                                <a
+                                    href="/programs/fellowships"
+                                    style={{
+                                        display: "inline-flex",
+                                        alignItems: "center",
+                                        gap: 6,
+                                        padding: "10px 22px",
+                                        borderRadius: 99,
+                                        background: "transparent",
+                                        border: "1.5px solid rgba(2,29,73,.25)",
+                                        color: "#021d49",
+                                        fontFamily: "'Inter', sans-serif",
+                                        fontWeight: 600,
+                                        fontSize: 13,
+                                        textDecoration: "none",
+                                        transition: "all .25s ease",
+                                    }}
+                                    onMouseEnter={e => {
+                                        (e.currentTarget as HTMLAnchorElement).style.background = "#021d49";
+                                        (e.currentTarget as HTMLAnchorElement).style.color = "white";
+                                    }}
+                                    onMouseLeave={e => {
+                                        (e.currentTarget as HTMLAnchorElement).style.background = "transparent";
+                                        (e.currentTarget as HTMLAnchorElement).style.color = "#021d49";
+                                    }}
+                                >
+                                    View all Fellows <ArrowUpRight size={13} />
+                                </a>
+                            </div>
+                        )}
                     </div>
                 ))}
             </div>
