@@ -28,7 +28,7 @@ const CATEGORY_LABELS: Record<string, string> = {
     "Executive Director": "Executive Director",
     "Focal Points": "Regional Focal Points",
     "Secretariat": "Secretariat Staff",
-    "Fellows": "Mini-Grant Awardees",
+    "Fellows": "Fellows",
 };
 
 // Map old DB category names → new canonical names so existing data displays correctly
