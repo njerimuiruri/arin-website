@@ -2,7 +2,7 @@
 import { ArrowRight } from "lucide-react";
 
 const CTASection = () => (
-    <section className="max-w-[1600px] mx-auto px-6 pb-16">
+    <section className="max-w-[1600px] mx-auto px-6 pb-10">
         <div className="flex items-center justify-between gap-8 bg-[#021d49] rounded-2xl px-10 py-7 shadow-lg flex-wrap">
             <p className="text-white font-semibold text-lg">
                 Have a question or want to collaborate with ARIN?

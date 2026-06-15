@@ -88,23 +88,6 @@ export default function AboutSection() {
                             </div>
                         </div>
 
-                        {/* ── Proof strip — floats below the card ── */}
-                        <div className="ab2-proof-strip">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                                src="/images/arin1.jpeg"
-                                alt="ARIN Team"
-                                className="ab2-proof-thumb"
-                            />
-                            <div className="ab2-proof-text">
-                                <div className="ab2-proof-title">4th Annual Conference</div>
-                                <div className="ab2-proof-sub">Pan-African Research Summit</div>
-                            </div>
-                            <div className="ab2-proof-live">
-                                <span className="ab2-proof-dot" />
-                                Recorded
-                            </div>
-                        </div>
                     </div>
 
                     {/* ══ RIGHT — text + thematic areas ══ */}

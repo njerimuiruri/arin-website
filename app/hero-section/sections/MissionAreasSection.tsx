@@ -2,7 +2,7 @@
 "use client";
 
 const MissionAreasSection = () => (
-    <section className="max-w-[1600px] mx-auto px-6 pb-20">
+    <section className="max-w-[1600px] mx-auto px-6 pb-10">
         {/* ...existing code for the mission areas section... */}
     </section>
 );

@@ -1,21 +1,11 @@
-import { Suspense } from "react";
-import { dynamic } from "next/dynamic";
-
 export const dynamic = "force-dynamic";
 export const revalidate = 3600;
 
 import HeroTopSection from "./sections/HeroTopSection";
-import FeaturesSection from "./sections/FeaturesSection";
-import FocusAreasSection from "./sections/FocusAreasSection";
 import MissionAreasSection from "./sections/MissionAreasSection";
-import LatestPostsSection from "./sections/LatestPostsSection";
-import UpcomingEventsSection from "./sections/UpcomingEventsSection";
-import LatestProjectsSection from "./sections/LatestProjectsSection";
 import PartnersSection from "./sections/PartnersSection";
 import LatestFromArinSection from "./sections/LatestFromArinSection";
 import CTASection from "./sections/CTASection";
-import AfricaPresenceMap from "./sections/AfricaPresenceMap";
-import ImpactStories from "./sections/impactstories";
 
 import { technicalReportsService } from "@/services/technicalReportsService";
 import { policyBriefsService } from "@/services/policyBriefsService";
@@ -24,8 +14,8 @@ import { getResearchProjects } from "@/services/researchProjectService";
 
 import StatsSection from "./sections/StatsSection";
 import AboutSection from "./sections/Aboutsection";
-import PresenceSection from "./sections/Presencesection";
 import MerlSpotlightSection from "./sections/MerlSpotlightSection";
+import StrategicPlanSection from "./sections/StrategicPlanSection";
 
 const latestPosts = [
     {
@@ -82,14 +72,11 @@ const partners = [
     { name: "Partner 1", logo: "/partners/iclei.jpg" },
     { name: "Partner 2", logo: "/partners/kenia.png" },
     { name: "Partner 3", logo: "/partners/idrc.png" },
-    { name: "Partner 4", logo: "/partners/kings_college_london.png" },
     { name: "Partner 5", logo: "/partners/nairobi_county.jpg" },
     { name: "Partner 6", logo: "/partners/redcross.png" },
     { name: "Partner 4", logo: "/partners/sdi.png" },
     { name: "Partner 5", logo: "/partners/ssn.jpg" },
     { name: "Partner 6", logo: "/partners/steps_africa.jpg" },
-    { name: "Partner 5", logo: "/partners/tomorrowscities.png" },
-    { name: "Partner 6", logo: "/partners/ucl.jpg" },
     { name: "Partner 4", logo: "/partners/uk_foreign_office.jpg" },
     { name: "Partner 5", logo: "/partners/ukcdr-scaled.jpg" },
     { name: "Partner 6", logo: "/partners/ukri.png" }
@@ -132,17 +119,8 @@ export default async function HeroSection() {
             <HeroTopSection />
             <StatsSection />
             <AboutSection />
-            <PresenceSection />
-            {/* <FeaturesSection /> */}
-            <FocusAreasSection />
             <MissionAreasSection />
-            {/* <AfricaPresenceMap /> */}
-
-            {/* <LatestPostsSection latestPosts={latestPosts} /> */}
-            {/* <UpcomingEventsSection upcomingEvents={upcomingEvents} /> */}
-            {/* <LatestProjectsSection latestProjects={latestProjects} /> */}
-            {/* <ImpactStories /> */}
-
+            <StrategicPlanSection />
             <MerlSpotlightSection />
 
             <LatestFromArinSection

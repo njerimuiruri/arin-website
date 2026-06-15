@@ -1094,7 +1094,7 @@ i {
 /* ══ Stats Section (sc-*) ══ */
 .sc-section {
   background: #ffffff;
-  padding: 32px 24px;
+  padding: 20px 24px;
   position: relative;
   overflow: hidden;
 }
@@ -2040,7 +2040,7 @@ i {
 .pts-section {
   position: relative;
   background: #ffffff;
-  padding: 52px 0 56px;
+  padding: 32px 0 36px;
   overflow: hidden;
 }
 .pts-lines {
@@ -2358,7 +2358,7 @@ i {
 .ab2-section {
   position: relative;
   background: linear-gradient(160deg, #f8faff 0%, #ffffff 55%, #f0fdf8 100%);
-  padding: 72px 0 80px;
+  padding: 40px 0 48px;
   overflow: hidden;
 }
 .ab2-art {
@@ -3207,7 +3207,7 @@ i {
 /* ══ Latest from ARIN Section ══ */
 .arin-section {
   background: linear-gradient(135deg, #f0f4ff 0%, #fafbff 40%, #f5f9ff 100%);
-  padding: 48px 0;
+  padding: 32px 0;
   border-top: 1px solid #e5eaf5;
   position: relative;
   overflow: hidden;

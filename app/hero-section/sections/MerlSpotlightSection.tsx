@@ -19,7 +19,7 @@ const highlights = [
 export default function MerlSpotlightSection() {
     return (
         <section
-            className="py-16 md:py-20 px-6"
+            className="py-10 md:py-12 px-6"
             style={{ background: "white", borderTop: "1px solid #f1f5f9" }}
         >
             <div style={{ maxWidth: 1200, margin: "0 auto" }}>
