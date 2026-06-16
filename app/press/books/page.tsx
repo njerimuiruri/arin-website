@@ -22,7 +22,8 @@ const BooksPage = () => {
         try {
             setLoading(true);
             const data = await getBooks();
-            setBooks(data);
+            const sorted = [...data].sort((a, b) => new Date(b.datePosted || 0).getTime() - new Date(a.datePosted || 0).getTime());
+            setBooks(sorted);
             setError(null);
         } catch (err: any) {
             setError(err.message);
