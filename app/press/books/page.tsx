@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { BookOpen, Calendar, Search, Filter, ChevronLeft, ChevronRight, FileText, Users, ArrowRight } from 'lucide-react';
+import { BookOpen, Calendar, Search, Filter, ChevronLeft, ChevronRight, FileText, Users, ArrowRight, Lock } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
 import { getBooks } from '@/services/booksService';
 import Footer from '@/app/footer/Footer';
@@ -193,10 +193,15 @@ const BooksPage = () => {
                                                 <BookOpen className="w-16 h-16 text-white/20" />
                                             </div>
                                         )}
-                                        <div className="absolute top-3 left-3">
+                                        <div className="absolute top-3 left-3 flex flex-col gap-1.5">
                                             <span className="px-2.5 py-1 bg-white/95 backdrop-blur-sm text-[#021d49] font-bold text-xs uppercase tracking-wide rounded-lg shadow-lg">
                                                 {book.category || 'Book'}
                                             </span>
+                                            {book.embargoDate && new Date(book.embargoDate) > new Date() && (
+                                                <span className="flex items-center gap-1 px-2.5 py-1 bg-orange-500 text-white font-bold text-xs rounded-lg shadow-lg">
+                                                    <Lock className="w-3 h-3" /> Embargoed
+                                                </span>
+                                            )}
                                         </div>
                                     </div>
 
