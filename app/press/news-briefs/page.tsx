@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { Newspaper, Calendar, Search, Filter, ChevronLeft, ChevronRight, ArrowRight, Users, X } from 'lucide-react';
+import { Newspaper, Calendar, Search, Filter, ChevronLeft, ChevronRight, ArrowRight, Users, ArrowUpDown } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { getNewsBriefs } from '@/services/newsBriefsService';
 import Navbar from '@/app/navbar/Navbar';
@@ -23,6 +23,8 @@ const NewsBriefsPage = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [selectedCategory, setSelectedCategory] = useState<string>('All');
+    const [selectedYear, setSelectedYear] = useState<string>('All');
+    const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
     const [currentPage, setCurrentPage] = useState<number>(1);
     const briefsPerPage = 6;
     const router = useRouter();
@@ -31,12 +33,7 @@ const NewsBriefsPage = () => {
         async function fetchBriefs() {
             setLoading(true);
             const data = await getNewsBriefs();
-            const sorted = [...data].sort((a: NewsBrief, b: NewsBrief) => {
-                const dateA = a.datePosted ? new Date(a.datePosted).getTime() : 0;
-                const dateB = b.datePosted ? new Date(b.datePosted).getTime() : 0;
-                return dateB - dateA;
-            });
-            setNewsBriefs(sorted);
+            setNewsBriefs(data);
             setLoading(false);
         }
         fetchBriefs();
@@ -48,7 +45,13 @@ const NewsBriefsPage = () => {
     );
     const categories = ['All', ...dynamicCategories];
 
-    // Helper to strip HTML tags
+    const availableYears = ['All', ...Array.from(
+        new Set(newsBriefs
+            .map((b: NewsBrief) => b.datePosted ? new Date(b.datePosted).getFullYear().toString() : null)
+            .filter(Boolean) as string[]
+        )
+    ).sort((a, b) => Number(b) - Number(a))];
+
     function stripHtml(html: string) {
         if (!html) return '';
         return html.replace(/<[^>]+>/g, '');
@@ -57,17 +60,26 @@ const NewsBriefsPage = () => {
     const today = new Date();
     today.setHours(23, 59, 59, 999);
 
-    const filteredBriefs = newsBriefs.filter((brief: NewsBrief) => {
-        const title = (brief.title || '').toLowerCase();
-        const description = stripHtml(brief.description || '').toLowerCase();
-        const authors = Array.isArray(brief.authors) ? brief.authors.join(', ').toLowerCase() : '';
-        const matchesSearch = title.includes(searchTerm.toLowerCase()) ||
-            description.includes(searchTerm.toLowerCase()) ||
-            authors.includes(searchTerm.toLowerCase());
-        const matchesCategory = selectedCategory === 'All' || (brief.category === selectedCategory);
-        const matchesDate = !brief.datePosted || new Date(brief.datePosted) <= today;
-        return matchesSearch && matchesCategory && matchesDate;
-    });
+    const filteredBriefs = newsBriefs
+        .filter((brief: NewsBrief) => {
+            const title = (brief.title || '').toLowerCase();
+            const description = stripHtml(brief.description || '').toLowerCase();
+            const authors = Array.isArray(brief.authors) ? brief.authors.join(', ').toLowerCase() : '';
+            const matchesSearch = title.includes(searchTerm.toLowerCase()) ||
+                description.includes(searchTerm.toLowerCase()) ||
+                authors.includes(searchTerm.toLowerCase());
+            const matchesCategory = selectedCategory === 'All' || brief.category === selectedCategory;
+            const matchesYear = selectedYear === 'All' || (
+                brief.datePosted && new Date(brief.datePosted).getFullYear().toString() === selectedYear
+            );
+            const matchesDate = !brief.datePosted || new Date(brief.datePosted) <= today;
+            return matchesSearch && matchesCategory && matchesYear && matchesDate;
+        })
+        .sort((a: NewsBrief, b: NewsBrief) => {
+            const dateA = a.datePosted ? new Date(a.datePosted).getTime() : 0;
+            const dateB = b.datePosted ? new Date(b.datePosted).getTime() : 0;
+            return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
+        });
 
     // Pagination logic
     const indexOfLastBrief = currentPage * briefsPerPage;
@@ -118,7 +130,8 @@ const NewsBriefsPage = () => {
 
             {/* Filter Section */}
             <section className="bg-white border-b border-gray-200">
-                <div className="max-w-7xl mx-auto px-6 py-4">
+                <div className="max-w-7xl mx-auto px-6 py-4 space-y-3">
+                    {/* Category pills */}
                     <div className="flex items-center gap-3 flex-wrap">
                         <Filter className="w-4 h-4 text-gray-500 flex-shrink-0" />
                         {categories.map((category) => (
@@ -133,7 +146,35 @@ const NewsBriefsPage = () => {
                                 {category}
                             </button>
                         ))}
-                        <span className="ml-auto text-xs text-gray-500">{filteredBriefs.length} result{filteredBriefs.length !== 1 ? 's' : ''}</span>
+                    </div>
+
+                    {/* Year + Sort row */}
+                    <div className="flex items-center gap-3 flex-wrap">
+                        <Calendar className="w-4 h-4 text-gray-500 flex-shrink-0" />
+                        <div className="flex items-center gap-2 flex-wrap">
+                            {availableYears.map((year) => (
+                                <button
+                                    key={year}
+                                    onClick={() => { setSelectedYear(year); setCurrentPage(1); }}
+                                    className={`px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-200 ${selectedYear === year
+                                        ? 'bg-[#021d49] text-white shadow-md'
+                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                        }`}
+                                >
+                                    {year === 'All' ? 'All Years' : year}
+                                </button>
+                            ))}
+                        </div>
+
+                        <button
+                            onClick={() => { setSortOrder(s => s === 'newest' ? 'oldest' : 'newest'); setCurrentPage(1); }}
+                            className="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all duration-200 whitespace-nowrap"
+                        >
+                            <ArrowUpDown className="w-3.5 h-3.5" />
+                            {sortOrder === 'newest' ? 'Newest First' : 'Oldest First'}
+                        </button>
+
+                        <span className="text-xs text-gray-500 whitespace-nowrap">{filteredBriefs.length} result{filteredBriefs.length !== 1 ? 's' : ''}</span>
                     </div>
                 </div>
             </section>
@@ -254,6 +295,8 @@ const NewsBriefsPage = () => {
                                     onClick={() => {
                                         setSearchTerm('');
                                         setSelectedCategory('All');
+                                        setSelectedYear('All');
+                                        setSortOrder('newest');
                                     }}
                                     className="px-6 py-3 bg-[#021d49] text-white rounded-lg hover:bg-[#032a5e] transition-colors duration-200"
                                 >
