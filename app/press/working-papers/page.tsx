@@ -11,8 +11,12 @@ export default function WorkingPapersPage() {
     const [papers, setPapers] = useState<any[]>([]);
     const [expanded, setExpanded] = useState<{ [key: string]: boolean }>({});
     const [searchTerm, setSearchTerm] = useState('');
+    const [loading, setLoading] = useState(true);
     useEffect(() => {
-        workingPaperSeriesService.getAll().then(setPapers).catch(() => setPapers([]));
+        workingPaperSeriesService.getAll()
+            .then(setPapers)
+            .catch(() => setPapers([]))
+            .finally(() => setLoading(false));
     }, []);
 
     const today = new Date();
@@ -60,6 +64,12 @@ export default function WorkingPapersPage() {
 
                 {/* Cards Grid */}
                 <section className="max-w-7xl mx-auto px-6 py-8">
+                    {loading && (
+                        <div className="flex flex-col items-center justify-center py-24 gap-3">
+                            <div className="w-10 h-10 rounded-full border-4 border-[#021d49] border-t-transparent animate-spin" />
+                            <p className="text-sm text-gray-500">Loading working papers…</p>
+                        </div>
+                    )}
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {visiblePapers.map((paper: any) => (
                             <Link
@@ -149,7 +159,7 @@ export default function WorkingPapersPage() {
                     </div>
 
                     {/* No Results Message */}
-                    {visiblePapers.length === 0 && (
+                    {!loading && visiblePapers.length === 0 && (
                         <div className="text-center py-16">
                             <FileText className="w-12 h-12 text-gray-300 mx-auto mb-3" />
                             <h3 className="text-xl font-bold text-gray-900 mb-2">No Working Papers Found</h3>

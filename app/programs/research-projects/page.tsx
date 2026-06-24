@@ -158,9 +158,11 @@ const ResearchProjectsPage = () => {
 
                         {/* Results Count + view toggle */}
                         <div className="mt-4 flex items-center justify-between">
+                            {!loading ? (
                             <p className="text-gray-600">
                                 Showing <span className="font-semibold text-[#021d49]">{filteredProjects.length}</span> of <span className="font-semibold">{projects.length}</span> projects
                             </p>
+                            ) : <span />}
                             <div className="flex items-center bg-white border border-gray-200 rounded-lg p-1 shadow-sm">
                                 <button
                                     onClick={() => setViewMode('list')}

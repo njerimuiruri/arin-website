@@ -142,7 +142,17 @@ const TechnicalReportsPage = () => {
                         ))}
                     </div>
 
+                    {loading && (
+                        <div className="flex flex-col items-center justify-center py-24 gap-3">
+                            <div className="w-10 h-10 rounded-full border-4 border-[#021d49] border-t-transparent animate-spin" />
+                            <p className="text-sm text-gray-500">Loading reports…</p>
+                        </div>
+                    )}
+
+                    {error && <p className="text-center text-red-500 py-16 text-sm">{error}</p>}
+
                     {/* Results Counter + View Toggle */}
+                    {!loading && !error && (
                     <div className="mb-6 flex items-center justify-between">
                         <h2 className="text-2xl font-bold text-gray-900">
                             {filteredReports.length === 0 ? 'No reports found' : `${filteredReports.length} ${filteredReports.length === 1 ? 'Report' : 'Reports'} Found`}
@@ -171,6 +181,7 @@ const TechnicalReportsPage = () => {
                             </div>
                         </div>
                     </div>
+                    )}
 
                     {/* Grid view */}
                     {viewMode === 'grid' && (
@@ -276,7 +287,7 @@ const TechnicalReportsPage = () => {
                     )}
 
                     {/* No Results */}
-                    {filteredReports.length === 0 && (
+                    {!loading && !error && filteredReports.length === 0 && (
                         <div className="text-center py-16 bg-white rounded-xl shadow-sm border border-gray-100">
                             <div className="bg-gray-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <BookOpen className="w-10 h-10 text-gray-400" />
