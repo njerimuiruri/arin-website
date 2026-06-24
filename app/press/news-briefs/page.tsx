@@ -13,7 +13,9 @@ interface NewsBrief {
     authors?: string[];
     category?: string;
     image?: string;
+    coverImage?: string;
     datePosted?: string;
+    excerpt?: string;
 }
 
 const NewsBriefsPage = () => {
