@@ -29,13 +29,22 @@ const NewsBriefsPage = () => {
         async function fetchBriefs() {
             setLoading(true);
             const data = await getNewsBriefs();
-            setNewsBriefs(data);
+            const sorted = [...data].sort((a: NewsBrief, b: NewsBrief) => {
+                const dateA = a.datePosted ? new Date(a.datePosted).getTime() : 0;
+                const dateB = b.datePosted ? new Date(b.datePosted).getTime() : 0;
+                return dateB - dateA;
+            });
+            setNewsBriefs(sorted);
             setLoading(false);
         }
         fetchBriefs();
     }, []);
 
-    const categories = ['All', 'Events & Workshops', 'Publications', 'Conferences', 'Advocacy'];
+    const knownCategories = ['Friday Reviews', 'Briefs', 'Climate', 'Energy', 'Agriculture', 'Governance', 'Health', 'Biodiversity'];
+    const dynamicCategories = knownCategories.filter((c) =>
+        newsBriefs.some((b: NewsBrief) => b.category === c)
+    );
+    const categories = ['All', ...dynamicCategories];
 
     // Helper to strip HTML tags
     function stripHtml(html: string) {
@@ -166,8 +175,8 @@ const NewsBriefsPage = () => {
 
                                         {/* Badge */}
                                         <div className="absolute top-4 right-4">
-                                            <span className="px-3 py-1.5 bg-white/95 text-[#021d49] font-bold text-xs uppercase tracking-wider rounded-full shadow-lg backdrop-blur-sm">
-                                                News
+                                            <span className={`px-3 py-1.5 font-bold text-xs uppercase tracking-wider rounded-full shadow-lg backdrop-blur-sm ${brief.category === 'Friday Reviews' ? 'bg-blue-500 text-white' : 'bg-white/95 text-[#021d49]'}`}>
+                                                {brief.category || 'News'}
                                             </span>
                                         </div>
                                     </div>

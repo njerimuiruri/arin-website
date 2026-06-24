@@ -86,7 +86,7 @@ export default function NewsBriefDetailPage() {
                             <button onClick={() => router.push('/press/news-briefs')} className="inline-flex items-center gap-1.5 text-white/60 hover:text-white text-xs mb-2 transition-colors">
                                 <ArrowLeft className="w-3.5 h-3.5" /> All News Briefs
                             </button>
-                            <span className="inline-block px-2.5 py-0.5 bg-white/15 text-white/90 text-xs font-semibold uppercase tracking-wider rounded-full mb-2 ml-2">News Brief</span>
+                            <span className={`inline-block px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider rounded-full mb-2 ml-2 ${brief.category === 'Friday Reviews' ? 'bg-blue-500 text-white' : 'bg-white/15 text-white/90'}`}>{brief.category || 'News Brief'}</span>
                             <h1 className="text-lg md:text-2xl font-bold leading-snug mb-2 line-clamp-2">{brief.title}</h1>
                             <div className="flex flex-wrap gap-3 text-xs text-white/70">
                                 {brief.datePosted && <span className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5" />{new Date(brief.datePosted).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>}
@@ -183,6 +183,7 @@ export default function NewsBriefDetailPage() {
                             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
                                 <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4">Brief Details</h3>
                                 <dl className="space-y-3 text-sm">
+                                    {brief.category && <div><dt className="text-gray-500 text-xs uppercase tracking-wide mb-0.5">Category</dt><dd className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold ${brief.category === 'Friday Reviews' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}`}>{brief.category}</dd></div>}
                                     {brief.datePosted && <div><dt className="text-gray-500 text-xs uppercase tracking-wide mb-0.5">Published</dt><dd className="text-gray-900 font-medium">{new Date(brief.datePosted).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</dd></div>}
                                     {brief.authors?.length > 0 && <div><dt className="text-gray-500 text-xs uppercase tracking-wide mb-0.5">Authors</dt><dd className="text-gray-900 font-medium">{brief.authors.join(', ')}</dd></div>}
                                 </dl>
