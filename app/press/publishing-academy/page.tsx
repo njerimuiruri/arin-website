@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from 'react';
-import { ChevronDown, FileText, ExternalLink, Download, BookOpen, Target, Users } from 'lucide-react';
+import { ChevronDown, FileText, ExternalLink, Download, BookOpen, Users } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
 import Footer from '@/app/footer/Footer';
 
@@ -137,6 +137,15 @@ export default function ARINPublishingAcademy() {
                                 <span className="inline-block text-[10px] font-bold uppercase tracking-[0.18em] text-white bg-[#021d49] px-3 py-1 rounded-full mb-3">ARIN Press</span>
                                 <h1 className="text-3xl md:text-4xl font-bold text-[#021d49] tracking-tight leading-tight">Publishing Academy</h1>
                                 <p className="text-gray-500 text-sm mt-1.5 max-w-xl">Research Writing, Publishing, and Policy Communication for African Scholars</p>
+                                <a
+                                    href="https://elearning.arin-africa.org/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2 mt-4 bg-[#021d49] text-white text-xs font-semibold px-4 py-2 rounded-full hover:bg-[#032566] transition-colors"
+                                >
+                                    See More Details
+                                    <ExternalLink className="w-3 h-3" />
+                                </a>
                             </div>
                             <div className="shrink-0 text-right">
                                 <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-0.5">Publishing Partner</p>
@@ -148,44 +157,28 @@ export default function ARINPublishingAcademy() {
 
                 <div className="max-w-6xl mx-auto px-6 py-8 space-y-8">
 
-                    {/* ── Background + Objectives ──────────────── */}
-                    <div className="grid md:grid-cols-2 gap-5">
-
-                        {/* Background */}
-                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                            <div className="flex items-center gap-2 mb-3">
-                                <div className="w-7 h-7 rounded-lg bg-[#021d49] flex items-center justify-center">
-                                    <BookOpen className="w-3.5 h-3.5 text-white" />
-                                </div>
-                                <span className="text-xs font-bold uppercase tracking-widest text-[#021d49]">Background</span>
-                            </div>
-                            <p className="text-sm text-gray-600 leading-relaxed mb-3">
-                                Africa's research landscape is vibrant yet African scholarship remains structurally under-represented in global knowledge systems. Limited training in research writing, scientific communication, peer-review processes, and evidence translation means high-quality, Africa-generated research rarely reaches the audiences it could influence.
+                    {/* ── Background ───────────────────────────── */}
+                    <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-[#021d49] mb-3">Background</p>
+                        <div className="space-y-4 text-sm text-gray-600 leading-relaxed">
+                            <p>
+                                Africa's research landscape is vibrant yet African scholarship remains structurally
+                                under-represented in global knowledge systems. Limited training in research writing,
+                                scientific communication, peer-review processes, and translation of scientific evidence
+                                into policy means that high-quality, Africa-generated evidence rarely reaches the
+                                audiences it could influence.
                             </p>
-                            <p className="text-sm text-gray-600 leading-relaxed">
-                                The ARIN Publishing Academy is ARIN's response: a pan-African, Africa-led programme delivered over three months using a blended model  live webinars, self-paced e-learning, mentorship clinics, peer-review circles, and practical writing labs  for working professionals and early-career researchers across all African time zones.
+                            <p>
+                                The ARIN Publishing Academy is ARIN's response: a pan-African, Africa-led programme
+                                designed to strengthen the full research-to-impact pipeline.
                             </p>
-                        </div>
-
-                        {/* Objectives */}
-                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                            <div className="flex items-center gap-2 mb-3">
-                                <div className="w-7 h-7 rounded-lg bg-[#021d49] flex items-center justify-center">
-                                    <Target className="w-3.5 h-3.5 text-white" />
-                                </div>
-                                <span className="text-xs font-bold uppercase tracking-widest text-[#021d49]">Objectives</span>
-                            </div>
-                            <ol className="space-y-2.5">
-                                {objectives.map((obj, i) => (
-                                    <li key={i} className="flex gap-2.5 text-sm text-gray-600 leading-relaxed">
-                                        <span className="shrink-0 w-5 h-5 rounded-full bg-[#021d49] text-white text-[9px] font-bold flex items-center justify-center mt-0.5">{i + 1}</span>
-                                        {obj}
-                                    </li>
-                                ))}
-                            </ol>
+                            <p>
+                                Delivered over three months using a blended, flexible model — live webinars, self-paced
+                                e-learning, mentorship clinics, peer-review circles, and practical writing labs —
+                                designed for working professionals and early-career researchers across all African time zones.
+                            </p>
                         </div>
                     </div>
-
 
                     {/* ── Training Curriculum ──────────────────── */}
                     <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
