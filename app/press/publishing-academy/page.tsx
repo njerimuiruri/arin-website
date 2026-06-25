@@ -173,8 +173,8 @@ export default function ARINPublishingAcademy() {
                                 designed to strengthen the full research-to-impact pipeline.
                             </p>
                             <p>
-                                Delivered over three months using a blended, flexible model — live webinars, self-paced
-                                e-learning, mentorship clinics, peer-review circles, and practical writing labs —
+                                Delivered over three months using a blended, flexible model  live webinars, self-paced
+                                e-learning, mentorship clinics, peer-review circles, and practical writing labs 
                                 designed for working professionals and early-career researchers across all African time zones.
                             </p>
                         </div>
@@ -314,7 +314,7 @@ export default function ARINPublishingAcademy() {
                             <div className="rounded-xl bg-gray-50 border border-gray-100 p-4">
                                 <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Support Team</p>
                                 <div className="space-y-1.5 mt-1">
-                                    {['Jerry Ariel', 'Nancy Mutwii', 'Maria Nailentei'].map((name) => (
+                                    {['Jerry Ariel', 'Nancy Mutwii', 'Maria Nailantei'].map((name) => (
                                         <div key={name} className="flex items-center gap-2">
                                             <span className="w-1.5 h-1.5 rounded-full bg-[#021d49] opacity-40" />
                                             <p className="text-sm font-medium text-[#021d49]">{name}</p>
