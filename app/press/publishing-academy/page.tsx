@@ -138,7 +138,7 @@ export default function ARINPublishingAcademy() {
                                 <h1 className="text-3xl md:text-4xl font-bold text-[#021d49] tracking-tight leading-tight">Publishing Academy</h1>
                                 <p className="text-gray-500 text-sm mt-1.5 max-w-xl">Research Writing, Publishing, and Policy Communication for African Scholars</p>
                                 <a
-                                    href="https://elearning.arin-africa.org/"
+                                    href="https://elearning.arin-africa.org/arin-publishing-academy"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="inline-flex items-center gap-2 mt-4 bg-[#021d49] text-white text-xs font-semibold px-4 py-2 rounded-full hover:bg-[#032566] transition-colors"
