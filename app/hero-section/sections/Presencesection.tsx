@@ -73,7 +73,7 @@ export default function PresenceSection() {
 
             <p className="pr-body">
               ARIN's network of researchers, focal points, and fellows spans
-              the breadth of Africa — driving evidence-based change where
+              the breadth of Africa  driving evidence-based change where
               it matters most.
             </p>
 

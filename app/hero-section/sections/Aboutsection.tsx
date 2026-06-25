@@ -39,10 +39,10 @@ export default function AboutSection() {
 
                 <div className="ab2-grid">
 
-                    {/* ══ LEFT — video column ══ */}
+                    {/* ══ LEFT  video column ══ */}
                     <div className="ab2-video-col">
 
-                        {/* Main video card — real photo + overlay */}
+                        {/* Main video card  real photo + overlay */}
                         <div className="ab2-vid-card" onClick={() => setOpen(true)}>
 
                             {/* Photo background */}
@@ -90,7 +90,7 @@ export default function AboutSection() {
 
                     </div>
 
-                    {/* ══ RIGHT — text + thematic areas ══ */}
+                    {/* ══ RIGHT  text + thematic areas ══ */}
                     <div>
                         <div className="ab2-eyebrow">
                             <div className="ab2-ey-dot" />
@@ -104,7 +104,7 @@ export default function AboutSection() {
                         </h2>
 
                         <p className="ab2-body">
-                            ARIN is Africa's premier research network — connecting scholars, institutions,
+                            ARIN is Africa's premier research network  connecting scholars, institutions,
                             and policymakers to drive evidence-based solutions that shape millions of lives
                             across the continent through eight thematic disciplines.
                         </p>
@@ -154,7 +154,7 @@ export default function AboutSection() {
                         </button>
                         <iframe
                             src="https://www.youtube.com/embed/K1MKlqB0uKk?start=15112&autoplay=1"
-                            title="ARIN — 4th Annual Conference"
+                            title="ARIN  4th Annual Conference"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowFullScreen
                         />

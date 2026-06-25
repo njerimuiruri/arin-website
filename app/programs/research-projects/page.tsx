@@ -199,7 +199,7 @@ const ResearchProjectsPage = () => {
                         </div>
                     )}
 
-                    {/* Projects — Grid view */}
+                    {/* Projects  Grid view */}
                     {!loading && !error && viewMode === 'grid' && (
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {filteredProjects.map((project) => {
@@ -250,7 +250,7 @@ const ResearchProjectsPage = () => {
                         </div>
                     )}
 
-                    {/* Projects — List view */}
+                    {/* Projects  List view */}
                     {!loading && !error && viewMode === 'list' && (
                         <div className="space-y-3">
                             {filteredProjects.map((project) => {

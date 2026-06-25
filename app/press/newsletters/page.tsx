@@ -113,7 +113,7 @@ const NewslettersPage = () => {
                         </div>
                     )}
 
-                    {/* Grid — no card borders, open layout */}
+                    {/* Grid  no card borders, open layout */}
                     {!loading && !error && paginated.length > 0 && (
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
                             {paginated.map(n => {
@@ -130,7 +130,7 @@ const NewslettersPage = () => {
                                         onClick={() => goTo(n._id)}
                                         className="group cursor-pointer flex flex-col"
                                     >
-                                        {/* Image — full visible, rounded, no overlay */}
+                                        {/* Image  full visible, rounded, no overlay */}
                                         <div className="relative w-full h-52 rounded-2xl overflow-hidden mb-4 bg-[#021d49] shrink-0">
                                             {img ? (
                                                 <img

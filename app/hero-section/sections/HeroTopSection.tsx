@@ -104,7 +104,7 @@ const HeroSection = () => {
                     )}
                 </div>
 
-                {/* ── MAIN CONTENT — bottom-left ── */}
+                {/* ── MAIN CONTENT  bottom-left ── */}
                 <div className="px-6 sm:px-10 lg:px-20 pb-10 pointer-events-auto">
 
                     {/* Discipline content block */}

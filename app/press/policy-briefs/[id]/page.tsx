@@ -187,7 +187,7 @@ const PolicyBriefViewPage = () => {
                 {/* Body */}
                 <div className="max-w-7xl mx-auto px-6 py-8">
 
-                    {/* Compact info bar — replaces sidebar */}
+                    {/* Compact info bar  replaces sidebar */}
                     <div className="flex flex-wrap items-center gap-3 mb-6 p-4 bg-white rounded-2xl shadow-sm border border-gray-200">
                         {/* Thumbnail */}
                         {heroImage && (
@@ -232,7 +232,7 @@ const PolicyBriefViewPage = () => {
                         </div>
                     </div>
 
-                    {/* Excerpt callout — full width */}
+                    {/* Excerpt callout  full width */}
                     {brief.excerpt && (
                         <div className="flex gap-4 mb-6 p-6 bg-[#021d49] rounded-2xl">
                             <BookOpen className="w-5 h-5 text-white/50 shrink-0 mt-0.5" />
@@ -240,7 +240,7 @@ const PolicyBriefViewPage = () => {
                         </div>
                     )}
 
-                    {/* Brief Content — full width, document style */}
+                    {/* Brief Content  full width, document style */}
                     {brief.description && (
                         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 mb-8 overflow-hidden">
                             <div className="flex items-center gap-3 px-10 pt-8 pb-5 border-b border-gray-100">
@@ -372,7 +372,7 @@ const PolicyBriefViewPage = () => {
                         </div>
                     )}
 
-                    {/* Resources — full width */}
+                    {/* Resources  full width */}
                     {resources.length > 0 && (
                         <div id="resources" className="bg-linear-to-br from-[#021d49]/5 to-blue-50 rounded-2xl border border-gray-200 p-8 mb-8">
                             <div className="flex items-center gap-3 mb-6 pb-5 border-b border-gray-200">

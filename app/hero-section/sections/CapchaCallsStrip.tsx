@@ -7,7 +7,7 @@ import { ArrowUpRight } from "lucide-react";
  * Clean, minimal calls strip overlaid inside the HeroSection.
  * Uses a solid dark backdrop behind the text so it reads over any image.
  *
- * PLACEMENT in HeroSection.tsx — add just before the closing </div> of the
+ * PLACEMENT in HeroSection.tsx  add just before the closing </div> of the
  * "── MAIN CONTENT" block, right above the BOTTOM ROW div:
  *
  *   <CAPCHACallsOverlay />
@@ -37,7 +37,7 @@ const calls = [
         disabled: false,
     },
     {
-        status: "Deadline Extended — 25 Apr",
+        status: "Deadline Extended  25 Apr",
         color: "#c084fc",
         title: "Learning Curve",
         sub: "Climate-Health Programme",
@@ -53,7 +53,7 @@ export default function CAPCHACallsOverlay() {
             className="pointer-events-auto w-full mb-6"
             style={{ zIndex: 15 }}
         >
-            {/* Solid dark pill container — guaranteed readable over any image */}
+            {/* Solid dark pill container  guaranteed readable over any image */}
             <div style={{
                 display: "inline-flex",
                 alignItems: "stretch",

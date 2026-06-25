@@ -10,7 +10,7 @@ const AREA = {
     icon: HeartPulse,
     tagline: "Building Evidence for Health-Resilient Communities",
     description:
-        "ARIN's Climate and Health focus area investigates the health impacts of climate change and builds evidence for health-resilient communities and systems. We examine how extreme weather, changing disease vectors, food insecurity, and environmental degradation affect human health across Africa — and how health systems can be strengthened to respond.",
+        "ARIN's Climate and Health focus area investigates the health impacts of climate change and builds evidence for health-resilient communities and systems. We examine how extreme weather, changing disease vectors, food insecurity, and environmental degradation affect human health across Africa  and how health systems can be strengthened to respond.",
     highlights: [
         "Climate-sensitive disease surveillance",
         "Health system resilience",

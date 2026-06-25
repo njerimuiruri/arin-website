@@ -231,7 +231,7 @@ export default function FocusAreasPage() {
             <div style={{ background: "#f8faff", minHeight: "100vh" }}>
 
                 {/* ══════════════════════════════════
-                    HERO — infographic image
+                    HERO  infographic image
                 ══════════════════════════════════ */}
                 <section style={{
                     background: "#ffffff",

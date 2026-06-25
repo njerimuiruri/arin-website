@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "About ARIN",
   description:
-    "Learn about the Africa Research & Impact Network (ARIN) — our mission, secretariat, focus areas, and the team driving evidence-based policy across Africa.",
+    "Learn about the Africa Research & Impact Network (ARIN)  our mission, secretariat, focus areas, and the team driving evidence-based policy across Africa.",
   keywords: [
     "About ARIN",
     "ARIN Mission",
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "About ARIN | Africa Research & Impact Network",
     description:
-      "Discover ARIN's mission to bridge research and policy in Africa — meet our secretariat and explore our focus areas.",
+      "Discover ARIN's mission to bridge research and policy in Africa  meet our secretariat and explore our focus areas.",
     url: "https://arin-africa.org/about-us",
   },
 };

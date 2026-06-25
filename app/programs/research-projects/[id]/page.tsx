@@ -46,7 +46,7 @@ const ProjectDetailPage = () => {
     };
 
     const fmt = (d?: string, opts?: Intl.DateTimeFormatOptions) =>
-        d ? new Date(d).toLocaleDateString('en-US', opts || { month: 'long', day: 'numeric', year: 'numeric' }) : '—';
+        d ? new Date(d).toLocaleDateString('en-US', opts || { month: 'long', day: 'numeric', year: 'numeric' }) : '';
 
     return (
         <>
@@ -74,7 +74,7 @@ const ProjectDetailPage = () => {
                         </button>
                     </div>
 
-                    {/* ══ BIG CLEAR IMAGE — full width, no overlay ══ */}
+                    {/* ══ BIG CLEAR IMAGE  full width, no overlay ══ */}
                     <div className="p-image-strip">
                         {project.coverImage ? (
                             <img
@@ -160,7 +160,7 @@ const ProjectDetailPage = () => {
                         {/* ── SIDEBAR ── */}
                         <aside className="p-sidebar">
 
-                            {/* ★ PLAIN IMAGE — large, no cropping, clearly visible ★ */}
+                            {/* ★ PLAIN IMAGE  large, no cropping, clearly visible ★ */}
                             {project.coverImage && (
                                 <div className="p-sidebar-img-wrap">
                                     <div className="p-sidebar-img-label">Project Image</div>

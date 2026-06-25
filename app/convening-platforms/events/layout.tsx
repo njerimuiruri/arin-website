@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Events",
   description:
-    "Stay up to date with ARIN's upcoming and past events — workshops, seminars, webinars, and community engagement sessions driving evidence-based development across Africa.",
+    "Stay up to date with ARIN's upcoming and past events  workshops, seminars, webinars, and community engagement sessions driving evidence-based development across Africa.",
   openGraph: {
     title: "Events | ARIN Africa",
     description:

@@ -111,7 +111,7 @@ export default function TechnicalReportDetailPage() {
                     </div>
                 )}
 
-                {/* Hero — compact banner with thumbnail */}
+                {/* Hero  compact banner with thumbnail */}
                 <div className="bg-[#021d49] text-white">
                     <div className="max-w-7xl mx-auto px-6 py-6 flex items-center gap-6">
 
@@ -213,7 +213,7 @@ export default function TechnicalReportDetailPage() {
                                 />
                             </div>
 
-                            {/* Available Resources — below description */}
+                            {/* Available Resources  below description */}
                             {resources.length > 0 && (
                                 <div id="resources" className="bg-gradient-to-br from-[#021d49]/5 to-blue-50 rounded-2xl border border-gray-200 p-8 md:p-10 mb-8">
                                     <div className="flex items-center gap-3 mb-6 pb-6 border-b border-gray-200">

@@ -326,7 +326,7 @@ export default function BookDetailPage() {
     /* ── derived values ── */
     const imageUrl = book.image?.startsWith("http") ? book.image : book.image ? `${API_CONFIG.BASE_URL}${book.image}` : "";
     const authorsDisplay = book.authors?.length ? book.authors.join(", ") : "Unknown Author";
-    const sku = book._id ? `BK${book._id.slice(-11).toUpperCase()}` : "—";
+    const sku = book._id ? `BK${book._id.slice(-11).toUpperCase()}` : "";
     const isEmbargoed = !!(book.embargoDate && new Date(book.embargoDate) > new Date());
     const embargoDateDisplay = book.embargoDate
         ? new Date(book.embargoDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })

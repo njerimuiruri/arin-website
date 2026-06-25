@@ -1,12 +1,12 @@
 import { ArrowRight, ExternalLink, CheckCircle2 } from "lucide-react";
 
 const partners = [
-    { label: "MECCF", full: "Ministry of Environment, Climate Change, Natural Resources & Forestry — Kenya" },
+    { label: "MECCF", full: "Ministry of Environment, Climate Change, Natural Resources & Forestry  Kenya" },
     { label: "SSN", full: "SouthSouthNorth" },
     { label: "CDKN", full: "Climate & Development Knowledge Network" },
     { label: "WRI", full: "World Resources Institute" },
     { label: "AGNES", full: "African Group of Negotiators Expert Support" },
-    { label: "ARIN / LAMA", full: "Africa Research & Impact Network — LAMA Platform", highlight: true },
+    { label: "ARIN / LAMA", full: "Africa Research & Impact Network  LAMA Platform", highlight: true },
 ];
 
 const highlights = [
@@ -51,7 +51,7 @@ export default function MerlSpotlightSection() {
                     </span>
                 </div>
 
-                {/* Main grid — stacks on mobile, side-by-side on lg+ */}
+                {/* Main grid  stacks on mobile, side-by-side on lg+ */}
                 <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-10 lg:gap-16 items-start">
 
                     {/* LEFT */}
@@ -77,7 +77,7 @@ export default function MerlSpotlightSection() {
                             marginBottom: 32,
                         }}>
                             Kenya&apos;s Ministry of Environment, Climate Change, Natural Resources and Forestry (MECCF)
-                            has formed a landmark multi-partner initiative — co-led with{" "}
+                            has formed a landmark multi-partner initiative  co-led with{" "}
                             <strong style={{ color: "#0f172a", fontWeight: 600 }}>SouthSouthNorth (SSN)</strong>,{" "}
                             the <strong style={{ color: "#0f172a", fontWeight: 600 }}>Climate and Development Knowledge Network (CDKN)</strong>,
                             and the <strong style={{ color: "#0f172a", fontWeight: 600 }}>World Resources Institute (WRI)</strong>,
@@ -89,7 +89,7 @@ export default function MerlSpotlightSection() {
                             <strong style={{ color: "#00c4b3", fontWeight: 600 }}>Locally Led Adaptation Metrics for Africa (LAMA) Platform</strong>.
                             Together, this coalition is co-developing a standardised indicators handbook and a digital
                             Monitoring, Evaluation, Reporting, and Learning (MERL) tool. The MERL tool will leverage
-                            these indicators to strengthen data collection, analysis, and reporting — ultimately promoting
+                            these indicators to strengthen data collection, analysis, and reporting  ultimately promoting
                             greater transparency, accountability, and &quot;Informed decision-making across Kenya&apos;s climate actions&quot;.
                         </p>
 
@@ -161,7 +161,7 @@ export default function MerlSpotlightSection() {
                         </div>
                     </div>
 
-                    {/* RIGHT — partners panel */}
+                    {/* RIGHT  partners panel */}
                     <div>
                         {/* Accent bar card */}
                         <div style={{
@@ -238,7 +238,7 @@ export default function MerlSpotlightSection() {
                                         rel="noopener noreferrer"
                                         style={{ color: "#475569", textDecoration: "underline" }}
                                     >
-                                        CDKN — Measuring Impact, Kenya 2025
+                                        CDKN  Measuring Impact, Kenya 2025
                                     </a>
                                 </p>
                             </div>

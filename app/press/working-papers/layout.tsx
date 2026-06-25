@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Working Papers",
   description:
-    "Browse ARIN's working paper series — preliminary research and analysis on key development, climate, and policy issues facing Africa.",
+    "Browse ARIN's working paper series  preliminary research and analysis on key development, climate, and policy issues facing Africa.",
   openGraph: {
     title: "Working Papers | ARIN Press",
     description:

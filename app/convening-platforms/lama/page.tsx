@@ -195,18 +195,18 @@ const LAMAPage = () => {
 
                             <div className="grid lg:grid-cols-3 gap-10 items-start">
 
-                                {/* Main content — 2 cols */}
+                                {/* Main content  2 cols */}
                                 <div className="lg:col-span-2">
                                     <h2 className="font-bold leading-tight text-[#021d49] mb-6" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: "clamp(1.6rem, 2.8vw, 2.3rem)" }}>
                                         LAMA Engaged in Kenya's National Climate Monitoring,
                                         Evaluation, Reporting &amp; Learning (MERL) Initiative
                                     </h2>
 
-                                    {/* Exact paragraph — professionally formatted */}
+                                    {/* Exact paragraph  professionally formatted */}
                                     <div className="border-l-4 border-[#00c4b3] pl-5 mb-8">
                                         <p className="text-gray-700 leading-relaxed" style={{ fontSize: 15.5, lineHeight: 1.85 }}>
                                             Kenya&apos;s Ministry of Environment, Climate Change, Natural Resources and Forestry (MECCF)
-                                            has formed a landmark multi-partner initiative — co-led with{" "}
+                                            has formed a landmark multi-partner initiative  co-led with{" "}
                                             <strong className="text-[#021d49]">SouthSouthNorth (SSN)</strong>,
                                             the <strong className="text-[#021d49]">Climate and Development Knowledge Network (CDKN)</strong>,
                                             and the <strong className="text-[#021d49]">World Resources Institute (WRI)</strong>,
@@ -218,7 +218,7 @@ const LAMAPage = () => {
                                             <strong className="text-[#00c4b3]">Locally Led Adaptation Metrics for Africa (LAMA) Platform</strong>.
                                             Together, this coalition is co-developing a standardised indicators handbook and a digital
                                             Monitoring, Evaluation, Reporting, and Learning (MERL) tool. The MERL tool will leverage these
-                                            indicators to strengthen data collection, analysis, and reporting — ultimately promoting greater
+                                            indicators to strengthen data collection, analysis, and reporting  ultimately promoting greater
                                             transparency, accountability, and "Informed decision-making across Kenya\u2019s climate actions".
                                         </p>
                                     </div>

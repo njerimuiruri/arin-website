@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "ARIN Press",
   description:
-    "Access ARIN's full library of publications — peer-reviewed journal articles, working papers, technical reports, books, policy briefs, impact stories, news briefs, and newsletters covering Africa's development landscape.",
+    "Access ARIN's full library of publications  peer-reviewed journal articles, working papers, technical reports, books, policy briefs, impact stories, news briefs, and newsletters covering Africa's development landscape.",
   keywords: [
     "ARIN Press",
     "Africa Research Publications",

@@ -50,10 +50,10 @@ const normaliseCategory = (raw?: string): string => {
 const imgSrc = (image?: string) =>
     image
         ? image.startsWith("http")
-            ? image                              // absolute URL — use as-is
+            ? image                              // absolute URL  use as-is
             : image.startsWith("/img/")
-                ? image                          // local public folder — use as-is
-                : `${API_CONFIG.BASE_URL}${image}` // backend upload path — prepend API base
+                ? image                          // local public folder  use as-is
+                : `${API_CONFIG.BASE_URL}${image}` // backend upload path  prepend API base
         : "";
 
 const fallback = (name: string) =>
@@ -92,7 +92,7 @@ function TeamCard({
                 flexDirection: "column",
             }}
         >
-            {/* Photo — fully visible, no overlay */}
+            {/* Photo  fully visible, no overlay */}
             <div style={{
                 height: 280,
                 overflow: "hidden",

@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Programs",
   description:
-    "Explore ARIN's programs — from cutting-edge research projects addressing Africa's most pressing challenges to capacity-building initiatives that empower researchers, policymakers, and communities.",
+    "Explore ARIN's programs  from cutting-edge research projects addressing Africa's most pressing challenges to capacity-building initiatives that empower researchers, policymakers, and communities.",
   keywords: [
     "ARIN Programs",
     "Africa Research Projects",

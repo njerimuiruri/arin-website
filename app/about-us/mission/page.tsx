@@ -62,7 +62,7 @@ export default function ARINAboutPage() {
                                 <img src="/images/DSC_0318.jpg" alt="ARIN Researchers" />
                             </div>
 
-                            {/* Card 1 — Mission */}
+                            {/* Card 1  Mission */}
                             <div className="ms-strip-card">
                                 <div>
                                     <div className="ms-card-ico">
@@ -82,7 +82,7 @@ export default function ARINAboutPage() {
                                 <img src="/images/lreb.jpg" alt="Africa Research" />
                             </div>
 
-                            {/* Card 2 — Vision */}
+                            {/* Card 2  Vision */}
                             <div className="ms-strip-card">
                                 <div>
                                     <div className="ms-card-ico">
@@ -135,7 +135,7 @@ export default function ARINAboutPage() {
                                 Across Africa
                             </h2>
                             <p className="wu-body">
-                                Among the areas that ARIN has pioneered path-breaking research are climate change, knowledge management, science technology, and innovation. The network convenes research and policy platforms on climate action — drawing from researchers on adaptation, STI status, and science-policy interface in Africa.
+                                Among the areas that ARIN has pioneered path-breaking research are climate change, knowledge management, science technology, and innovation. The network convenes research and policy platforms on climate action  drawing from researchers on adaptation, STI status, and science-policy interface in Africa.
                             </p>
 
                             {/* 3-pillar strip */}

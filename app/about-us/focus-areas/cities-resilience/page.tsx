@@ -30,7 +30,7 @@ const AREA = {
         },
         {
             title: "Infrastructure Resilience",
-            body: "Researching approaches to build and retrofit urban infrastructure — transport, water, energy, housing — to withstand climate extremes and population growth.",
+            body: "Researching approaches to build and retrofit urban infrastructure  transport, water, energy, housing  to withstand climate extremes and population growth.",
         },
     ],
 };
