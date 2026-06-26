@@ -104,9 +104,10 @@ export default function AboutSection() {
                         </h2>
 
                         <p className="ab2-body">
-                            ARIN is Africa's premier research network  connecting scholars, institutions,
-                            and policymakers to drive evidence-based solutions that shape millions of lives
-                            across the continent through eight thematic disciplines.
+                            The Africa Research and Impact Network (ARIN) is a pan-African research organisation that
+                            strengthens the capacity of African researchers and policymakers to generate, share, and use evidence
+                            for sustainable development. ARIN operates a Science-Policy Fellowship Programme engaging
+                            members from 36 African countries, with 30% drawn from government and policy institutions.
                         </p>
 
                         {/* Thematic areas mini grid */}
