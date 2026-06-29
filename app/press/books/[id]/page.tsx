@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import { getBook } from "@/services/booksService";
 import {
     ZoomIn, X, Lock, Eye, Download, BookOpen,
-    Calendar, Users, ShoppingCart, Zap, CheckCircle,
+    Calendar, Users, Zap, CheckCircle,
     Mail, FileText, ArrowLeft, CreditCard
 } from "lucide-react";
 import Navbar from "@/app/navbar/Navbar";
@@ -14,8 +14,8 @@ import { API_CONFIG } from "@/lib/apiConfig";
 
 declare global {
     interface Window {
-        PaystackPop: {
-            setup: (options: Record<string, unknown>) => { openIframe: () => void };
+        PaystackPop: new () => {
+            newTransaction: (options: Record<string, unknown>) => void;
         };
     }
 }
@@ -43,6 +43,7 @@ interface PaymentResult {
     email: string;
     quantity: number;
     resources: string[];
+    emailSent: boolean;
 }
 
 /* ─── helpers ─────────────────────────────────────── */
@@ -76,16 +77,8 @@ function PaymentSuccess({ result, onClose }: { result: PaymentResult; onClose: (
                             <span className="font-semibold text-gray-800 text-right max-w-[60%] leading-snug">{result.bookTitle}</span>
                         </div>
                         <div className="flex justify-between">
-                            <span className="text-gray-500">Quantity</span>
-                            <span className="font-semibold text-gray-800">{result.quantity}</span>
-                        </div>
-                        <div className="flex justify-between">
                             <span className="text-gray-500">Amount Paid</span>
                             <span className="font-bold text-gray-900">{formatPrice(result.amount / 100, result.currency)}</span>
-                        </div>
-                        <div className="flex justify-between">
-                            <span className="text-gray-500">Email</span>
-                            <span className="font-medium text-gray-800">{result.email}</span>
                         </div>
                         <div className="border-t border-gray-200 pt-2 flex justify-between">
                             <span className="text-gray-500">Reference</span>
@@ -93,44 +86,32 @@ function PaymentSuccess({ result, onClose }: { result: PaymentResult; onClose: (
                         </div>
                     </div>
 
-                    {/* What happens next */}
-                    <div className="mb-5">
-                        <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">What happens next</p>
-                        <div className="space-y-2.5">
-                            <div className="flex items-start gap-3">
-                                <div className="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center shrink-0 mt-0.5">
-                                    <Mail className="w-3.5 h-3.5 text-emerald-600" />
-                                </div>
-                                <p className="text-sm text-gray-600">A confirmation receipt has been sent to <strong>{result.email}</strong></p>
-                            </div>
-                            {result.resources.length > 0 && (
-                                <div className="flex items-start gap-3">
-                                    <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center shrink-0 mt-0.5">
-                                        <FileText className="w-3.5 h-3.5 text-blue-600" />
-                                    </div>
-                                    <p className="text-sm text-gray-600">Your resources are available to download below</p>
-                                </div>
-                            )}
-                            <div className="flex items-start gap-3">
-                                <div className="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center shrink-0 mt-0.5">
-                                    <CreditCard className="w-3.5 h-3.5 text-purple-600" />
-                                </div>
-                                <p className="text-sm text-gray-600">You can verify your payment on Paystack using your reference number</p>
-                            </div>
+                    {/* Email confirmation banner */}
+                    <div className={`flex items-start gap-3 rounded-2xl p-4 mb-5 ${result.emailSent ? "bg-emerald-50 border border-emerald-200" : "bg-amber-50 border border-amber-200"}`}>
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${result.emailSent ? "bg-emerald-100" : "bg-amber-100"}`}>
+                            <Mail className={`w-4 h-4 ${result.emailSent ? "text-emerald-600" : "text-amber-600"}`} />
+                        </div>
+                        <div>
+                            <p className={`font-bold text-sm mb-0.5 ${result.emailSent ? "text-emerald-800" : "text-amber-800"}`}>
+                                {result.emailSent ? "Book sent to your email!" : "Check your email shortly"}
+                            </p>
+                            <p className={`text-xs leading-relaxed ${result.emailSent ? "text-emerald-700" : "text-amber-700"}`}>
+                                Your download link has been sent to <strong>{result.email}</strong>. Check your inbox (and spam folder).
+                            </p>
                         </div>
                     </div>
 
-                    {/* Download resources */}
+                    {/* Backup download links */}
                     {result.resources.length > 0 && (
                         <div className="mb-5">
-                            <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">Download Your Book</p>
+                            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Or download directly here</p>
                             <div className="space-y-2">
                                 {result.resources.map((url, i) => {
                                     const fullUrl = url.startsWith("http") ? url : `${API_CONFIG.BASE_URL}${url}`;
                                     const filename = decodeURIComponent(url.split("/").pop()?.split("?")[0] ?? "") || `Document ${i + 1}`;
                                     return (
-                                        <a key={i} href={fullUrl} download
-                                            className="flex items-center gap-3 bg-[#021d49] hover:bg-[#032a5e] text-white px-4 py-3 rounded-xl transition group">
+                                        <a key={i} href={fullUrl} target="_blank" rel="noopener noreferrer"
+                                            className="flex items-center gap-3 bg-[#021d49] hover:bg-[#032a5e] text-white px-4 py-3 rounded-xl transition">
                                             <Download className="w-4 h-4 shrink-0" />
                                             <span className="text-sm font-semibold flex-1 line-clamp-1">{filename}</span>
                                         </a>
@@ -240,10 +221,10 @@ export default function BookDetailPage() {
     const [paymentResult, setPaymentResult] = useState<PaymentResult | null>(null);
 
     useEffect(() => {
-        const existing = document.querySelector('script[src="https://js.paystack.co/v1/inline.js"]');
+        const existing = document.querySelector('script[src="https://js.paystack.co/v2/inline.js"]');
         if (existing) { setPaystackReady(true); return; }
         const s = document.createElement("script");
-        s.src = "https://js.paystack.co/v1/inline.js";
+        s.src = "https://js.paystack.co/v2/inline.js";
         s.async = true;
         s.onload = () => setPaystackReady(true);
         document.body.appendChild(s);
@@ -260,34 +241,67 @@ export default function BookDetailPage() {
     const initiatePaystack = () => {
         if (!book?.price) return;
         if (!email.trim() || !email.includes("@")) return;
+        if (!window.PaystackPop) {
+            alert("Paystack is still loading, please try again in a moment.");
+            return;
+        }
         setPaying(true);
         const currency = book.currency || "USD";
         const totalCents = Math.round(book.price * quantity * 100);
         const resources = (book.availableResources ?? []).filter(u => typeof u === "string" && u.trim());
 
-        const handler = window.PaystackPop.setup({
-            key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || "",
-            email: email.trim(),
-            amount: totalCents,
-            currency,
-            ref: `ARIN-${Date.now()}-${Math.floor(Math.random() * 99999)}`,
-            metadata: { book_id: book._id, book_title: book.title, quantity },
-            callback: (response: { reference: string }) => {
-                setPaying(false);
-                setShowCheckout(false);
-                setPaymentResult({
-                    reference: response.reference,
-                    bookTitle: book.title,
-                    amount: totalCents,
-                    currency,
-                    email: email.trim(),
-                    quantity,
-                    resources,
-                });
-            },
-            onClose: () => setPaying(false),
-        });
-        handler.openIframe();
+        try {
+            const paystack = new window.PaystackPop();
+            paystack.newTransaction({
+                key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || "",
+                email: email.trim(),
+                amount: totalCents,
+                currency,
+                ref: `ARIN-${Date.now()}-${Math.floor(Math.random() * 99999)}`,
+                metadata: { book_id: book._id, book_title: book.title, quantity },
+                onSuccess: async (transaction: { reference: string }) => {
+                    setPaying(false);
+                    setShowCheckout(false);
+                    let emailSent = false;
+                    try {
+                        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/purchases/verify`, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                reference: transaction.reference,
+                                email: email.trim(),
+                                bookId: book._id,
+                                bookTitle: book.title,
+                                resources,
+                                currency,
+                                quantity,
+                            }),
+                        });
+                        if (res.ok) {
+                            const data = await res.json();
+                            emailSent = data.emailSent ?? false;
+                        }
+                    } catch {
+                        // show success even if backend call fails
+                    }
+                    setPaymentResult({
+                        reference: transaction.reference,
+                        bookTitle: book.title,
+                        amount: totalCents,
+                        currency,
+                        email: email.trim(),
+                        quantity,
+                        resources,
+                        emailSent,
+                    });
+                },
+                onCancel: () => setPaying(false),
+            });
+        } catch (err) {
+            setPaying(false);
+            console.error("Paystack error:", err);
+            alert("Could not open payment. Please refresh the page and try again.");
+        }
     };
 
     /* ── loading / error states ── */
@@ -456,7 +470,6 @@ export default function BookDetailPage() {
                                             <p className="text-4xl font-black text-gray-900 tracking-tight leading-none">
                                                 {formatPrice(book.price, book.currency)}
                                             </p>
-                                            <p className="text-xs text-gray-400 mt-2">Per copy · all taxes included</p>
                                         </div>
                                     )}
 
@@ -503,25 +516,13 @@ export default function BookDetailPage() {
                                                         className="w-11 h-12 text-gray-600 hover:bg-gray-50 font-bold text-xl transition">+</button>
                                                 </div>
 
-                                                <button disabled
-                                                    className="flex-1 h-12 flex items-center justify-center gap-2 bg-gray-300 text-gray-500 rounded-2xl font-bold text-sm cursor-not-allowed">
-                                                    <ShoppingCart className="w-4 h-4" /> Add To Cart
-                                                </button>
-
-                                                <button disabled
-                                                    className="flex-1 h-12 flex items-center justify-center gap-2 bg-gray-300 text-gray-500 rounded-2xl font-bold text-sm cursor-not-allowed">
+                                                <button
+                                                    onClick={() => setShowCheckout(true)}
+                                                    className="flex-1 h-12 flex items-center justify-center gap-2 bg-[#021d49] hover:bg-[#032a5e] text-white rounded-2xl font-bold text-sm transition shadow-md shadow-[#021d49]/20">
                                                     <Zap className="w-4 h-4" /> Buy Now
                                                 </button>
                                             </div>
 
-                                            {/* Payment badges */}
-                                            <div className="flex items-center gap-1.5 flex-wrap">
-                                                <Lock className="w-3 h-3 text-gray-400" />
-                                                <span className="text-xs text-gray-400 mr-1">Secure payment via</span>
-                                                {["VISA", "Mastercard", "M-PESA", "Paystack"].map(m => (
-                                                    <span key={m} className="text-xs font-bold text-gray-500 bg-gray-100 border border-gray-200 px-2.5 py-1 rounded-lg">{m}</span>
-                                                ))}
-                                            </div>
                                         </>
                                     ) : null}
                                 </div>
