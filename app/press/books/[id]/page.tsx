@@ -33,6 +33,7 @@ interface Book {
     embargoDate?: string;
     price?: number;
     currency?: string;
+    resourcesPublic?: boolean;
 }
 
 interface PaymentResult {
@@ -567,7 +568,7 @@ export default function BookDetailPage() {
                     </div>
 
                     {/* ── Resources ── */}
-                    {!isEmbargoed && resources.length > 0 && (
+                    {!isEmbargoed && resources.length > 0 && book.resourcesPublic !== false && (
                         <div className="bg-white rounded-3xl shadow-xl border border-gray-100/80 p-8 mb-6">
                             <div className="flex items-center gap-4 mb-6">
                                 <div className="w-12 h-12 bg-linear-to-br from-blue-500 to-[#021d49] rounded-2xl flex items-center justify-center shadow-lg">
