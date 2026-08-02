@@ -38,6 +38,8 @@ const ResearchProjectsPage = () => {
     }, [projects]);
 
     const stripHtml = (html: string) => html.replace(/<[^>]*>/g, '');
+    const truncate = (text: string, max: number) =>
+        text.length <= max ? text : text.slice(0, max).replace(/\s+\S*$/, '') + '…';
     const buildImageUrl = (img?: string) => {
         if (!img) return '';
         return img.startsWith('http') ? img : `${API_CONFIG.BASE_URL}${img}`;
@@ -230,7 +232,7 @@ const ResearchProjectsPage = () => {
                                                 {project.category && <span className="inline-block px-3 py-1 bg-[#021d49]/10 text-[#021d49] text-xs font-bold rounded-full border border-[#021d49]/20">{project.category}</span>}
                                             </div>
                                             <p className="text-sm text-gray-600 leading-relaxed line-clamp-3 min-h-18">
-                                                {stripHtml(project.description || 'No description available').slice(0, 150)}{stripHtml(project.description || '').length > 150 ? '...' : ''}
+                                                {truncate(stripHtml(project.description || 'No description available'), 150)}
                                             </p>
                                             {project.teamMembers && project.teamMembers.length > 0 && (
                                                 <div className="flex flex-wrap gap-2">
@@ -290,7 +292,7 @@ const ResearchProjectsPage = () => {
                                                 {project.title}
                                             </h3>
                                             <p className="text-sm text-gray-500 line-clamp-1">
-                                                {stripHtml(project.description || '').slice(0, 120)}
+                                                {truncate(stripHtml(project.description || ''), 120)}
                                             </p>
                                         </div>
                                         {/* CTA */}

@@ -1,7 +1,21 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ChevronDown, ChevronRight, Menu, X } from 'lucide-react';
 import Image from 'next/image';
+import { getResearchProjects } from '@/services/researchProjectService';
+
+type MenuItem = {
+    name: string;
+    href: string;
+    external?: boolean;
+    megaMenu?: boolean;
+    submenu?: Array<{
+        name: string;
+        href: string;
+        external?: boolean;
+        sections?: { title?: string; items: { name: string; href: string }[] }[];
+    }>;
+};
 
 const Navbar = () => {
     const [activeMenu, setActiveMenu] = useState<number | null>(null);
@@ -11,6 +25,31 @@ const Navbar = () => {
     const [activeNestedMenu, setActiveNestedMenu] = useState<string | null>(null);
     const [mobileNestedOpen, setMobileNestedOpen] = useState<string | null>(null);
     const [scrolled, setScrolled] = useState(false);
+    const [researchProjects, setResearchProjects] = useState<{ _id: string; title: string }[]>([]);
+    const [projectsLoading, setProjectsLoading] = useState(true);
+    const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    const openMenu = (index: number) => {
+        if (closeTimeoutRef.current) {
+            clearTimeout(closeTimeoutRef.current);
+            closeTimeoutRef.current = null;
+        }
+        setActiveMenu(index);
+    };
+
+    const scheduleCloseMenu = () => {
+        if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
+        closeTimeoutRef.current = setTimeout(() => {
+            setActiveMenu(null);
+            closeTimeoutRef.current = null;
+        }, 200);
+    };
+
+    useEffect(() => {
+        return () => {
+            if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
+        };
+    }, []);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -18,6 +57,21 @@ const Navbar = () => {
         };
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    useEffect(() => {
+        let mounted = true;
+        (async () => {
+            try {
+                const data = await getResearchProjects();
+                if (mounted) setResearchProjects(data);
+            } catch {
+                // menu simply shows an empty state if this fails
+            } finally {
+                if (mounted) setProjectsLoading(false);
+            }
+        })();
+        return () => { mounted = false; };
     }, []);
 
     useEffect(() => {
@@ -57,7 +111,7 @@ const Navbar = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeMenu]);
 
-    const menuItems = [
+    const menuItems: MenuItem[] = [
         {
             name: 'Home',
             href: '/',
@@ -90,11 +144,15 @@ const Navbar = () => {
         },
         {
             name: 'Programs',
-            href: '/programs',
+            href: '/programs/capacity-building',
             submenu: [
-                { name: 'Research Projects', href: '/programs/research-projects' },
                 { name: 'Capacity Building', href: '/programs/capacity-building' },
             ]
+        },
+        {
+            name: 'Research Projects',
+            href: '/programs/research-projects',
+            megaMenu: true,
         },
         {
             name: 'Convening Platforms',
@@ -183,10 +241,10 @@ const Navbar = () => {
                                     <li
                                         key={index}
                                         className="relative group"
-                                        onMouseEnter={() => item.submenu && setActiveMenu(index)}
-                                        onMouseLeave={() => item.submenu && setActiveMenu(null)}
+                                        onMouseEnter={() => (item.submenu || item.megaMenu) && openMenu(index)}
+                                        onMouseLeave={() => (item.submenu || item.megaMenu) && scheduleCloseMenu()}
                                     >
-                                        {item.submenu ? (
+                                        {item.submenu || item.megaMenu ? (
                                             <React.Fragment>
                                                 <button
                                                     className={`flex items-center gap-0.5 text-[12px] 2xl:text-[13px] font-medium transition-all duration-200 py-1 px-2 rounded-lg whitespace-nowrap ${isActive(item.href) ? 'text-[#021d49] font-semibold bg-blue-50' : 'text-gray-700 hover:text-[#021d49] hover:bg-gray-50'}`}
@@ -201,8 +259,61 @@ const Navbar = () => {
                                                     className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-[#021d49] to-blue-600 transition-all duration-300 ${isActive(item.href) ? 'w-full' : 'w-0 group-hover:w-full'}`}
                                                 />
 
-                                                {activeMenu === index && (
-                                                    <div className={`absolute top-full pt-4 min-w-[450px] 2xl:min-w-[500px] ${index >= menuItems.length - 2 ? 'right-0' : 'left-0'}`}>
+                                                {activeMenu === index && item.megaMenu && (
+                                                    <div
+                                                        className="fixed inset-x-0 top-20 sm:top-24 lg:top-28 z-40"
+                                                        onMouseEnter={() => openMenu(index)}
+                                                        onMouseLeave={() => scheduleCloseMenu()}
+                                                    >
+                                                        <div className="bg-white shadow-2xl border-t border-gray-200 animate-fadeIn">
+                                                            <div className="max-w-[1600px] mx-auto px-6 py-8">
+                                                                <div className="flex items-center justify-between mb-6 gap-4">
+                                                                    <div>
+                                                                        <h3 className="text-lg font-bold text-[#021d49]">All Research Projects</h3>
+                                                                        <p className="text-sm text-gray-500 mt-0.5">
+                                                                            {projectsLoading ? 'Loading projects…' : `${researchProjects.length} project${researchProjects.length !== 1 ? 's' : ''} across ARIN's research programme`}
+                                                                        </p>
+                                                                    </div>
+                                                                    <a
+                                                                        href="/programs/research-projects"
+                                                                        className="flex items-center gap-1 text-sm font-semibold text-[#021d49] hover:text-blue-700 whitespace-nowrap"
+                                                                    >
+                                                                        View all &amp; search
+                                                                        <ChevronRight className="w-4 h-4" />
+                                                                    </a>
+                                                                </div>
+
+                                                                {projectsLoading ? (
+                                                                    <div className="py-10 text-center text-sm text-gray-400">Loading projects...</div>
+                                                                ) : researchProjects.length === 0 ? (
+                                                                    <div className="py-10 text-center text-sm text-gray-400">No research projects published yet.</div>
+                                                                ) : (
+                                                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-1 max-h-[55vh] overflow-y-auto pr-2">
+                                                                        {researchProjects.map((project) => (
+                                                                            <a
+                                                                                key={project._id}
+                                                                                href={`/programs/research-projects/${project._id}`}
+                                                                                className="group/proj flex items-start gap-2 px-2 py-2.5 rounded-lg hover:bg-gray-50 transition-colors"
+                                                                            >
+                                                                                <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#021d49]/30 group-hover/proj:bg-[#021d49] flex-shrink-0" />
+                                                                                <span className="text-[13px] text-gray-700 group-hover/proj:text-[#021d49] leading-snug line-clamp-2">
+                                                                                    {project.title}
+                                                                                </span>
+                                                                            </a>
+                                                                        ))}
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )}
+
+                                                {activeMenu === index && item.submenu && (
+                                                    <div
+                                                        className={`absolute top-full pt-4 min-w-[450px] 2xl:min-w-[500px] ${index >= menuItems.length - 2 ? 'right-0' : 'left-0'}`}
+                                                        onMouseEnter={() => openMenu(index)}
+                                                        onMouseLeave={() => scheduleCloseMenu()}
+                                                    >
                                                         <div className="bg-white rounded-xl shadow-2xl border border-gray-200 py-3 px-4 2xl:py-4 2xl:px-5 animate-fadeIn">
                                                             {item.submenu.some(s => (s as { sections?: unknown }).sections) ? (
                                                                 <div className="flex">
@@ -401,7 +512,7 @@ const Navbar = () => {
                     <div className="px-3 sm:px-4 py-4 sm:py-5 space-y-1.5">
                         {menuItems.map((item, index) => (
                             <div key={index}>
-                                {item.submenu ? (
+                                {item.submenu || item.megaMenu ? (
                                     <React.Fragment>
                                         <button
                                             onClick={() => setMobileSubmenuOpen(mobileSubmenuOpen === index ? null : index)}
@@ -412,7 +523,32 @@ const Navbar = () => {
                                                 className={`w-4 h-4 transition-transform duration-300 ${mobileSubmenuOpen === index ? 'rotate-180' : ''}`}
                                             />
                                         </button>
-                                        {mobileSubmenuOpen === index && (
+                                        {mobileSubmenuOpen === index && item.megaMenu && (
+                                            <div className="ml-2 mt-1 space-y-0.5 animate-fadeIn max-h-[50vh] overflow-y-auto">
+                                                <a
+                                                    href="/programs/research-projects"
+                                                    className="block px-3 py-2 text-[13px] sm:text-[14px] font-semibold text-[#021d49] rounded-lg hover:bg-gray-50"
+                                                >
+                                                    View all &amp; search →
+                                                </a>
+                                                {projectsLoading && (
+                                                    <div className="px-3 py-2 text-[12px] text-gray-400">Loading projects...</div>
+                                                )}
+                                                {!projectsLoading && researchProjects.length === 0 && (
+                                                    <div className="px-3 py-2 text-[12px] text-gray-400">No research projects published yet.</div>
+                                                )}
+                                                {!projectsLoading && researchProjects.map((project) => (
+                                                    <a
+                                                        key={project._id}
+                                                        href={`/programs/research-projects/${project._id}`}
+                                                        className="block px-3 py-2 text-[12px] sm:text-[13px] text-gray-700 hover:bg-gray-50 hover:text-[#021d49] rounded-lg line-clamp-1 touch-manipulation"
+                                                    >
+                                                        {project.title}
+                                                    </a>
+                                                ))}
+                                            </div>
+                                        )}
+                                        {mobileSubmenuOpen === index && item.submenu && (
                                             <div className="ml-2 mt-1 space-y-0.5 animate-fadeIn">
                                                 {item.submenu.map((subItem, subIndex) => {
                                                     const sub = subItem as { name: string; href: string; external?: boolean; sections?: { title: string; items: { name: string; href: string }[] }[] };
