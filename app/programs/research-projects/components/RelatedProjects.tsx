@@ -41,7 +41,7 @@ export default function RelatedProjects({ allProjects, currentId, category, limi
 
     return (
         <section>
-            <div className="max-w-6xl mx-auto px-6 py-12 sm:py-14">
+            <div className="max-w-6xl mx-auto px-6 py-10 sm:py-12">
                 <SectionHeading eyebrow="Keep Exploring" title="Related Projects" />
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
                     {related.map((project) => {

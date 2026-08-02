@@ -101,7 +101,7 @@ const AbstractDetailPage = () => {
                     {looksLikeHtml(abstract.body) ? (
                         <div className="p-prose" dangerouslySetInnerHTML={{ __html: abstract.body }} />
                     ) : (
-                        <p className="text-base text-gray-700 leading-relaxed whitespace-pre-wrap">{abstract.body}</p>
+                        <p className="text-base text-gray-700 leading-relaxed whitespace-pre-wrap text-justify">{abstract.body}</p>
                     )}
                 </div>
             </main>

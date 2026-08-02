@@ -1,25 +1,27 @@
 import React from 'react';
-import { ResourcesGrid } from './ResourcesSection';
+import { Clock } from 'lucide-react';
+import { ResourcesGrid, IndexedResourceItem } from './ResourcesSection';
 import { AbstractsGrid, IndexedAbstractItem } from './AbstractsSection';
-import { ResourceItem } from './ResourceCard';
 
 interface ThemeSectionProps {
     projectId: string;
     description?: string;
-    resources: ResourceItem[];
+    resources: IndexedResourceItem[];
     abstracts: IndexedAbstractItem[];
 }
 
 export default function ThemeSection({ projectId, description, resources, abstracts }: ThemeSectionProps) {
+    const hasContent = resources.length > 0 || abstracts.length > 0;
+
     return (
-        <div className="space-y-12">
+        <div className="space-y-8">
             {description && (
-                <p className="text-base text-gray-600 leading-relaxed max-w-3xl">{description}</p>
+                <p className="text-base text-gray-600 leading-relaxed max-w-3xl text-justify">{description}</p>
             )}
 
             {resources.length > 0 && (
                 <div>
-                    <ResourcesGrid resources={resources} />
+                    <ResourcesGrid projectId={projectId} resources={resources} />
                 </div>
             )}
 
@@ -33,8 +35,14 @@ export default function ThemeSection({ projectId, description, resources, abstra
                 </div>
             )}
 
-            {resources.length === 0 && abstracts.length === 0 && !description && (
-                <p className="text-sm text-gray-400 italic">No content added under this theme yet.</p>
+            {!hasContent && (
+                <div className="flex flex-col items-center justify-center text-center py-12 px-6 bg-slate-50 border border-dashed border-gray-200 rounded-2xl">
+                    <div className="w-12 h-12 rounded-full bg-white border border-gray-100 shadow-sm flex items-center justify-center mb-4">
+                        <Clock className="w-5 h-5 text-gray-400" />
+                    </div>
+                    <p className="text-sm font-semibold text-gray-700">Resources & presentations coming soon</p>
+                    <p className="text-sm text-gray-400 mt-1 max-w-sm">Nothing has been added under this theme yet — check back soon.</p>
+                </div>
             )}
         </div>
     );

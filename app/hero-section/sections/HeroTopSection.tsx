@@ -1,171 +1,117 @@
 "use client";
-import {
-    ArrowRight, ChevronLeft, ChevronRight, Play, Pause, Volume2, VolumeX,
-} from "lucide-react";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { ArrowRight, ChevronDown } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
-const slides = [
-    { type: "image" as const, src: "/images/lreb.jpg", label: "Sustainable Development", href: "/about-us/focus-areas" },
-    { type: "image" as const, src: "/images/arin1.jpeg", label: "Climate Change & Energy", href: "/about-us/focus-areas" },
-    { type: "image" as const, src: "/images/lreb4.jpg", label: "Cities & Resilience", href: "/about-us/focus-areas" },
-    { type: "video" as const, src: "/videos/hero1.mp4", poster: "/images/sdg.jpeg", label: "Agriculture & Forestry", href: "/about-us/focus-areas" },
-    { type: "image" as const, src: "/images/geo.jpeg", label: "Mining, Trade & Industry", href: "/about-us/focus-areas" },
-    { type: "video" as const, src: "/videos/hero2.mp4", poster: "/images/lreb.jpg", label: "Technology & Innovation", href: "/about-us/focus-areas" },
-    { type: "image" as const, src: "/images/arin1.jpeg", label: "Climate & Health", href: "/about-us/focus-areas" },
-];
-
+// Background rotates purely for visual variety — the message itself stays
+// fixed, so the hero states one clear thing about ARIN instead of cycling
+// through a different claim every few seconds.
+const backgrounds = ["/images/lreb.jpg", "/images/arin1.jpeg", "/images/lreb4.jpg", "/images/geo.jpeg", "/images/sdg.jpeg"];
 const DURATION = 6000;
 
 const HeroSection = () => {
     const [current, setCurrent] = useState(0);
     const [prev, setPrev] = useState<number | null>(null);
-    const [paused, setPaused] = useState(false);
-    const [muted, setMuted] = useState(true);
     const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-    const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
-
-    const goTo = useCallback((idx: number) => {
-        if (idx === current) return;
-        setPrev(current); setCurrent(idx);
-    }, [current]);
-    const next = useCallback(() => goTo((current + 1) % slides.length), [current, goTo]);
-    const prev_ = useCallback(() => goTo((current - 1 + slides.length) % slides.length), [current, goTo]);
 
     useEffect(() => {
-        if (paused) { clearInterval(timerRef.current!); return; }
-        clearInterval(timerRef.current!);
-        timerRef.current = setInterval(next, DURATION);
+        timerRef.current = setInterval(() => {
+            setPrev(current);
+            setCurrent((c) => (c + 1) % backgrounds.length);
+        }, DURATION);
         return () => clearInterval(timerRef.current!);
-    }, [current, paused, next]);
-
-    useEffect(() => {
-        videoRefs.current.forEach((v, i) => {
-            if (!v) return;
-            if (i === current) { v.currentTime = 0; v.muted = muted; paused ? v.pause() : v.play().catch(() => { }); }
-            else v.pause();
-        });
-    }, [current, paused, muted]);
-
-    const slide = slides[current];
-    const isVideo = slide.type === "video";
+    }, [current]);
 
     return (
-        <section className="relative w-full overflow-hidden" style={{ height: "75vh", minHeight: 560, borderBottomLeftRadius: "2.5rem", borderBottomRightRadius: "2.5rem" }}>
-
-            {/* ─── background slides ─── */}
-            {slides.map((s, i) => {
-                const on = i === current, was = i === prev;
-                return (
-                    <div key={i} className="absolute inset-0" style={{
-                        zIndex: on ? 2 : was ? 1 : 0,
-                        opacity: on ? 1 : 0,
-                        transition: "opacity 1.2s ease-in-out",
-                    }}>
-                        {s.type === "video"
-                            ? <video ref={el => { videoRefs.current[i] = el }} src={s.src} poster={(s as any).poster}
-                                muted={muted} loop playsInline
-                                className="absolute inset-0 w-full h-full object-cover" />
-                            : <div className="absolute inset-0" style={{
-                                backgroundImage: `url(${s.src})`,
-                                backgroundSize: "cover", backgroundPosition: "center",
-                                animation: on ? "kb 7s ease-in-out forwards" : "none",
+        <section className="relative w-full" style={{ minHeight: 480 }}>
+            {/* Background layer — clipped to the section's bounds (rounded corners,
+                the decorative ring bleeding off-canvas). The text content below is
+                NOT inside this clipped layer, so it can never get cut off, however
+                tall it ends up being on a given screen. */}
+            <div className="absolute inset-0 overflow-hidden">
+                {backgrounds.map((src, i) => {
+                    const on = i === current, was = i === prev;
+                    return (
+                        <div key={i} className="absolute inset-0" style={{ zIndex: on ? 2 : was ? 1 : 0, opacity: on ? 1 : 0, transition: "opacity 1.4s ease-in-out" }}>
+                            <div className="absolute inset-0" style={{
+                                backgroundImage: `url(${src})`,
+                                backgroundSize: "cover",
+                                backgroundPosition: "center",
+                                animation: on ? "kb 8s ease-in-out forwards" : "none",
                             }} />
-                        }
-                        {/* Gradient: heavy bottom-left for text, light everywhere else */}
-                        <div className="absolute inset-0" style={{
-                            background: "linear-gradient(135deg, rgba(2,29,73,0.72) 0%, rgba(2,29,73,0.18) 55%, rgba(2,29,73,0.04) 100%)"
-                        }} />
-                        {/* Extra bottom fade */}
-                        <div className="absolute inset-0" style={{
-                            background: "linear-gradient(to top, rgba(2,29,73,0.60) 0%, transparent 40%)"
-                        }} />
-                    </div>
-                );
-            })}
+                            <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(2,29,73,0.80) 0%, rgba(2,29,73,0.38) 55%, rgba(2,29,73,0.14) 100%)" }} />
+                            <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(2,29,73,0.6) 0%, transparent 45%)" }} />
+                        </div>
+                    );
+                })}
 
-            {/* ─── UI layer ─── */}
-            <div className="absolute inset-0 z-10 flex flex-col justify-between pointer-events-none">
+                {/* Restrained decorative art — a faint ring and a small dot-grid tucked in
+                    the top-right, well clear of the text column, for visual texture without clutter. */}
+                <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full border border-white/10 pointer-events-none hidden md:block" />
+                <div className="absolute top-16 right-10 lg:right-24 w-28 h-28 pointer-events-none hidden lg:block" style={{
+                    backgroundImage: "radial-gradient(rgba(255,255,255,0.28) 1.5px, transparent 1.5px)",
+                    backgroundSize: "14px 14px",
+                }} />
+            </div>
 
-                {/* ── TOP BAR ── */}
-                <div className="flex items-center justify-between px-6 sm:px-10 lg:px-20 pt-24 pointer-events-auto">
-                    {/* ARIN badge */}
-                    <div className="g-light rounded-2xl px-4 py-2 flex items-center gap-2">
+            {/* Slide indicator dots — subtle, top-right, replaces the old manual controls
+                with a passive "there's more imagery" cue rather than an interactive control. */}
+            <div className="absolute top-8 right-6 sm:right-10 lg:right-20 z-10 flex items-center gap-1.5">
+                {backgrounds.map((_, i) => (
+                    <div
+                        key={i}
+                        className="rounded-full transition-all duration-500"
+                        style={{
+                            width: i === current ? 18 : 6,
+                            height: 6,
+                            background: i === current ? "#00c4b3" : "rgba(255,255,255,0.35)",
+                        }}
+                    />
+                ))}
+            </div>
+
+            {/* Content — normal document flow (not absolutely positioned), so if it
+                ever needs more room than the nominal minHeight, the section simply
+                grows to fit rather than clipping the buttons. */}
+            <div className="relative z-10 flex flex-col justify-between" style={{ minHeight: 480 }}>
+                <div className="max-w-6xl mx-auto w-full px-6 pt-20">
+                    <div className="g-light rounded-2xl px-4 py-2 inline-flex items-center gap-2 w-fit">
                         <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
                         <span className="fm text-white/80 text-xs tracking-widest uppercase">
-                            Africa Research & Impact Network
+                            Africa Research &amp; Impact Network
                         </span>
                     </div>
-
-                    {/* Mute button for video slides */}
-                    {isVideo && (
-                        <button onClick={() => setMuted(m => !m)} className="c-btn pointer-events-auto" aria-label="Toggle mute">
-                            {muted ? <VolumeX className="w-3.5 h-3.5 text-white" /> : <Volume2 className="w-3.5 h-3.5 text-white" />}
-                        </button>
-                    )}
                 </div>
 
-                {/* ── MAIN CONTENT  bottom-left ── */}
-                <div className="px-6 sm:px-10 lg:px-20 pb-10 pointer-events-auto">
-
-                    {/* Discipline content block */}
-                    <div key={current} className="mb-8 max-w-xl">
-
-                        {/* Headline */}
-                        <h1 className="a-h1 fp text-white mb-3" style={{
-                            fontSize: "clamp(2.6rem, 5.5vw, 5rem)",
-                            fontWeight: 900,
-                            lineHeight: 1.06,
-                            letterSpacing: "-0.025em",
-                        }}>
-                            {(() => {
-                                const words = slide.label.split(" ");
-                                return words.map((w, wi) => (
-                                    <span key={wi} style={{ color: wi === words.length - 1 ? "#00c4b3" : "white" }}>
-                                        {w}{wi < words.length - 1 ? " " : ""}
-                                    </span>
-                                ));
-                            })()}
+                <div className="max-w-6xl mx-auto w-full px-6 pt-10 pb-14">
+                    <div className="max-w-2xl">
+                        <div className="w-12 h-1 rounded-full mb-4" style={{ background: "#00c4b3" }} />
+                        <h1 className="text-white mb-3" style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.8rem)", fontWeight: 900, lineHeight: 1.1, letterSpacing: "-0.02em" }}>
+                            Africa&apos;s Network for<br />
+                            <span style={{ color: "#00c4b3" }}>Research-Driven Impact</span>
                         </h1>
-
-                        {/* Short description */}
-                        <p className="a-sub fd text-white/60 text-sm leading-relaxed mb-6" style={{ maxWidth: 380 }}>
-                            ARIN drives evidence-based research and policy transformation
-                            across Africa in this critical domain.
+                        <p className="text-white/70 text-base leading-relaxed mb-6 max-w-lg">
+                            We connect researchers, policymakers, and practitioners across the continent to turn evidence into action for sustainable development.
                         </p>
-
-                        {/* CTAs */}
-                        <div className="a-cta flex items-center gap-3 flex-wrap">
-                            <a href={slide.href} className="btn-primary">
-                                Explore Focus Area <ArrowRight className="w-4 h-4" />
+                        <div className="flex items-center gap-3 flex-wrap">
+                            <a href="#about" className="btn-primary">
+                                Learn About ARIN <ArrowRight className="w-4 h-4" />
                             </a>
                             <a href="/contact" className="btn-ghost">
                                 Join the Network
                             </a>
                         </div>
                     </div>
-
-                    {/* ── BOTTOM ROW: nav controls ── */}
-                    <div className="flex items-center gap-2">
-                        <button onClick={prev_} className="c-btn" aria-label="Previous">
-                            <ChevronLeft className="w-4 h-4 text-white" />
-                        </button>
-                        <button onClick={next} className="c-btn" aria-label="Next">
-                            <ChevronRight className="w-4 h-4 text-white" />
-                        </button>
-                        <button onClick={() => setPaused(p => !p)} className="c-btn" aria-label={paused ? "Play" : "Pause"}>
-                            {paused ? <Play className="w-3.5 h-3.5 text-white" /> : <Pause className="w-3.5 h-3.5 text-white" />}
-                        </button>
-                    </div>
                 </div>
             </div>
 
-            {/* ─── progress bar ─── */}
-            <div className="absolute bottom-0 left-0 w-full z-20" style={{ height: 2, background: "rgba(255,255,255,.10)" }}>
-                <div key={`${current}-${paused}`} style={{
-                    height: "100%", background: "rgba(255,255,255,.70)",
-                    animation: paused ? "none" : `pb ${DURATION}ms linear forwards`,
-                }} />
-            </div>
+            {/* Scroll cue */}
+            <a
+                href="#about"
+                aria-label="Scroll to learn more"
+                className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 w-10 h-10 rounded-full bg-white/15 backdrop-blur-md border border-white/40 flex items-center justify-center text-white hover:bg-white/25 transition-colors animate-bounce shadow-lg"
+            >
+                <ChevronDown className="w-4 h-4" />
+            </a>
         </section>
     );
 };

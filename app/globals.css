@@ -2,6 +2,10 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+html {
+  scroll-behavior: smooth;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -418,19 +422,18 @@ i {
   gap: 6px;
   padding: 12px 22px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.15);
-  color: white;
+  background: white;
+  color: #021d49;
   font-family: "Inter", sans-serif;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 14px;
-  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  border: 1.5px solid white;
   transition: all 0.25s ease;
-  backdrop-filter: blur(8px);
   text-decoration: none;
+  box-shadow: 0 2px 10px rgba(2, 29, 73, 0.18);
 }
 .btn-ghost:hover {
-  background: rgba(255, 255, 255, 0.25);
-  border-color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.88);
   gap: 10px;
 }
 
@@ -1156,11 +1159,12 @@ i {
 .sc-grid {
   position: relative;
   z-index: 1;
-  max-width: 860px;
+  max-width: 1152px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
+  padding: 0 24px;
 }
 @media (max-width: 600px) {
   .sc-grid {
@@ -1170,8 +1174,10 @@ i {
 .sc-header {
   position: relative;
   z-index: 1;
+  max-width: 1152px;
+  margin: 0 auto 40px;
+  padding: 0 24px;
   text-align: center;
-  margin-bottom: 40px;
 }
 .sc-eyebrow {
   font-family: "DM Mono", monospace;
@@ -2129,7 +2135,7 @@ i {
 .pts-wrap {
   position: relative;
   z-index: 1;
-  max-width: 1100px;
+  max-width: 1152px;
   margin: 0 auto;
   padding: 0 32px;
 }
@@ -2452,7 +2458,7 @@ i {
 .ab2-grid {
   position: relative;
   z-index: 1;
-  max-width: 1160px;
+  max-width: 1152px;
   margin: 0 auto;
   padding: 0 32px;
   display: grid;
@@ -3560,18 +3566,30 @@ i {
    ══════════════════════════════════════ */
 .p-prose {
   font-size: 16.5px;
-  line-height: 1.82;
+  line-height: 1.72;
   color: #374151;
 }
 .p-prose p {
-  margin: 0 0 1.3em;
+  margin: 0 0 1.1em;
+  text-align: justify;
+  text-justify: inter-word;
 }
 .p-prose p:last-child {
   margin-bottom: 0;
 }
+/* The editor inserts an empty <p> (or <p><br></p>) for every blank line an
+   author presses Enter through — each one otherwise renders as a dead gap
+   the width of a full line, which is where most "too much whitespace"
+   complaints in pasted content actually come from. Collapse them. */
+.p-prose p:empty,
+.p-prose p:has(> br:only-child) {
+  display: none;
+}
 /* First paragraph reads as a lead-in, giving the block visual hierarchy
-   even when the author hasn't added any headings or images. */
-.p-prose > p:first-of-type {
+   even when the author hasn't added any headings or images. Opt-in only
+   (via p-prose-lead) — inside a small card (Outputs, an Abstract) an
+   enlarged first line looks like a mistake, not a lead-in. */
+.p-prose-lead > p:first-of-type {
   font-size: 1.15em;
   color: #1f2937;
 }
