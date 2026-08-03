@@ -1,5 +1,14 @@
 import React from 'react';
 import { BookOpen, ClipboardList, File, FileText, ListChecks, Presentation, Wrench } from 'lucide-react';
+import { API_CONFIG } from '@/lib/apiConfig';
+
+// Uploaded file paths are sometimes returned as relative paths (e.g.
+// /uploads/research-projects/xyz.jpg) rather than absolute URLs — resolve
+// those against the API host so the image actually loads on this site.
+export const buildAssetUrl = (src?: string) => {
+    if (!src) return '';
+    return src.startsWith('http') ? src : `${API_CONFIG.BASE_URL}${src}`;
+};
 
 export interface ResourceItem {
     url: string;
@@ -35,7 +44,7 @@ export default function ResourceCard({ resource, href }: { resource: ResourceIte
         >
             {resource.image ? (
                 <div className="h-32 w-full overflow-hidden bg-gray-100">
-                    <img src={resource.image} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <img src={buildAssetUrl(resource.image)} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 </div>
             ) : (
                 <div className="h-32 w-full bg-linear-to-br from-[#021d49]/5 to-[#021d49]/10 flex items-center justify-center">
