@@ -77,7 +77,7 @@ function TeamCard({
     const name = `${member.firstName} ${member.lastName}`;
 
     return (
-        <div style={{ position: "relative", width: "100%", maxWidth: 330, height: "100%" }}>
+        <div style={{ position: "relative", width: "100%", maxWidth: 270, height: "100%" }}>
             {/* Slight decorative "peek" card behind — a small brand-gradient edge
                 shows past the corner, a light art touch without being loud. */}
             <div style={{
@@ -149,15 +149,15 @@ function TeamCard({
                 {/* Info strip — fixed heights so name/role blocks line up card to card */}
                 <div style={{
                     position: "relative",
-                    padding: "22px 24px 24px",
+                    padding: "18px 20px 20px",
                     flex: 1,
                     display: "flex",
                     flexDirection: "column",
                 }}>
                     {/* faint corner dot-grid, echoing the page's decorative art */}
                     <div style={{
-                        position: "absolute", top: 16, right: 18,
-                        width: 26, height: 26,
+                        position: "absolute", top: 14, right: 16,
+                        width: 22, height: 22,
                         backgroundImage: "radial-gradient(rgba(2,29,73,.16) 1.2px, transparent 1.2px)",
                         backgroundSize: "7px 7px",
                         pointerEvents: "none",
@@ -165,69 +165,69 @@ function TeamCard({
 
                     <div style={{
                         height: 3,
-                        width: hovered ? "100%" : 40,
+                        width: hovered ? "100%" : 36,
                         background: "linear-gradient(to right, #021d49, #00c4b3)",
                         borderRadius: 2,
-                        marginBottom: 14,
+                        marginBottom: 12,
                         transition: "width .35s ease",
                     }} />
 
                     <div style={{
-                    fontFamily: "'Playfair Display', Georgia, serif",
-                    fontWeight: 700,
-                    fontSize: "1.22rem",
-                    color: "#021d49",
-                    lineHeight: 1.3,
-                    minHeight: "2.6em",
-                    display: "-webkit-box",
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                    marginBottom: 10,
-                }}>
-                    {name}
-                </div>
+                        fontFamily: "'Playfair Display', Georgia, serif",
+                        fontWeight: 700,
+                        fontSize: "1.05rem",
+                        color: "#021d49",
+                        lineHeight: 1.3,
+                        minHeight: "2.6em",
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                        marginBottom: 8,
+                    }}>
+                        {name}
+                    </div>
 
-                <div style={{
-                    display: "inline-flex",
-                    alignSelf: "flex-start",
-                    alignItems: "center",
-                    fontFamily: "'Inter', sans-serif",
-                    fontSize: 11,
-                    fontWeight: 600,
-                    color: "#00a896",
-                    background: "rgba(0,196,179,.1)",
-                    letterSpacing: ".05em",
-                    textTransform: "uppercase",
-                    padding: "5px 12px",
-                    borderRadius: 99,
-                    marginBottom: 20,
-                    minHeight: "1.4em",
-                    lineHeight: 1.4,
-                }}>
-                    {member.role}
-                </div>
+                    <div style={{
+                        display: "inline-flex",
+                        alignSelf: "flex-start",
+                        alignItems: "center",
+                        fontFamily: "'Inter', sans-serif",
+                        fontSize: 10,
+                        fontWeight: 600,
+                        color: "#00a896",
+                        background: "rgba(0,196,179,.1)",
+                        letterSpacing: ".04em",
+                        textTransform: "uppercase",
+                        padding: "4px 10px",
+                        borderRadius: 99,
+                        marginBottom: 16,
+                        minHeight: "1.4em",
+                        lineHeight: 1.4,
+                    }}>
+                        {member.role}
+                    </div>
 
-                <button style={{
-                    marginTop: "auto",
-                    alignSelf: "flex-start",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 6,
-                    padding: "9px 18px",
-                    borderRadius: 99,
-                    background: hovered ? "#021d49" : "transparent",
-                    border: "1.5px solid rgba(2,29,73,.2)",
-                    color: hovered ? "white" : "#021d49",
-                    fontFamily: "'Inter', sans-serif",
-                    fontWeight: 600,
-                    fontSize: 12,
-                    cursor: "pointer",
-                    transition: "all .25s ease",
-                    whiteSpace: "nowrap",
-                }}>
-                    View Bio <ArrowUpRight size={12} />
-                </button>
+                    <button style={{
+                        marginTop: "auto",
+                        alignSelf: "flex-start",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 5,
+                        padding: "8px 15px",
+                        borderRadius: 99,
+                        background: hovered ? "#021d49" : "transparent",
+                        border: "1.5px solid rgba(2,29,73,.2)",
+                        color: hovered ? "white" : "#021d49",
+                        fontFamily: "'Inter', sans-serif",
+                        fontWeight: 600,
+                        fontSize: 11,
+                        cursor: "pointer",
+                        transition: "all .25s ease",
+                        whiteSpace: "nowrap",
+                    }}>
+                        View Bio <ArrowUpRight size={11} />
+                    </button>
                 </div>
             </div>
         </div>
@@ -554,6 +554,24 @@ const SecretariatPage = () => {
         <>
             <Navbar />
 
+            <style jsx>{`
+                .sec-card-grid {
+                    display: grid;
+                    grid-template-columns: repeat(4, 1fr);
+                    gap: 24px;
+                }
+                @media (max-width: 980px) {
+                    .sec-card-grid {
+                        grid-template-columns: repeat(2, 1fr);
+                    }
+                }
+                @media (max-width: 520px) {
+                    .sec-card-grid {
+                        grid-template-columns: 1fr;
+                    }
+                }
+            `}</style>
+
             <div style={{
                 background: "#f8faff",
                 backgroundImage: "radial-gradient(rgba(2,29,73,.06) 1px, transparent 1px)",
@@ -731,15 +749,9 @@ const SecretariatPage = () => {
                                     ))}
                                 </div>
                             ) : (
-                                /* Cards — auto-fit + centred justify keeps cards at their full
-                                   intended size and centres any partial last row instead of
-                                   letting it hang ragged to the left */
-                                <div style={{
-                                    display: "grid",
-                                    gridTemplateColumns: "repeat(auto-fit, minmax(270px, 330px))",
-                                    justifyContent: "center",
-                                    gap: 30,
-                                }}>
+                                /* Cards — a fixed 4-column grid (not viewport-dependent auto-fit),
+                                   stepping down to 2 then 1 column on smaller screens. */
+                                <div className="sec-card-grid">
                                     {grouped[category].map((member, i) => (
                                         <TeamCard
                                             key={member._id}
