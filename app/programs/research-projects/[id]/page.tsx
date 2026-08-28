@@ -5,40 +5,38 @@ import Footer from '@/app/footer/Footer';
 import { API_CONFIG } from '@/lib/apiConfig';
 import { useParams } from 'next/navigation';
 import { getResearchProject, getResearchProjects } from '@/services/researchProjectService';
+import { getThemesByProject } from '@/services/themeService';
 
 import ProjectHero from '../components/ProjectHero';
 import ProjectOverview from '../components/ProjectOverview';
 import ProjectImpact from '../components/ProjectImpact';
+import PartnersFunders from '../components/PartnersFunders';
 import ProjectTeam from '../components/ProjectTeam';
 import ThemesGrid from '../components/ThemesGrid';
-import ResourcesSection from '../components/ResourcesSection';
+import UnifiedResources, { AggregatedResource } from '../components/UnifiedResources';
 import AbstractsSection from '../components/AbstractsSection';
 import GallerySection from '../components/GallerySection';
-import SectionNav from '../components/SectionNav';
+import Breadcrumb from '../components/Breadcrumb';
 import RelatedInitiatives from '../components/RelatedInitiatives';
 import RelatedProjects from '../components/RelatedProjects';
+import { Band, SectionHeading } from '../components/rp-ui';
 
 const stripHtml = (html: string) => html.replace(/<[^>]*>/g, '');
-// Cuts at the last full word within `max` chars instead of mid-word, so
-// previews read as an intentional excerpt rather than truncated garbage.
+// Cuts at the last full word within `max` chars instead of mid-word.
 const truncate = (text: string, max: number) =>
     text.length <= max ? text : text.slice(0, max).replace(/\s+\S*$/, '') + '…';
 const buildImageUrl = (img?: string) => {
     if (!img) return '';
     return img.startsWith('http') ? img : `${API_CONFIG.BASE_URL}${img}`;
 };
-const slugify = (text: string) => text.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
-const SECTION_SCROLL_MT = 'scroll-mt-32 sm:scroll-mt-36 lg:scroll-mt-40';
-
-function SectionHeader({ title }: { title: string }) {
-    return <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">{title}</h2>;
-}
+const CONTAINER = 'max-w-7xl';
 
 const ProjectDetailPage = () => {
     const { id } = useParams();
     const [project, setProject] = useState<any | null>(null);
     const [allProjects, setAllProjects] = useState<any[]>([]);
+    const [themes, setThemes] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -46,13 +44,15 @@ const ProjectDetailPage = () => {
         let mounted = true;
         (async () => {
             try {
-                const [data, list] = await Promise.all([
+                const [data, list, projectThemes] = await Promise.all([
                     getResearchProject(id as string),
                     getResearchProjects().catch(() => []),
+                    getThemesByProject(id as string).catch(() => []),
                 ]);
                 if (mounted) {
                     setProject(data);
                     setAllProjects(list);
+                    setThemes(projectThemes);
                 }
             } catch (e: any) {
                 if (mounted) setError(e?.message || 'Failed to load project');
@@ -95,131 +95,170 @@ const ProjectDetailPage = () => {
         );
     }
 
-    const excerpt = truncate(stripHtml(project.description || '').trim(), 180);
+    const excerpt = truncate(stripHtml(project.description || '').trim(), 200);
     const dateLabel = project.date
         ? new Date(project.date).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
         : undefined;
     const gallery = Array.isArray(project.gallery) ? project.gallery : [];
     const relatedInitiatives = Array.isArray(project.relatedInitiatives) ? project.relatedInitiatives : [];
     const teamMembers = Array.isArray(project.teamMembers) ? project.teamMembers : [];
-    // Resources and abstracts carry no _id of their own, so their position in
-    // these arrays is their stable identity — tag it on before any
-    // filtering/grouping so the detail pages (/resources/[index],
-    // /abstracts/[index]) can look the right one back up.
     const allResources = Array.isArray(project.resources) ? project.resources : [];
     const indexedResources = allResources.map((r: any, i: number) => ({ ...r, _index: i }));
     const allAbstracts = Array.isArray(project.abstracts) ? project.abstracts : [];
     const indexedAbstracts = allAbstracts.map((a: any, i: number) => ({ ...a, _index: i }));
-    const themes = Array.isArray(project.themes) ? project.themes : [];
+    const legacyThemes = Array.isArray(project.themes) ? project.themes : [];
 
-    // Resources/abstracts tagged with a theme live on that theme's own page;
-    // everything else stays in the general Resources/Abstracts sections here.
-    const themeNames = new Set(themes.map((t: any) => t.name));
-    const resources = indexedResources.filter((r: any) => !r.group || !themeNames.has(r.group));
-    const abstracts = indexedAbstracts.filter((a: any) => !a.group || !themeNames.has(a.group));
+    const legacyThemeNames = new Set(legacyThemes.map((t: any) => t.name));
+    const resources = indexedResources.filter((r: any) => !r.group || !legacyThemeNames.has(r.group));
+    const abstracts = indexedAbstracts.filter((a: any) => !a.group || !legacyThemeNames.has(a.group));
 
-    const themeSummaries = themes.map((theme: any) => ({
-        id: slugify(theme.name),
-        name: theme.name,
-        description: theme.description,
-        resourceCount: allResources.filter((r: any) => r.group === theme.name).length,
-        abstractCount: indexedAbstracts.filter((a: any) => a.group === theme.name).length,
-    }));
+    const unifiedResources: AggregatedResource[] = [
+        ...resources.map((r: any) => ({ ...r, _source: 'General' as const })),
+        ...themes.flatMap((theme: any) =>
+            (Array.isArray(theme.resources) ? theme.resources : []).map((r: any) => ({
+                ...r,
+                _index: undefined,
+                _source: theme.name,
+            }))
+        ),
+    ];
 
+    const funders = Array.isArray(project.funders) ? project.funders : [];
+    const partners = Array.isArray(project.partners) ? project.partners : [];
     const hasImpact = Boolean(
         project.outputs || project.longTermOutcome ||
-        (project.intermediateOutcomes && project.intermediateOutcomes.length > 0) ||
-        (project.funders && project.funders.length > 0) ||
-        (project.partners && project.partners.length > 0)
+        (project.intermediateOutcomes && project.intermediateOutcomes.length > 0)
     );
-
-    // Themes and Resources come right after Overview — they're the content
-    // people are most often here to find, so they shouldn't be buried below
-    // supporting detail like Outcomes/Funders/Team.
-    const navItems = [
-        { id: 'overview', label: 'Overview' },
-        ...(themeSummaries.length > 0 ? [{ id: 'themes', label: 'Themes', count: themeSummaries.length }] : []),
-        ...(resources.length > 0 ? [{ id: 'resources', label: 'Resources', count: resources.length }] : []),
-        ...(abstracts.length > 0 ? [{ id: 'abstracts', label: 'Abstracts', count: abstracts.length }] : []),
-        ...(hasImpact ? [{ id: 'impact', label: 'Impact' }] : []),
-        ...(teamMembers.length > 0 ? [{ id: 'team', label: 'Team', count: teamMembers.length }] : []),
-        ...(gallery.length > 0 ? [{ id: 'gallery', label: 'Gallery', count: gallery.length }] : []),
-    ];
+    const hasPartners = Boolean(funders.length > 0 || partners.length > 0);
 
     return (
         <>
             <Navbar />
             <main className="bg-white">
+                <Breadcrumb
+                    maxWidthClass={CONTAINER}
+                    items={[
+                        { label: 'Research Projects', href: '/programs/research-projects' },
+                        { label: project.title },
+                    ]}
+                />
+
                 <ProjectHero
                     title={project.title}
                     category={project.category}
                     dateLabel={dateLabel}
                     excerpt={excerpt}
                     coverImageUrl={buildImageUrl(project.coverImage)}
-                    hasResources={resources.length > 0}
-                    hasThemes={themeSummaries.length > 0}
+                    hasResources={unifiedResources.length > 0}
+                    hasThemes={themes.length > 0}
+                    projectAreasCount={themes.length}
+                    resourcesCount={unifiedResources.length}
+                    teamCount={teamMembers.length}
                 />
 
-                <SectionNav items={navItems} />
+                {themes.length > 0 && (
+                    <Band id="project-areas">
+                        <SectionHeading
+                            eyebrow="Programmes under this project"
+                            title="Project"
+                            accentWord="Areas"
+                            subtitle="This project runs two programmes, each on its own page. Click a card to open it."
+                        />
+                        <div className="mt-6">
+                            <ThemesGrid projectId={project._id} items={themes} />
+                        </div>
+                    </Band>
+                )}
 
-                <div className="max-w-6xl mx-auto px-6 py-8 sm:py-10">
-                    <section id="overview" className={SECTION_SCROLL_MT}>
+                <Band id="overview">
+                    <SectionHeading
+                        eyebrow="Our research"
+                        title="Project"
+                        accentWord="Overview"
+                        subtitle="What this project is about, the goal it works toward, and the objectives that guide it."
+                    />
+                    <div className="mt-6">
                         <ProjectOverview
                             description={project.description}
                             goal={project.goal}
                             objectives={project.objectives}
                             focusAreas={project.focusAreas}
+                            projectId={project._id}
+                            themes={themes}
                         />
-                    </section>
+                    </div>
+                </Band>
 
-                    {themeSummaries.length > 0 && (
-                        <section id="themes" className={`${SECTION_SCROLL_MT} mt-12 pt-10 border-t border-gray-100`}>
-                            <SectionHeader title="Themes" />
-                            <ThemesGrid projectId={project._id} items={themeSummaries} />
-                        </section>
-                    )}
-
-                    {resources.length > 0 && (
-                        <section id="resources" className={`${SECTION_SCROLL_MT} mt-12 pt-10 border-t border-gray-100`}>
-                            <SectionHeader title="Resources" />
-                            <ResourcesSection projectId={project._id} resources={resources} />
-                        </section>
-                    )}
-
-                    {abstracts.length > 0 && (
-                        <section id="abstracts" className={`${SECTION_SCROLL_MT} mt-12 pt-10 border-t border-gray-100`}>
-                            <SectionHeader title="Abstracts" />
-                            <AbstractsSection projectId={project._id} items={abstracts} />
-                        </section>
-                    )}
-
-                    {hasImpact && (
-                        <section id="impact" className={`${SECTION_SCROLL_MT} mt-12 pt-10 border-t border-gray-100`}>
-                            <SectionHeader title="Impact" />
+                {hasImpact && (
+                    <Band id="impact">
+                        <SectionHeading
+                            eyebrow="Outcomes & evidence"
+                            title="The"
+                            accentWord="Impact"
+                            subtitle="What this project has produced and the change it's working toward."
+                        />
+                        <div className="mt-6">
                             <ProjectImpact
                                 outputs={project.outputs}
                                 longTermOutcome={project.longTermOutcome}
                                 intermediateOutcomes={project.intermediateOutcomes}
-                                funders={project.funders}
-                                partners={project.partners}
                             />
-                        </section>
-                    )}
+                        </div>
+                    </Band>
+                )}
 
-                    {teamMembers.length > 0 && (
-                        <section id="team" className={`${SECTION_SCROLL_MT} mt-12 pt-10 border-t border-gray-100`}>
-                            <SectionHeader title="Project Team" />
+                {unifiedResources.length > 0 && (
+                    <Band id="resources" bg="white">
+                        <SectionHeading
+                            eyebrow="Downloads"
+                            title="Resources"
+                            subtitle="Reports, papers, toolkits, and presentations — from the project overall and from each project area."
+                        />
+                        <div className="mt-6">
+                            <UnifiedResources projectId={project._id} resources={unifiedResources} />
+                        </div>
+                    </Band>
+                )}
+
+                {abstracts.length > 0 && (
+                    <Band id="abstracts" bg="tint">
+                        <SectionHeading
+                            eyebrow="Contributions"
+                            title="Abstracts"
+                            subtitle="Student and researcher abstracts submitted in connection with this project."
+                        />
+                        <div className="mt-6">
+                            <AbstractsSection projectId={project._id} items={abstracts} />
+                        </div>
+                    </Band>
+                )}
+
+                {hasPartners && (
+                    <Band id="partners" bg="white">
+                        <SectionHeading eyebrow="Who we work with" title="Partners &" accentWord="Funders" />
+                        <div className="mt-6">
+                            <PartnersFunders funders={project.funders} partners={project.partners} />
+                        </div>
+                    </Band>
+                )}
+
+                {teamMembers.length > 0 && (
+                    <Band id="team" bg="tint">
+                        <SectionHeading eyebrow="The people" title="Project" accentWord="Team" />
+                        <div className="mt-6">
                             <ProjectTeam teamMembers={teamMembers} />
-                        </section>
-                    )}
+                        </div>
+                    </Band>
+                )}
 
-                    {gallery.length > 0 && (
-                        <section id="gallery" className={`${SECTION_SCROLL_MT} mt-12 pt-10 border-t border-gray-100`}>
-                            <SectionHeader title="Gallery" />
+                {gallery.length > 0 && (
+                    <Band id="gallery" bg="white">
+                        <SectionHeading eyebrow="In pictures" title="Gallery" />
+                        <div className="mt-6">
                             <GallerySection items={gallery} />
-                        </section>
-                    )}
-                </div>
+                        </div>
+                    </Band>
+                )}
 
                 <RelatedInitiatives items={relatedInitiatives} />
                 <RelatedProjects allProjects={allProjects} currentId={project._id} category={project.category} />

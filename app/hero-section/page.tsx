@@ -4,6 +4,7 @@ export const revalidate = 3600;
 import HeroTopSection from "./sections/HeroTopSection";
 import PartnersSection from "./sections/PartnersSection";
 import LatestFromArinSection from "./sections/LatestFromArinSection";
+import SocialConnectSection from "./sections/SocialConnectSection";
 import CTASection from "./sections/CTASection";
 
 import { technicalReportsService } from "@/services/technicalReportsService";
@@ -58,6 +59,7 @@ export default async function HeroSection() {
                 policyBriefs={policyBriefs}
                 researchProjects={researchProjects}
             />
+            <SocialConnectSection />
             <StatsSection />
             <PartnersSection partners={partners} />
             <CTASection />

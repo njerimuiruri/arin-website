@@ -1,105 +1,67 @@
 import React from 'react';
-import { TrendingUp, ArrowRight, Landmark, Handshake, Building2 } from 'lucide-react';
-
-export interface OrgItem {
-    name: string;
-    logo?: string;
-}
+import { TrendingUp } from 'lucide-react';
+import { RP, NumberedCards, AccentPanel } from './rp-ui';
 
 interface ProjectImpactProps {
     outputs?: string;
     longTermOutcome?: string;
     intermediateOutcomes?: string[];
-    funders?: OrgItem[];
-    partners?: OrgItem[];
 }
 
-function OrgLogoRow({ items }: { items: OrgItem[] }) {
-    return (
-        <div className="flex flex-wrap gap-3">
-            {items.map((item, i) => (
-                <div
-                    key={i}
-                    className="flex flex-col items-center justify-center gap-2 w-32 p-3 bg-white border border-gray-100 rounded-xl shadow-sm"
-                >
-                    <div className="h-10 w-full flex items-center justify-center">
-                        {item.logo ? (
-                            <img src={item.logo} alt={item.name} className="max-h-10 max-w-full object-contain" />
-                        ) : (
-                            <Building2 className="w-6 h-6 text-gray-300" />
-                        )}
-                    </div>
-                    <p className="text-xs text-gray-600 text-center leading-snug line-clamp-2">{item.name}</p>
-                </div>
-            ))}
-        </div>
-    );
+const stripTags = (h: string) => h.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+
+// Pull <li> items out of the outputs HTML; split "Title: rest" where present.
+function parseOutputs(html: string): { title?: string; body: string }[] {
+    if (!html) return [];
+    const lis = html.match(/<li[^>]*>[\s\S]*?<\/li>/gi) || [];
+    return lis
+        .map((li) => stripTags(li))
+        .filter(Boolean)
+        .map((text) => {
+            const m = text.match(/^([A-Z][^:]{2,60}):\s+([\s\S]+)$/);
+            return m ? { title: m[1].trim(), body: m[2].trim() } : { body: text };
+        });
 }
 
-export default function ProjectImpact({ outputs, longTermOutcome, intermediateOutcomes = [], funders = [], partners = [] }: ProjectImpactProps) {
-    const hasOutputsOrOutcomes = Boolean(outputs || longTermOutcome || intermediateOutcomes.length > 0);
+export default function ProjectImpact({ outputs, longTermOutcome, intermediateOutcomes = [] }: ProjectImpactProps) {
+    const outputItems = parseOutputs(outputs || '');
 
     return (
-        <div className="max-w-4xl space-y-8">
-            {hasOutputsOrOutcomes && (
+        <div className="space-y-10">
+            {outputItems.length > 0 && (
                 <div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-5 flex items-center gap-2">
-                        <TrendingUp className="w-5 h-5 text-emerald-600" /> Outputs & Outcomes
+                    <h3 className="mb-6 text-2xl font-bold" style={{ color: RP.ink }}>
+                        What the project produces
                     </h3>
-
-                    <div className="space-y-5">
-                        {outputs && (
-                            <div className="bg-white border border-gray-100 rounded-xl shadow-sm p-5">
-                                <p className="text-xs font-bold tracking-widest uppercase text-emerald-600 mb-2">Outputs</p>
-                                <div className="p-prose" dangerouslySetInnerHTML={{ __html: outputs }} />
-                            </div>
-                        )}
-
-                        {longTermOutcome && (
-                            <div className="flex items-start gap-4 bg-emerald-50 border-l-4 border-emerald-600 rounded-r-xl p-6">
-                                <TrendingUp className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-                                <div>
-                                    <p className="text-xs font-bold tracking-widest uppercase text-emerald-600 mb-1.5">Long-term Outcome</p>
-                                    <p className="text-base text-gray-800 leading-relaxed text-justify">{longTermOutcome}</p>
-                                </div>
-                            </div>
-                        )}
-
-                        {intermediateOutcomes.length > 0 && (
-                            <div>
-                                <p className="text-xs font-bold tracking-widest uppercase text-gray-400 mb-2">Intermediate Outcomes</p>
-                                <div className="space-y-2">
-                                    {intermediateOutcomes.map((item, i) => (
-                                        <div
-                                            key={i}
-                                            className="flex items-start gap-3 p-4 bg-white border border-gray-100 rounded-xl shadow-sm"
-                                        >
-                                            <ArrowRight className="w-4 h-4 text-emerald-600 shrink-0 mt-1" />
-                                            <span className="text-sm text-gray-700 leading-relaxed">{item}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </div>
+                    <NumberedCards
+                        columns={3}
+                        items={outputItems.map((o) => ({ title: o.title, body: o.body }))}
+                    />
                 </div>
             )}
 
-            {funders.length > 0 && (
-                <div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-5 flex items-center gap-2">
-                        <Landmark className="w-5 h-5 text-blue-600" /> Funder{funders.length > 1 ? 's' : ''}
-                    </h3>
-                    <OrgLogoRow items={funders} />
+            {/* Fallback: no parseable list — render the raw HTML in a card. */}
+            {outputItems.length === 0 && outputs && (
+                <div className="overflow-hidden rounded-3xl bg-white p-7 shadow-sm ring-1 ring-black/5 sm:p-9">
+                    <p className="mb-4 text-[11px] font-bold uppercase tracking-[0.18em]" style={{ color: RP.accentWord }}>
+                        Outputs
+                    </p>
+                    <div className="p-prose" dangerouslySetInnerHTML={{ __html: outputs }} />
                 </div>
             )}
 
-            {partners.length > 0 && (
+            {longTermOutcome && (
+                <AccentPanel eyebrow="Long-term Outcome" icon={<TrendingUp className="h-5 w-5" />}>
+                    {longTermOutcome}
+                </AccentPanel>
+            )}
+
+            {intermediateOutcomes.length > 0 && (
                 <div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-5 flex items-center gap-2">
-                        <Handshake className="w-5 h-5 text-blue-600" /> Partners
+                    <h3 className="mb-6 text-2xl font-bold" style={{ color: RP.ink }}>
+                        Intermediate Outcomes
                     </h3>
-                    <OrgLogoRow items={partners} />
+                    <NumberedCards columns={2} items={intermediateOutcomes.map((o) => ({ body: o }))} />
                 </div>
             )}
         </div>

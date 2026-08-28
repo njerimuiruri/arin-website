@@ -1,12 +1,20 @@
 import React from 'react';
-import { ArrowRight, Layers, Clock } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+import { API_CONFIG } from '@/lib/apiConfig';
+import { RP } from './rp-ui';
+import { CardArt, motifVariantFor } from './PageArt';
 
 export interface ThemeSummary {
-    id: string;
+    _id: string;
     name: string;
-    description?: string;
-    resourceCount: number;
-    abstractCount: number;
+    subtitle?: string;
+    overview?: string;
+    coverImage?: string;
+    learningModules?: unknown[];
+    resources?: unknown[];
+    objectives?: unknown[];
+    levels?: unknown[];
+    learningOutcomes?: unknown[];
 }
 
 interface ThemesGridProps {
@@ -14,44 +22,101 @@ interface ThemesGridProps {
     items: ThemeSummary[];
 }
 
+const buildImageUrl = (img?: string) => {
+    if (!img) return '';
+    return img.startsWith('http') ? img : `${API_CONFIG.BASE_URL}${img}`;
+};
+
 export default function ThemesGrid({ projectId, items }: ThemesGridProps) {
     if (!items || items.length === 0) return null;
 
     return (
-        <div className="grid sm:grid-cols-2 gap-5">
-            {items.map((theme) => {
-                const total = theme.resourceCount + theme.abstractCount;
-                const parts = [
-                    theme.resourceCount > 0 ? `${theme.resourceCount} resource${theme.resourceCount > 1 ? 's' : ''}` : null,
-                    theme.abstractCount > 0 ? `${theme.abstractCount} abstract${theme.abstractCount > 1 ? 's' : ''}` : null,
-                ].filter(Boolean);
+        <div className="grid gap-6 md:grid-cols-2">
+            {items.map((theme, i) => {
+                const chips = [
+                    (theme.levels?.length || 0) > 0 ? `${theme.levels!.length} levels` : null,
+                    (theme.objectives?.length || 0) > 0 ? `${theme.objectives!.length} objectives` : null,
+                    (theme.learningOutcomes?.length || 0) > 0 ? `${theme.learningOutcomes!.length} outcomes` : null,
+                    (theme.learningModules?.length || 0) > 0 ? `${theme.learningModules!.length} modules` : null,
+                    (theme.resources?.length || 0) > 0 ? `${theme.resources!.length} resources` : null,
+                ].filter(Boolean) as string[];
 
                 return (
                     <a
-                        key={theme.id}
-                        href={`/programs/research-projects/${projectId}/themes/${theme.id}`}
-                        className="group flex flex-col h-full bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg hover:border-blue-200 hover:-translate-y-0.5 transition-all duration-200 p-6"
+                        key={theme._id}
+                        href={`/programs/research-projects/${projectId}/themes/${theme._id}`}
+                        className="group relative flex flex-col overflow-hidden rounded-[1.75rem] bg-white p-8 ring-1 ring-black/[0.07] transition-all duration-200 hover:-translate-y-1 hover:ring-black/15 hover:shadow-[0_18px_50px_-20px_rgba(2,29,73,0.35)]"
                     >
-                        <div className="flex items-start justify-between gap-3 mb-3">
-                            <div className="w-11 h-11 rounded-xl bg-blue-50 text-[#021d49] flex items-center justify-center group-hover:bg-[#021d49] group-hover:text-white transition-colors shrink-0">
-                                <Layers className="w-5 h-5" />
-                            </div>
-                            {total === 0 ? (
-                                <span className="inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wide text-gray-400 bg-gray-50 px-2.5 py-1 rounded-full">
-                                    <Clock className="w-3 h-3" /> Coming soon
-                                </span>
-                            ) : (
-                                <span className="text-[11px] font-semibold uppercase tracking-wide text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">
-                                    {parts.join(' · ')}
-                                </span>
+                        <CardArt variant={motifVariantFor(theme.name)} />
+
+                        <div className="relative flex flex-1 flex-col">
+                            {theme.coverImage && (
+                                <div className="mb-6 overflow-hidden rounded-2xl" style={{ background: RP.tint }}>
+                                    <img
+                                        src={buildImageUrl(theme.coverImage)}
+                                        alt=""
+                                        className="h-40 w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                    />
+                                </div>
                             )}
-                        </div>
-                        <h3 className="font-semibold text-lg text-gray-900 leading-snug mb-1.5">{theme.name}</h3>
-                        {theme.description && (
-                            <p className="text-sm text-gray-500 leading-relaxed line-clamp-2 mb-4 flex-1">{theme.description}</p>
-                        )}
-                        <div className="mt-auto pt-3 flex items-center gap-1.5 text-sm font-semibold text-[#021d49] group-hover:gap-2.5 transition-all">
-                            View theme <ArrowRight className="w-3.5 h-3.5" />
+
+                            <div className="mb-5 flex items-center gap-3">
+                                <span
+                                    className="flex h-10 w-10 items-center justify-center rounded-full text-xs font-bold text-white"
+                                    style={{ background: RP.ink }}
+                                >
+                                    {String(i + 1).padStart(2, '0')}
+                                </span>
+                                <span
+                                    className="rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em]"
+                                    style={{ background: RP.tint, color: RP.accentWord }}
+                                >
+                                    Programme {i + 1} of {items.length}
+                                </span>
+                            </div>
+
+                            {theme.subtitle && (
+                                <p
+                                    className="mb-1.5 text-[11px] font-bold uppercase tracking-[0.14em]"
+                                    style={{ color: RP.accentWord }}
+                                >
+                                    {theme.subtitle}
+                                </p>
+                            )}
+
+                            <h3 className="text-[1.6rem] font-bold leading-tight" style={{ color: RP.ink }}>
+                                {theme.name}
+                            </h3>
+
+                            {theme.overview && (
+                                <p className="mt-3 flex-1 text-sm leading-relaxed" style={{ color: RP.inkSoft }}>
+                                    {theme.overview}
+                                </p>
+                            )}
+
+                            {chips.length > 0 && (
+                                <div className="mt-6 flex flex-wrap gap-2">
+                                    {chips.map((c) => (
+                                        <span
+                                            key={c}
+                                            className="rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wide"
+                                            style={{ background: RP.tint, color: RP.ink }}
+                                        >
+                                            {c}
+                                        </span>
+                                    ))}
+                                </div>
+                            )}
+
+                            <span
+                                className="mt-7 inline-flex items-center gap-3 self-start rounded-full py-2.5 pl-5 pr-2.5 text-sm font-semibold text-white"
+                                style={{ background: RP.ink }}
+                            >
+                                Open the {theme.name.length > 24 ? 'programme page' : `${theme.name} page`}
+                                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/15 transition-colors group-hover:bg-white/30">
+                                    <ArrowRight className="h-3.5 w-3.5" />
+                                </span>
+                            </span>
                         </div>
                     </a>
                 );

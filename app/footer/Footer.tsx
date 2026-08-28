@@ -71,21 +71,27 @@ const Footer: React.FC = () => {
                                 <Facebook className="w-5 h-5" />
                             </a>
                             <a
-                                href="#"
+                                href="https://x.com/arin_africa"
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors"
-                                aria-label="Twitter"
+                                aria-label="X (Twitter)"
                             >
                                 <Twitter className="w-5 h-5" />
                             </a>
                             <a
-                                href="#"
+                                href="https://www.linkedin.com/company/arin-africa/"
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors"
                                 aria-label="LinkedIn"
                             >
                                 <Linkedin className="w-5 h-5" />
                             </a>
                             <a
-                                href="#"
+                                href="https://www.instagram.com/arin_africa"
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors"
                                 aria-label="Instagram"
                             >

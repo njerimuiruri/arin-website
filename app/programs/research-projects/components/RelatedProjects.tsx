@@ -27,7 +27,7 @@ const buildImageUrl = (img?: string) => {
     return img.startsWith('http') ? img : `${API_CONFIG.BASE_URL}${img}`;
 };
 
-export default function RelatedProjects({ allProjects, currentId, category, limit = 3 }: RelatedProjectsProps) {
+export default function RelatedProjects({ allProjects, currentId, category, limit = 4 }: RelatedProjectsProps) {
     const candidates = allProjects.filter((p) => p._id !== currentId);
 
     const sameCategory = category ? candidates.filter((p) => p.category === category) : [];
@@ -41,9 +41,9 @@ export default function RelatedProjects({ allProjects, currentId, category, limi
 
     return (
         <section>
-            <div className="max-w-6xl mx-auto px-6 py-10 sm:py-12">
-                <SectionHeading eyebrow="Keep Exploring" title="Related Projects" />
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div className="max-w-7xl mx-auto px-6 py-10 sm:py-12">
+                <SectionHeading eyebrow="Keep Exploring" title="Explore Other Research Projects" />
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                     {related.map((project) => {
                         const imageUrl = buildImageUrl(project.coverImage);
                         return (

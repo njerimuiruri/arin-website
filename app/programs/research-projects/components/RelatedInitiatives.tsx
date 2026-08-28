@@ -18,9 +18,9 @@ export default function RelatedInitiatives({ items }: RelatedInitiativesProps) {
 
     return (
         <section className="bg-slate-50 border-y border-gray-100">
-            <div className="max-w-6xl mx-auto px-6 py-10 sm:py-12">
+            <div className="max-w-7xl mx-auto px-6 py-10 sm:py-12">
                 <SectionHeading eyebrow="Explore More" title="Related Initiatives" />
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                     {items.map((item, idx) => {
                         const external = /^https?:\/\//i.test(item.url);
                         return (

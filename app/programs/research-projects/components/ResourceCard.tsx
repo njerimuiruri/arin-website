@@ -33,13 +33,15 @@ export function getResourceMeta(type?: string) {
     return TYPE_META[type || 'other'] || TYPE_META.other;
 }
 
-export default function ResourceCard({ resource, href }: { resource: ResourceItem; href: string }) {
+export default function ResourceCard({ resource, href, external = false }: { resource: ResourceItem; href: string; external?: boolean }) {
     const meta = getResourceMeta(resource.type);
     const Icon = meta.icon;
 
     return (
         <a
             href={href}
+            target={external ? '_blank' : undefined}
+            rel={external ? 'noopener noreferrer' : undefined}
             className="group flex flex-col h-full bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg hover:border-blue-200 hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
         >
             {resource.image ? (
