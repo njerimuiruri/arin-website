@@ -167,7 +167,7 @@ export default function ARINPressAboutPage() {
                 ══════════════════════════════════ */}
                 <section style={{
                     background: "#ffffff",
-                    padding: "22px 40px 60px",
+                    padding: "22px 40px 32px",
                     position: "relative",
                     overflow: "hidden",
                     borderBottom: "1px solid rgba(2,29,73,.07)",
@@ -187,7 +187,7 @@ export default function ARINPressAboutPage() {
                             background: "#eff6ff",
                             border: "1px solid #bfdbfe",
                             borderRadius: 99, padding: "5px 16px",
-                            marginBottom: 24,
+                            marginBottom: 16,
                             animation: "fa-fadeUp .6s ease forwards",
                         }}>
                             <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#38bdf8", animation: "fa-pulse 2s ease infinite" }} />
@@ -206,13 +206,13 @@ export default function ARINPressAboutPage() {
                         <p style={{
                             fontFamily: "'Inter', sans-serif",
                             fontSize: 15.5, color: "#64748b",
-                            lineHeight: 1.8, maxWidth: 620, marginBottom: 28,
+                            lineHeight: 1.8, maxWidth: 620, marginBottom: 18,
                             animation: "fa-fadeUp .7s .2s ease both",
                         }}>
                             The official publishing and knowledge dissemination arm of the Africa Research and Impact Network — amplifying African research voices and reshaping global and regional policy dialogue.
                         </p>
 
-                        <div style={{ marginBottom: 48, animation: "fa-fadeUp .7s .25s ease both" }}>
+                        <div style={{ marginBottom: 28, animation: "fa-fadeUp .7s .25s ease both" }}>
                             <a
                                 href="/documents/ARIN-Press-Write-up-1-1.pdf"
                                 target="_blank"
@@ -251,7 +251,7 @@ export default function ARINPressAboutPage() {
                             />
                         </div>
 
-                        <div style={{ textAlign: "center", marginTop: 40 }}>
+                        <div style={{ textAlign: "center", marginTop: 20 }}>
                             <button
                                 onClick={scrollToProducts}
                                 style={{
@@ -275,7 +275,7 @@ export default function ARINPressAboutPage() {
                 {/* ══════════════════════════════════
                     ABOUT NARRATIVE
                 ══════════════════════════════════ */}
-                <section style={{ padding: "80px 40px", background: "white", borderBottom: "1px solid rgba(2,29,73,.07)" }}>
+                <section style={{ padding: "48px 40px", background: "white", borderBottom: "1px solid rgba(2,29,73,.07)" }}>
                     <div style={{ maxWidth: 1160, margin: "0 auto", display: "grid", gridTemplateColumns: "minmax(0,1fr)", gap: 40 }}>
                         <div style={{ maxWidth: 820 }}>
                             <div style={{
@@ -284,7 +284,7 @@ export default function ARINPressAboutPage() {
                                 fontSize: 9.5, letterSpacing: ".14em", textTransform: "uppercase",
                                 color: "#021d49",
                                 background: "#eff6ff", border: "1px solid #bfdbfe",
-                                borderRadius: 99, padding: "4px 14px", marginBottom: 16,
+                                borderRadius: 99, padding: "4px 14px", marginBottom: 14,
                             }}>
                                 <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#00c4b3" }} />
                                 About
@@ -292,7 +292,7 @@ export default function ARINPressAboutPage() {
                             <h2 style={{
                                 fontFamily: "'Cormorant Garamond', Georgia, serif",
                                 fontWeight: 700, fontSize: "clamp(1.8rem, 3vw, 2.4rem)",
-                                color: "#021d49", lineHeight: 1.15, marginBottom: 24,
+                                color: "#021d49", lineHeight: 1.15, marginBottom: 18,
                             }}>
                                 A Strategic Pillar of ARIN's Vision to <em style={{ fontStyle: "italic", color: "#00c4b3" }}>Decolonise Knowledge Production</em>
                             </h2>
@@ -311,7 +311,7 @@ export default function ARINPressAboutPage() {
                 {/* ══════════════════════════════════
                     WHY IT MATTERS
                 ══════════════════════════════════ */}
-                <section style={{ padding: "80px 40px", position: "relative", overflow: "hidden" }}>
+                <section style={{ padding: "48px 40px", position: "relative", overflow: "hidden" }}>
                     <div style={{
                         position: "absolute", inset: 0,
                         backgroundImage: "repeating-linear-gradient(0deg,transparent,transparent 47px,rgba(2,29,73,.03) 47px,rgba(2,29,73,.03) 48px),repeating-linear-gradient(90deg,transparent,transparent 47px,rgba(2,29,73,.03) 47px,rgba(2,29,73,.03) 48px)",
@@ -324,7 +324,7 @@ export default function ARINPressAboutPage() {
                             fontSize: 9.5, letterSpacing: ".14em", textTransform: "uppercase",
                             color: "#021d49",
                             background: "#eff6ff", border: "1px solid #bfdbfe",
-                            borderRadius: 99, padding: "4px 14px", marginBottom: 16,
+                            borderRadius: 99, padding: "4px 14px", marginBottom: 14,
                         }}>
                             <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#00c4b3" }} />
                             Why It Matters
@@ -332,11 +332,11 @@ export default function ARINPressAboutPage() {
                         <h2 style={{
                             fontFamily: "'Cormorant Garamond', Georgia, serif",
                             fontWeight: 700, fontSize: "clamp(1.8rem, 3vw, 2.4rem)",
-                            color: "#021d49", lineHeight: 1.15, marginBottom: 24, maxWidth: 760,
+                            color: "#021d49", lineHeight: 1.15, marginBottom: 18, maxWidth: 760,
                         }}>
                             Africa's Knowledge Deserves a Global Stage
                         </h2>
-                        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 15, color: "#475569", lineHeight: 1.85, maxWidth: 760, marginBottom: 40 }}>
+                        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 15, color: "#475569", lineHeight: 1.85, maxWidth: 760, marginBottom: 28 }}>
                             <p style={{ marginBottom: 18 }}>
                                 Africa holds a vast and diverse reservoir of research, lived experiences, and practical knowledge across critical areas such as climate change, biodiversity, and sustainable development. Yet much of this knowledge remains undocumented, inaccessible, or marginalised within mainstream global discourse. ARIN Press seeks to change this narrative.
                             </p>
@@ -379,9 +379,9 @@ export default function ARINPressAboutPage() {
                 {/* ══════════════════════════════════
                     THEMATIC AREAS
                 ══════════════════════════════════ */}
-                <section style={{ padding: "80px 40px", background: "white", borderTop: "1px solid rgba(2,29,73,.07)", borderBottom: "1px solid rgba(2,29,73,.07)" }}>
+                <section style={{ padding: "48px 40px", background: "white", borderTop: "1px solid rgba(2,29,73,.07)", borderBottom: "1px solid rgba(2,29,73,.07)" }}>
                     <div style={{ maxWidth: 1160, margin: "0 auto" }}>
-                        <div style={{ marginBottom: 36, display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
+                        <div style={{ marginBottom: 24, display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
                             <div>
                                 <div style={{
                                     display: "inline-flex", alignItems: "center", gap: 7,
@@ -429,8 +429,8 @@ export default function ARINPressAboutPage() {
                 {/* ══════════════════════════════════
                     CORE KNOWLEDGE PRODUCTS
                 ══════════════════════════════════ */}
-                <div ref={productsRef} style={{ maxWidth: 1160, margin: "0 auto", padding: "80px 40px 40px" }}>
-                    <div style={{ marginBottom: 44, display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
+                <div ref={productsRef} style={{ maxWidth: 1160, margin: "0 auto", padding: "48px 40px 8px" }}>
+                    <div style={{ marginBottom: 28, display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
                         <div>
                             <div style={{
                                 display: "inline-flex", alignItems: "center", gap: 7,
@@ -466,7 +466,7 @@ export default function ARINPressAboutPage() {
                 {/* ══════════════════════════════════
                     CTA BANNER
                 ══════════════════════════════════ */}
-                <div style={{ padding: "40px 40px 96px" }}>
+                <div style={{ padding: "24px 40px 56px" }}>
                     <div style={{
                         maxWidth: 1160, margin: "0 auto",
                         background: "#021d49",
