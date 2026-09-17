@@ -29,9 +29,73 @@ function toPlainText(html: string): string {
         .trim();
 }
 
+function PaperCard({ paper }: { paper: any }) {
+    return (
+        <Link
+            href={`/press/working-papers/${String(paper._id)}`}
+            className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-[#021d49] group flex flex-col"
+        >
+            {paper.image ? (
+                <div className="relative h-48 overflow-hidden bg-[#021d49]">
+                    <img
+                        src={paper.image.startsWith('http') ? paper.image : `${API_CONFIG.BASE_URL}${paper.image}`}
+                        alt={paper.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent"></div>
+                    <div className="absolute top-4 right-4">
+                        <span className="px-3 py-1 bg-white/90 text-[#021d49] font-bold text-xs uppercase tracking-wide rounded-full shadow-lg">
+                            {paper.category || 'Working Paper'}
+                        </span>
+                    </div>
+                </div>
+            ) : (
+                <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-gray-100">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#021d49]/10 text-[#021d49] text-xs font-bold uppercase tracking-wide">
+                        <FileText className="w-3.5 h-3.5" /> {paper.category || 'Working Paper'}
+                    </span>
+                    {paper.datePosted && (
+                        <span className="inline-flex items-center gap-1 text-xs text-gray-400">
+                            <Calendar className="w-3.5 h-3.5" />
+                            {new Date(paper.datePosted).toLocaleDateString()}
+                        </span>
+                    )}
+                </div>
+            )}
+            <div className="p-6 flex flex-col grow">
+                <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#021d49] transition-colors leading-tight mb-2 line-clamp-3">
+                    {paper.title}
+                </h3>
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mb-3 text-sm text-gray-600">
+                    {paper.authors && paper.authors.length > 0 && (
+                        <span className="inline-flex items-center gap-1.5 min-w-0">
+                            <User className="w-3.5 h-3.5 text-[#021d49] shrink-0" />
+                            <span className="truncate">{paper.authors.join(', ')}</span>
+                        </span>
+                    )}
+                    {paper.image && paper.datePosted && (
+                        <span className="inline-flex items-center gap-1.5 text-gray-400 shrink-0">
+                            <Calendar className="w-3.5 h-3.5" />
+                            {new Date(paper.datePosted).toLocaleDateString()}
+                        </span>
+                    )}
+                </div>
+                <p className="mb-4 grow text-sm text-gray-600 leading-relaxed line-clamp-5">
+                    {paper.description ? toPlainText(paper.description) : <em>No description provided.</em>}
+                </p>
+                <span className="mt-auto inline-flex items-center gap-1.5 text-[#021d49] font-semibold text-sm group-hover:gap-2.5 transition-all">
+                    Read More
+                    <ArrowRight className="w-4 h-4" />
+                </span>
+            </div>
+        </Link>
+    );
+}
+
 export default function WorkingPapersPage() {
     const [papers, setPapers] = useState<any[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const [activeCategory, setActiveCategory] = useState('All');
     const [loading, setLoading] = useState(true);
     useEffect(() => {
         workingPaperSeriesService.getAll()
@@ -42,7 +106,7 @@ export default function WorkingPapersPage() {
 
     const today = new Date();
     today.setHours(23, 59, 59, 999);
-    const visiblePapers = papers
+    const filteredPapers = papers
         .filter(p => !p.datePosted || new Date(p.datePosted) <= today)
         .filter(p =>
             !searchTerm ||
@@ -55,6 +119,21 @@ export default function WorkingPapersPage() {
             const dateB = new Date(b.createdAt || b.datePosted || 0).getTime();
             return dateB - dateA;
         });
+
+    // Categories present in the filtered set, "General" always last so
+    // more specific groupings (e.g. "SDG") surface first.
+    const categories = Array.from(new Set(filteredPapers.map(p => p.category || 'General')))
+        .sort((a, b) => (a === 'General' ? 1 : 0) - (b === 'General' ? 1 : 0) || a.localeCompare(b));
+
+    const visiblePapers = activeCategory === 'All'
+        ? filteredPapers
+        : filteredPapers.filter(p => (p.category || 'General') === activeCategory);
+
+    const groupedByCategory = categories.map(category => ({
+        category,
+        items: filteredPapers.filter(p => (p.category || 'General') === category),
+    }));
+
     return (
         <>
             <Navbar />
@@ -93,69 +172,61 @@ export default function WorkingPapersPage() {
                             <p className="text-sm text-gray-500">Loading working papers…</p>
                         </div>
                     )}
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {visiblePapers.map((paper: any) => (
-                            <Link
-                                key={String(paper._id)}
-                                href={`/press/working-papers/${String(paper._id)}`}
-                                className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-[#021d49] group flex flex-col"
+
+                    {!loading && categories.length > 0 && (
+                        <div className="flex flex-wrap items-center gap-2 mb-6">
+                            <button
+                                type="button"
+                                onClick={() => setActiveCategory('All')}
+                                className={`px-4 py-1.5 rounded-full text-sm font-semibold border transition-colors ${activeCategory === 'All'
+                                    ? 'bg-[#021d49] text-white border-[#021d49]'
+                                    : 'bg-white text-gray-600 border-gray-200 hover:border-[#021d49] hover:text-[#021d49]'
+                                    }`}
                             >
-                                {paper.image ? (
-                                    <div className="relative h-48 overflow-hidden bg-[#021d49]">
-                                        <img
-                                            src={paper.image.startsWith('http') ? paper.image : `${API_CONFIG.BASE_URL}${paper.image}`}
-                                            alt={paper.title}
-                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                        />
-                                        <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent"></div>
-                                        <div className="absolute top-4 right-4">
-                                            <span className="px-3 py-1 bg-white/90 text-[#021d49] font-bold text-xs uppercase tracking-wide rounded-full shadow-lg">
-                                                Working Paper
-                                            </span>
-                                        </div>
+                                All ({filteredPapers.length})
+                            </button>
+                            {categories.map(category => {
+                                const count = filteredPapers.filter(p => (p.category || 'General') === category).length;
+                                return (
+                                    <button
+                                        key={category}
+                                        type="button"
+                                        onClick={() => setActiveCategory(category)}
+                                        className={`px-4 py-1.5 rounded-full text-sm font-semibold border transition-colors ${activeCategory === category
+                                            ? 'bg-[#021d49] text-white border-[#021d49]'
+                                            : 'bg-white text-gray-600 border-gray-200 hover:border-[#021d49] hover:text-[#021d49]'
+                                            }`}
+                                    >
+                                        {category} ({count})
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    )}
+
+                    {!loading && activeCategory === 'All' ? (
+                        groupedByCategory.map(({ category, items }) => (
+                            items.length > 0 && (
+                                <div key={category} className="mb-10">
+                                    <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                        {category} Papers
+                                        <span className="text-sm font-normal text-gray-400">({items.length})</span>
+                                    </h2>
+                                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                        {items.map((paper: any) => (
+                                            <PaperCard key={String(paper._id)} paper={paper} />
+                                        ))}
                                     </div>
-                                ) : (
-                                    <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-gray-100">
-                                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#021d49]/10 text-[#021d49] text-xs font-bold uppercase tracking-wide">
-                                            <FileText className="w-3.5 h-3.5" /> Working Paper
-                                        </span>
-                                        {paper.datePosted && (
-                                            <span className="inline-flex items-center gap-1 text-xs text-gray-400">
-                                                <Calendar className="w-3.5 h-3.5" />
-                                                {new Date(paper.datePosted).toLocaleDateString()}
-                                            </span>
-                                        )}
-                                    </div>
-                                )}
-                                <div className="p-6 flex flex-col flex-grow">
-                                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#021d49] transition-colors leading-tight mb-2 line-clamp-3">
-                                        {paper.title}
-                                    </h3>
-                                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mb-3 text-sm text-gray-600">
-                                        {paper.authors && paper.authors.length > 0 && (
-                                            <span className="inline-flex items-center gap-1.5 min-w-0">
-                                                <User className="w-3.5 h-3.5 text-[#021d49] shrink-0" />
-                                                <span className="truncate">{paper.authors.join(', ')}</span>
-                                            </span>
-                                        )}
-                                        {paper.image && paper.datePosted && (
-                                            <span className="inline-flex items-center gap-1.5 text-gray-400 shrink-0">
-                                                <Calendar className="w-3.5 h-3.5" />
-                                                {new Date(paper.datePosted).toLocaleDateString()}
-                                            </span>
-                                        )}
-                                    </div>
-                                    <p className="mb-4 grow text-sm text-gray-600 leading-relaxed line-clamp-5">
-                                        {paper.description ? toPlainText(paper.description) : <em>No description provided.</em>}
-                                    </p>
-                                    <span className="mt-auto inline-flex items-center gap-1.5 text-[#021d49] font-semibold text-sm group-hover:gap-2.5 transition-all">
-                                        Read More
-                                        <ArrowRight className="w-4 h-4" />
-                                    </span>
                                 </div>
-                            </Link>
-                        ))}
-                    </div>
+                            )
+                        ))
+                    ) : (
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {visiblePapers.map((paper: any) => (
+                                <PaperCard key={String(paper._id)} paper={paper} />
+                            ))}
+                        </div>
+                    )}
 
                     {/* No Results Message */}
                     {!loading && visiblePapers.length === 0 && (
