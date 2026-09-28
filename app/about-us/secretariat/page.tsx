@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { X, BookOpen, Users, ArrowUpRight, Briefcase, Star } from "lucide-react";
+import { X, BookOpen, Users, ArrowRight, Briefcase } from "lucide-react";
 import { getTeamMembers } from "@/services/teamsService";
 import Navbar from "@/app/navbar/Navbar";
 import Footer from "@/app/footer/Footer";
@@ -59,294 +59,80 @@ const imgSrc = (image?: string) =>
 const fallback = (name: string) =>
     `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=021d49&color=ffffff&size=400`;
 
+// Bio is stored as HTML; flatten it to plain text for the short preview on the ED feature
+const bioPreview = (bio?: string) =>
+    (bio || "")
+        .replace(/<[^>]+>/g, " ")
+        .replace(/&nbsp;/g, " ")
+        .replace(/&amp;/g, "&")
+        .replace(/&#39;|&apos;/g, "'")
+        .replace(/&quot;/g, '"')
+        .replace(/\s+/g, " ")
+        .trim();
+
 /* ─────────────────────────────────────────────
-   TEAM CARD  — bigger, fixed proportions so every
-   card in the grid reads as the same size, regardless
-   of name length or role length.
+   TEAM CARD  — simple photo + name + role tile
 ───────────────────────────────────────────── */
 function TeamCard({
     member,
-    index,
     onClick,
 }: {
     member: SecretariatMember;
-    index: number;
     onClick: () => void;
 }) {
-    const [hovered, setHovered] = useState(false);
     const name = `${member.firstName} ${member.lastName}`;
 
     return (
-        <div style={{ position: "relative", width: "100%", maxWidth: 270, height: "100%" }}>
-            {/* Slight decorative "peek" card behind — a small brand-gradient edge
-                shows past the corner, a light art touch without being loud. */}
-            <div style={{
-                position: "absolute",
-                inset: 0,
-                borderRadius: 22,
-                background: "linear-gradient(135deg, #021d49, #00c4b3)",
-                transform: hovered ? "translate(9px, 9px)" : "translate(6px, 6px)",
-                transition: "transform .32s cubic-bezier(.22,1,.36,1)",
-            }} />
-
-            <div
-                onClick={onClick}
-                onMouseEnter={() => setHovered(true)}
-                onMouseLeave={() => setHovered(false)}
-                style={{
-                    position: "relative",
-                    zIndex: 1,
-                    width: "100%",
-                    height: "100%",
-                    borderRadius: 22,
-                    overflow: "hidden",
-                    cursor: "pointer",
-                    background: "white",
-                    boxShadow: hovered
-                        ? "0 26px 56px rgba(2,29,73,.18), 0 0 0 1px rgba(0,196,179,.28)"
-                        : "0 4px 20px rgba(2,29,73,.08), 0 0 0 1px rgba(2,29,73,.06)",
-                    transform: hovered ? "translateY(-7px)" : "translateY(0)",
-                    transition: "all .32s cubic-bezier(.22,1,.36,1)",
-                    display: "flex",
-                    flexDirection: "column",
-                    animation: "tm-slideUp .5s cubic-bezier(.22,1,.36,1) both",
-                    animationDelay: `${Math.min(index, 8) * 0.06}s`,
-                }}
-            >
-                {/* Photo — fixed portrait ratio so every card matches, and bigger than before */}
-                <div style={{
-                    position: "relative",
-                    width: "100%",
-                    aspectRatio: "4 / 5",
-                    overflow: "hidden",
-                    flexShrink: 0,
-                    background: "#e8edf5",
-                }}>
-                    <img
-                        src={imgSrc(member.image) || fallback(name)}
-                        alt={name}
-                        onError={e => {
-                            (e.currentTarget as HTMLImageElement).src = fallback(name);
-                        }}
-                        style={{
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "cover",
-                            objectPosition: "center top",
-                            transform: hovered ? "scale(1.05)" : "scale(1)",
-                            transition: "transform .5s ease",
-                            display: "block",
-                        }}
-                    />
-                    {/* soft bottom fade so the info panel feels connected to the photo */}
-                    <div style={{
-                        position: "absolute", left: 0, right: 0, bottom: 0, height: 56,
-                        background: "linear-gradient(to top, rgba(2,10,30,.2), transparent)",
-                        pointerEvents: "none",
-                    }} />
-                </div>
-
-                {/* Info strip — fixed heights so name/role blocks line up card to card */}
-                <div style={{
-                    position: "relative",
-                    padding: "18px 20px 20px",
-                    flex: 1,
-                    display: "flex",
-                    flexDirection: "column",
-                }}>
-                    {/* faint corner dot-grid, echoing the page's decorative art */}
-                    <div style={{
-                        position: "absolute", top: 14, right: 16,
-                        width: 22, height: 22,
-                        backgroundImage: "radial-gradient(rgba(2,29,73,.16) 1.2px, transparent 1.2px)",
-                        backgroundSize: "7px 7px",
-                        pointerEvents: "none",
-                    }} />
-
-                    <div style={{
-                        height: 3,
-                        width: hovered ? "100%" : 36,
-                        background: "linear-gradient(to right, #021d49, #00c4b3)",
-                        borderRadius: 2,
-                        marginBottom: 12,
-                        transition: "width .35s ease",
-                    }} />
-
-                    <div style={{
-                        fontFamily: "'Playfair Display', Georgia, serif",
-                        fontWeight: 700,
-                        fontSize: "1.05rem",
-                        color: "#021d49",
-                        lineHeight: 1.3,
-                        minHeight: "2.6em",
-                        display: "-webkit-box",
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: "vertical",
-                        overflow: "hidden",
-                        marginBottom: 8,
-                    }}>
-                        {name}
-                    </div>
-
-                    <div style={{
-                        display: "inline-flex",
-                        alignSelf: "flex-start",
-                        alignItems: "center",
-                        fontFamily: "'Inter', sans-serif",
-                        fontSize: 10,
-                        fontWeight: 600,
-                        color: "#00a896",
-                        background: "rgba(0,196,179,.1)",
-                        letterSpacing: ".04em",
-                        textTransform: "uppercase",
-                        padding: "4px 10px",
-                        borderRadius: 99,
-                        marginBottom: 16,
-                        minHeight: "1.4em",
-                        lineHeight: 1.4,
-                    }}>
-                        {member.role}
-                    </div>
-
-                    <button style={{
-                        marginTop: "auto",
-                        alignSelf: "flex-start",
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 5,
-                        padding: "8px 15px",
-                        borderRadius: 99,
-                        background: hovered ? "#021d49" : "transparent",
-                        border: "1.5px solid rgba(2,29,73,.2)",
-                        color: hovered ? "white" : "#021d49",
-                        fontFamily: "'Inter', sans-serif",
-                        fontWeight: 600,
-                        fontSize: 11,
-                        cursor: "pointer",
-                        transition: "all .25s ease",
-                        whiteSpace: "nowrap",
-                    }}>
-                        View Bio <ArrowUpRight size={11} />
-                    </button>
+        <button type="button" onClick={onClick} className="sec-card">
+            <div className="sec-card-photo">
+                <img
+                    src={imgSrc(member.image) || fallback(name)}
+                    alt={name}
+                    onError={e => { (e.currentTarget as HTMLImageElement).src = fallback(name); }}
+                />
+            </div>
+            <div className="sec-card-body">
+                <div className="sec-card-name">{name}</div>
+                <div className="sec-card-role">{member.role}</div>
+                <div className="sec-card-link">
+                    View bio <ArrowRight size={13} />
                 </div>
             </div>
-        </div>
+        </button>
     );
 }
 
 /* ─────────────────────────────────────────────
-   LEADER SPOTLIGHT CARD  — reserved for the
-   Executive Director category: bigger, centred,
-   circular portrait treatment so leadership reads
-   as a deliberate spotlight rather than just
-   another grid tile.
+   EXECUTIVE DIRECTOR FEATURE  — large photo beside
+   name, role and a bio preview so leadership is the
+   first thing visitors see.
 ───────────────────────────────────────────── */
-function LeaderCard({
+function LeaderFeature({
     member,
     onClick,
 }: {
     member: SecretariatMember;
     onClick: () => void;
 }) {
-    const [hovered, setHovered] = useState(false);
     const name = `${member.firstName} ${member.lastName}`;
+    const preview = bioPreview(member.bio);
 
     return (
-        <div
-            onClick={onClick}
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
-            style={{
-                position: "relative",
-                width: "100%",
-                maxWidth: 460,
-                cursor: "pointer",
-                background: "white",
-                borderRadius: 28,
-                padding: "40px 40px 32px",
-                textAlign: "center",
-                boxShadow: hovered
-                    ? "0 30px 70px rgba(2,29,73,.2), 0 0 0 1px rgba(0,196,179,.3)"
-                    : "0 10px 40px rgba(2,29,73,.1), 0 0 0 1px rgba(2,29,73,.06)",
-                transform: hovered ? "translateY(-6px)" : "translateY(0)",
-                transition: "all .35s cubic-bezier(.22,1,.36,1)",
-                animation: "tm-slideUp .55s cubic-bezier(.22,1,.36,1) both",
-            }}
-        >
-            {/* Star badge */}
-            <div style={{
-                position: "absolute", top: 22, right: 22,
-                width: 30, height: 30, borderRadius: "50%",
-                background: "rgba(0,196,179,.12)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-            }}>
-                <Star size={13} style={{ color: "#00a896" }} fill="#00a896" />
+        <div className="sec-leader">
+            <div className="sec-leader-photo">
+                <img
+                    src={imgSrc(member.image) || fallback(name)}
+                    alt={name}
+                    onError={e => { (e.currentTarget as HTMLImageElement).src = fallback(name); }}
+                />
             </div>
-
-            {/* Circular portrait with gradient ring */}
-            <div style={{
-                width: 168, height: 168, margin: "0 auto 20px",
-                borderRadius: "50%",
-                padding: 5,
-                background: "linear-gradient(135deg, #021d49, #00c4b3)",
-            }}>
-                <div style={{
-                    width: "100%", height: "100%", borderRadius: "50%",
-                    overflow: "hidden", background: "#e8edf5",
-                    border: "4px solid white",
-                }}>
-                    <img
-                        src={imgSrc(member.image) || fallback(name)}
-                        alt={name}
-                        onError={e => { (e.currentTarget as HTMLImageElement).src = fallback(name); }}
-                        style={{
-                            width: "100%", height: "100%",
-                            objectFit: "cover", objectPosition: "center top",
-                            transform: hovered ? "scale(1.06)" : "scale(1)",
-                            transition: "transform .5s ease",
-                            display: "block",
-                        }}
-                    />
-                </div>
-            </div>
-
-            <div style={{
-                fontFamily: "'Playfair Display', Georgia, serif",
-                fontWeight: 700, fontSize: "1.5rem",
-                color: "#021d49", lineHeight: 1.25, marginBottom: 10,
-            }}>
-                {name}
-            </div>
-
-            <div style={{
-                display: "inline-flex", alignItems: "center",
-                fontFamily: "'Inter', sans-serif",
-                fontSize: 11.5, fontWeight: 600,
-                color: "#00a896", background: "rgba(0,196,179,.1)",
-                letterSpacing: ".06em", textTransform: "uppercase",
-                padding: "6px 16px", borderRadius: 99, marginBottom: 22,
-            }}>
-                {member.role}
-            </div>
-
-            <div>
-                <button style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 6,
-                    padding: "10px 22px",
-                    borderRadius: 99,
-                    background: hovered ? "#021d49" : "rgba(2,29,73,.06)",
-                    border: "1.5px solid rgba(2,29,73,.2)",
-                    color: hovered ? "white" : "#021d49",
-                    fontFamily: "'Inter', sans-serif",
-                    fontWeight: 600,
-                    fontSize: 12.5,
-                    cursor: "pointer",
-                    transition: "all .25s ease",
-                    whiteSpace: "nowrap",
-                }}>
-                    View Bio <ArrowUpRight size={13} />
+            <div className="sec-leader-body">
+                <div className="sec-eyebrow">Executive Director</div>
+                <h2 className="sec-leader-name">{name}</h2>
+                <div className="sec-leader-role">{member.role}</div>
+                {preview && <p className="sec-leader-bio">{preview}</p>}
+                <button type="button" onClick={onClick} className="sec-leader-btn">
+                    Read full bio <ArrowRight size={15} />
                 </button>
             </div>
         </div>
@@ -372,8 +158,8 @@ function BioModal({
             style={{
                 position: "fixed", inset: 0, zIndex: 1000,
                 background: "rgba(2,10,30,.65)",
-                backdropFilter: "blur(14px)",
-                WebkitBackdropFilter: "blur(14px)",
+                backdropFilter: "blur(10px)",
+                WebkitBackdropFilter: "blur(10px)",
                 display: "flex", alignItems: "center", justifyContent: "center",
                 padding: "20px 16px",
                 animation: "tm-fadeIn .2s ease",
@@ -381,21 +167,20 @@ function BioModal({
         >
             <div
                 onClick={e => e.stopPropagation()}
+                className="sec-modal"
                 style={{
                     background: "white",
-                    borderRadius: 26,
-                    maxWidth: 920, width: "100%",
+                    borderRadius: 16,
+                    maxWidth: 900, width: "100%",
                     maxHeight: "88vh",
                     boxShadow: "0 40px 120px rgba(2,29,73,.32)",
                     animation: "tm-slideUp .3s cubic-bezier(.22,1,.36,1)",
                     display: "flex",
-                    flexDirection: "row",
                     overflow: "hidden",
                 }}
             >
                 {/* ── Left: portrait photo, with name/role captioned on the image ── */}
-                <div style={{
-                    width: 320,
+                <div className="sec-modal-photo" style={{
                     flexShrink: 0,
                     position: "relative",
                     background: "#021d49",
@@ -413,41 +198,31 @@ function BioModal({
                             display: "block",
                         }}
                     />
-                    {/* legibility gradient behind the caption */}
                     <div style={{
                         position: "absolute", inset: 0,
-                        background: "linear-gradient(to top, rgba(2,8,30,.92) 0%, rgba(2,8,30,.15) 42%, transparent 62%)",
+                        background: "linear-gradient(to top, rgba(2,8,30,.9) 0%, rgba(2,8,30,.1) 45%, transparent 65%)",
                         pointerEvents: "none",
                     }} />
-                    {/* faint dot-grid, matching the page's decorative language */}
-                    <div style={{
-                        position: "absolute", top: 20, left: 20,
-                        width: 70, height: 70,
-                        backgroundImage: "radial-gradient(rgba(255,255,255,.35) 1.5px, transparent 1.5px)",
-                        backgroundSize: "12px 12px",
-                        pointerEvents: "none",
-                    }} />
-                    {/* Caption */}
-                    <div style={{ position: "absolute", left: 24, right: 24, bottom: 26 }}>
+                    <div style={{ position: "absolute", left: 22, right: 22, bottom: 22 }}>
                         <div style={{
                             display: "inline-flex", alignItems: "center", gap: 5,
                             padding: "4px 11px", borderRadius: 99,
                             background: "rgba(0,196,179,.18)",
                             border: "1px solid rgba(0,196,179,.4)",
-                            marginBottom: 12,
+                            marginBottom: 10,
                         }}>
                             <Briefcase size={10} style={{ color: "#5fe8d8" }} />
                             <span style={{
                                 fontFamily: "'Inter', sans-serif",
-                                fontSize: 9.5, color: "#5fe8d8",
-                                letterSpacing: ".07em", textTransform: "uppercase",
+                                fontSize: 10, color: "#5fe8d8",
+                                letterSpacing: ".06em", textTransform: "uppercase",
                             }}>
                                 {member.role}
                             </span>
                         </div>
                         <h2 style={{
                             fontFamily: "'Playfair Display', Georgia, serif",
-                            fontWeight: 700, fontSize: "1.55rem",
+                            fontWeight: 700, fontSize: "1.5rem",
                             color: "white", lineHeight: 1.2, margin: 0,
                         }}>
                             {name}
@@ -458,33 +233,27 @@ function BioModal({
                 {/* ── Right: bio ── */}
                 <div style={{
                     flex: 1,
-                    display: "flex",
-                    flexDirection: "column",
                     overflowY: "auto",
                     position: "relative",
                 }}>
-                    {/* Close button */}
                     <button
                         onClick={onClose}
+                        aria-label="Close"
                         style={{
-                            position: "absolute", top: 18, right: 18, zIndex: 2,
+                            position: "absolute", top: 16, right: 16, zIndex: 2,
                             width: 36, height: 36, borderRadius: "50%",
-                            background: "rgba(2,29,73,.06)",
-                            border: "1px solid rgba(2,29,73,.12)",
+                            background: "#f1f4f9",
+                            border: "1px solid rgba(2,29,73,.1)",
                             display: "flex", alignItems: "center", justifyContent: "center",
                             cursor: "pointer", color: "#021d49",
-                            transition: "background .2s ease",
                         }}
                     >
                         <X size={15} />
                     </button>
 
-                    {/* Bio */}
-                    <div style={{ padding: "34px 32px 32px", flex: 1 }}>
-                        <div style={{
-                            display: "flex", alignItems: "center", gap: 9, marginBottom: 16,
-                        }}>
-                            <BookOpen size={16} style={{ color: "#00c4b3" }} />
+                    <div style={{ padding: "32px 30px" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 18 }}>
+                            <BookOpen size={16} style={{ color: "#00a896" }} />
                             <span style={{
                                 fontFamily: "'Playfair Display', Georgia, serif",
                                 fontWeight: 700, fontSize: "1.1rem", color: "#021d49",
@@ -492,15 +261,10 @@ function BioModal({
                                 Biography
                             </span>
                         </div>
-                        <div style={{
-                            height: 2, width: 40, marginBottom: 20,
-                            background: "linear-gradient(to right, #021d49, #00c4b3)",
-                            borderRadius: 2,
-                        }} />
                         <div
                             style={{
                                 fontFamily: "'Inter', sans-serif",
-                                fontSize: 14, color: "#475569", lineHeight: 1.85,
+                                fontSize: 14.5, color: "#475569", lineHeight: 1.8,
                             }}
                             dangerouslySetInnerHTML={{
                                 __html: member.bio || '<p style="color:#94a3b8;font-style:italic">No biography available.</p>',
@@ -548,96 +312,163 @@ const SecretariatPage = () => {
         if (!grouped[cat]) grouped[cat] = [];
         grouped[cat].push(m);
     });
-    const orderedKeys = CATEGORY_ORDER.filter(c => grouped[c]);
+    const leaders = grouped["Executive Director"] || [];
+    const teamKeys = CATEGORY_ORDER.filter(c => c !== "Executive Director" && grouped[c]);
 
     return (
         <>
             <Navbar />
 
-            <style jsx>{`
-                .sec-card-grid {
+            <style jsx global>{`
+                .sec-wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+                /* ── ED feature ── */
+                .sec-leader {
+                    display: grid;
+                    grid-template-columns: 380px 1fr;
+                    background: white;
+                    border-radius: 16px;
+                    overflow: hidden;
+                    box-shadow: 0 10px 40px rgba(2,29,73,.08);
+                    border: 1px solid #e6eaf1;
+                    animation: tm-slideUp .5s cubic-bezier(.22,1,.36,1) both;
+                }
+                .sec-leader + .sec-leader { margin-top: 24px; }
+                .sec-leader-photo { background: #e8edf5; aspect-ratio: 4 / 5; }
+                .sec-leader-photo img {
+                    width: 100%; height: 100%; display: block;
+                    object-fit: cover; object-position: center top;
+                }
+                .sec-leader-body {
+                    padding: 44px 48px;
+                    display: flex; flex-direction: column; justify-content: center;
+                }
+                .sec-eyebrow {
+                    font-family: 'Inter', sans-serif;
+                    font-size: 12px; font-weight: 600;
+                    letter-spacing: .12em; text-transform: uppercase;
+                    color: #00a896; margin-bottom: 12px;
+                }
+                .sec-leader-name {
+                    font-family: 'Playfair Display', Georgia, serif;
+                    font-weight: 700; font-size: clamp(1.8rem, 3.2vw, 2.5rem);
+                    color: #021d49; line-height: 1.15; margin: 0 0 8px;
+                }
+                .sec-leader-role {
+                    font-family: 'Inter', sans-serif;
+                    font-size: 15px; color: #64748b; margin-bottom: 22px;
+                }
+                .sec-leader-bio {
+                    font-family: 'Inter', sans-serif;
+                    font-size: 15px; color: #475569; line-height: 1.75;
+                    margin: 0 0 28px;
+                    display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical;
+                    overflow: hidden;
+                }
+                .sec-leader-btn {
+                    align-self: flex-start;
+                    display: inline-flex; align-items: center; gap: 8px;
+                    padding: 12px 24px; border-radius: 99px; border: none;
+                    background: #021d49; color: white; cursor: pointer;
+                    font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px;
+                    transition: background .2s ease;
+                }
+                .sec-leader-btn:hover { background: #00a896; }
+
+                /* ── Section headings ── */
+                .sec-section { margin-top: 64px; }
+                .sec-section-head {
+                    display: flex; align-items: baseline; gap: 10px;
+                    padding-bottom: 14px; margin-bottom: 28px;
+                    border-bottom: 1px solid #e2e8f0;
+                }
+                .sec-section-head h2 {
+                    font-family: 'Playfair Display', Georgia, serif;
+                    font-weight: 700; font-size: 1.5rem; color: #021d49; margin: 0;
+                }
+                .sec-section-head span {
+                    font-family: 'Inter', sans-serif; font-size: 13px; color: #94a3b8;
+                }
+
+                /* ── Team grid + cards ── */
+                .sec-grid {
                     display: grid;
                     grid-template-columns: repeat(4, 1fr);
                     gap: 24px;
                 }
-                @media (max-width: 980px) {
-                    .sec-card-grid {
-                        grid-template-columns: repeat(2, 1fr);
-                    }
+                .sec-card {
+                    display: flex; flex-direction: column;
+                    text-align: left; padding: 0; cursor: pointer;
+                    background: white; border: 1px solid #e6eaf1;
+                    border-radius: 12px; overflow: hidden;
+                    transition: transform .25s ease, box-shadow .25s ease;
+                    animation: tm-slideUp .45s cubic-bezier(.22,1,.36,1) both;
                 }
-                @media (max-width: 520px) {
-                    .sec-card-grid {
-                        grid-template-columns: 1fr;
-                    }
+                .sec-card:hover {
+                    transform: translateY(-4px);
+                    box-shadow: 0 16px 36px rgba(2,29,73,.12);
+                }
+                .sec-card-photo { aspect-ratio: 4 / 5; background: #e8edf5; overflow: hidden; }
+                .sec-card-photo img {
+                    width: 100%; height: 100%; display: block;
+                    object-fit: cover; object-position: center top;
+                    transition: transform .4s ease;
+                }
+                .sec-card:hover .sec-card-photo img { transform: scale(1.04); }
+                .sec-card-body { padding: 16px 18px 18px; display: flex; flex-direction: column; flex: 1; }
+                .sec-card-name {
+                    font-family: 'Playfair Display', Georgia, serif;
+                    font-weight: 700; font-size: 1.05rem; color: #021d49;
+                    line-height: 1.3; margin-bottom: 4px;
+                }
+                .sec-card-role {
+                    font-family: 'Inter', sans-serif;
+                    font-size: 13px; color: #64748b; line-height: 1.45;
+                    margin-bottom: 14px;
+                }
+                .sec-card-link {
+                    margin-top: auto;
+                    display: inline-flex; align-items: center; gap: 5px;
+                    font-family: 'Inter', sans-serif; font-weight: 600; font-size: 13px;
+                    color: #00a896;
+                }
+
+                /* ── Modal ── */
+                .sec-modal { flex-direction: row; }
+                .sec-modal-photo { width: 320px; }
+
+                @media (max-width: 1024px) {
+                    .sec-grid { grid-template-columns: repeat(3, 1fr); }
+                }
+                @media (max-width: 820px) {
+                    .sec-leader { grid-template-columns: 1fr; }
+                    .sec-leader-photo { aspect-ratio: 1 / 1; max-height: 420px; }
+                    .sec-leader-body { padding: 28px 24px 32px; }
+                    .sec-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+                    .sec-modal { flex-direction: column; overflow-y: auto !important; }
+                    .sec-modal-photo { width: 100%; height: 320px; }
+                }
+                @media (max-width: 420px) {
+                    .sec-grid { grid-template-columns: 1fr; }
                 }
             `}</style>
 
-            <div style={{
-                background: "#f8faff",
-                backgroundImage: "radial-gradient(rgba(2,29,73,.06) 1px, transparent 1px)",
-                backgroundSize: "26px 26px",
-                minHeight: "100vh",
-                paddingBottom: 100,
-            }}>
+            <div style={{ background: "#f7f9fc", minHeight: "100vh", paddingBottom: 100 }}>
 
-                {/* ── Hero header ── */}
-                <div style={{
-                    background: "linear-gradient(135deg, #021d49 0%, #043166 100%)",
-                    padding: "60px 40px 68px",
-                    position: "relative",
-                    overflow: "hidden",
-                }}>
-                    {/* decorative glow */}
-                    <div style={{
-                        position: "absolute", top: -80, right: -60,
-                        width: 320, height: 320, borderRadius: "50%",
-                        background: "radial-gradient(circle, rgba(0,196,179,.22) 0%, transparent 70%)",
-                        pointerEvents: "none",
-                    }} />
-                    {/* decorative ring + dot-grid, echoing the homepage hero's art */}
-                    <div style={{
-                        position: "absolute", top: -60, right: 40,
-                        width: 220, height: 220, borderRadius: "50%",
-                        border: "1px solid rgba(255,255,255,.12)",
-                        pointerEvents: "none",
-                    }} className="hidden md:block" />
-                    <div style={{
-                        position: "absolute", bottom: 18, right: 90,
-                        width: 96, height: 96,
-                        backgroundImage: "radial-gradient(rgba(255,255,255,.3) 1.5px, transparent 1.5px)",
-                        backgroundSize: "14px 14px",
-                        pointerEvents: "none",
-                    }} className="hidden lg:block" />
-                    <div style={{
-                        position: "absolute", top: 30, left: "42%",
-                        width: 10, height: 10, borderRadius: "50%",
-                        background: "rgba(0,196,179,.5)",
-                        pointerEvents: "none",
-                    }} className="hidden lg:block" />
-                    <div style={{ maxWidth: 1200, margin: "0 auto", position: "relative" }}>
-                        <div style={{
-                            display: "inline-flex", alignItems: "center", gap: 7,
-                            fontFamily: "'Space Mono', monospace",
-                            fontSize: 10, letterSpacing: ".14em", textTransform: "uppercase",
-                            color: "#e0f7f4", background: "rgba(255,255,255,.08)",
-                            border: "1px solid rgba(255,255,255,.18)",
-                            borderRadius: 99, padding: "5px 14px", marginBottom: 18,
-                        }}>
-                            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#00c4b3" }} />
-                            Our People
-                        </div>
+                {/* ── Header ── */}
+                <div style={{ background: "#021d49", padding: "28px 0" }}>
+                    <div className="sec-wrap">
                         <h1 style={{
                             fontFamily: "'Playfair Display', Georgia, serif",
-                            fontWeight: 700, fontSize: "clamp(1.9rem, 4vw, 2.8rem)",
-                            color: "white", lineHeight: 1.15, margin: "0 0 12px",
-                            maxWidth: 640,
+                            fontWeight: 700, fontSize: "clamp(1.5rem, 3vw, 2rem)",
+                            color: "white", lineHeight: 1.2, margin: "0 0 6px",
                         }}>
-                            Meet the <em style={{ fontStyle: "italic", color: "#00c4b3" }}>ARIN Team</em>
+                            Meet the ARIN Team
                         </h1>
                         <p style={{
                             fontFamily: "'Inter', sans-serif",
-                            fontSize: 14.5, color: "rgba(255,255,255,.72)",
-                            lineHeight: 1.7, maxWidth: 560, margin: 0,
+                            fontSize: 14, color: "rgba(255,255,255,.75)",
+                            lineHeight: 1.6, margin: 0,
                         }}>
                             The leadership, staff, and fellows driving ARIN&apos;s mission across the continent.
                         </p>
@@ -670,102 +501,42 @@ const SecretariatPage = () => {
                     </div>
                 )}
 
-                {/* ── Categories ── */}
-                {!loading && allMembers.length > 0 && orderedKeys.map((category, idx) => {
-                    const isLeadership = category === "Executive Director";
-                    return (
-                        <div key={category} style={{ maxWidth: 1200, margin: `${idx === 0 ? "48px" : "56px"} auto 0`, padding: "0 40px", position: "relative", overflow: isLeadership ? "hidden" : "visible" }}>
+                {!loading && allMembers.length > 0 && (
+                    <div className="sec-wrap">
 
-                            {/* Decorative art tucked behind the leadership spotlight */}
-                            {isLeadership && (
-                                <>
-                                    <div style={{
-                                        position: "absolute", top: -60, left: "50%", transform: "translateX(-50%)",
-                                        width: 520, height: 320, borderRadius: "50%",
-                                        background: "radial-gradient(ellipse, rgba(0,196,179,.14) 0%, transparent 70%)",
-                                        pointerEvents: "none",
-                                    }} />
-                                    <div style={{
-                                        position: "absolute", top: 30, right: "8%",
-                                        width: 90, height: 90,
-                                        backgroundImage: "radial-gradient(rgba(2,29,73,.14) 1.5px, transparent 1.5px)",
-                                        backgroundSize: "13px 13px",
-                                        pointerEvents: "none",
-                                    }} className="hidden md:block" />
-                                    <div style={{
-                                        position: "absolute", bottom: 10, left: "6%",
-                                        width: 130, height: 130, borderRadius: "50%",
-                                        border: "1px solid rgba(2,29,73,.1)",
-                                        pointerEvents: "none",
-                                    }} className="hidden md:block" />
-                                </>
-                            )}
-
-                            {/* Category heading */}
-                            <div style={{
-                                display: "flex", alignItems: "center", gap: 12,
-                                marginBottom: 28,
-                                justifyContent: isLeadership ? "center" : "flex-start",
-                                position: "relative",
-                            }}>
-                                <h2 style={{
-                                    fontFamily: "'Playfair Display', Georgia, serif",
-                                    fontWeight: 700, fontSize: "1.3rem",
-                                    color: "#021d49", margin: 0, whiteSpace: "nowrap",
-                                }}>
-                                    {CATEGORY_LABELS[category] ?? category}
-                                </h2>
-                                <span style={{
-                                    fontFamily: "'Inter', sans-serif",
-                                    fontSize: 11, fontWeight: 600, color: "#00a896",
-                                    background: "rgba(0,196,179,.1)",
-                                    borderRadius: 99, padding: "3px 10px", flexShrink: 0,
-                                }}>
-                                    {grouped[category].length}
-                                </span>
-                                {!isLeadership && (
-                                    <div style={{
-                                        height: 1, flex: 1,
-                                        background: "linear-gradient(to right, rgba(2,29,73,.18), transparent)",
-                                    }} />
-                                )}
+                        {/* ── Executive Director feature ── */}
+                        {leaders.length > 0 && (
+                            <div style={{ marginTop: 48 }}>
+                                {leaders.map(member => (
+                                    <LeaderFeature
+                                        key={member._id}
+                                        member={member}
+                                        onClick={() => setSelectedMember(member)}
+                                    />
+                                ))}
                             </div>
+                        )}
 
-                            {isLeadership ? (
-                                /* Leadership gets a centred spotlight treatment instead of a grid tile */
-                                <div style={{
-                                    display: "flex",
-                                    flexWrap: "wrap",
-                                    justifyContent: "center",
-                                    gap: 32,
-                                    position: "relative",
-                                }}>
-                                    {grouped[category].map(member => (
-                                        <LeaderCard
-                                            key={member._id}
-                                            member={member}
-                                            onClick={() => setSelectedMember(member)}
-                                        />
-                                    ))}
+                        {/* ── Remaining categories ── */}
+                        {teamKeys.map(category => (
+                            <section key={category} className="sec-section">
+                                <div className="sec-section-head">
+                                    <h2>{CATEGORY_LABELS[category] ?? category}</h2>
+                                    <span>{grouped[category].length}</span>
                                 </div>
-                            ) : (
-                                /* Cards — a fixed 4-column grid (not viewport-dependent auto-fit),
-                                   stepping down to 2 then 1 column on smaller screens. */
-                                <div className="sec-card-grid">
-                                    {grouped[category].map((member, i) => (
+                                <div className="sec-grid">
+                                    {grouped[category].map(member => (
                                         <TeamCard
                                             key={member._id}
                                             member={member}
-                                            index={i}
                                             onClick={() => setSelectedMember(member)}
                                         />
                                     ))}
                                 </div>
-                            )}
-
-                        </div>
-                    );
-                })}
+                            </section>
+                        ))}
+                    </div>
+                )}
             </div>
 
             {/* Bio modal */}
