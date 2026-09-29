@@ -1,3 +1,5 @@
+// Rendered per request so the daily hero rotation (and latest content) stays current.
+export const dynamic = "force-dynamic";
 
 import Navbar from "./navbar/Navbar";
 import Footer from "./footer/Footer";

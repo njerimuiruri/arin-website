@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 export const revalidate = 3600;
 
-import HeroTopSection from "./sections/HeroTopSection";
+import DailyHero from "./sections/DailyHero";
 import PartnersSection from "./sections/PartnersSection";
 import LatestFromArinSection from "./sections/LatestFromArinSection";
 import CTASection from "./sections/CTASection";
@@ -48,7 +48,7 @@ export default async function HeroSection() {
 
     return (
         <div className="w-full bg-gradient-to-br from-slate-50 via-white to-stone-50">
-            <HeroTopSection />
+            <DailyHero />
             <AboutSection />
             <StrategicPlanSection />
 
