@@ -87,7 +87,7 @@ export default function BlogDetailPage() {
                             <button onClick={() => setImageModalOpen(false)} className="absolute -top-12 right-0 bg-white/20 hover:bg-white/40 text-white rounded-full p-2.5 transition-colors">
                                 <X className="w-5 h-5" />
                             </button>
-                            <img src={blog.image} alt={blog.title} className="w-full h-auto max-h-[85vh] object-contain rounded-xl shadow-2xl" />
+                            <img src={resolveResourceUrl(blog.image)} alt={blog.title} className="w-full h-auto max-h-[85vh] object-contain rounded-xl shadow-2xl" />
                             <p className="text-white/60 text-xs text-center mt-3">Click outside to close</p>
                         </div>
                     </div>
@@ -98,7 +98,7 @@ export default function BlogDetailPage() {
                     <div className="max-w-7xl mx-auto px-6 py-6 flex items-center gap-6">
                         {blog.image && (
                             <button onClick={() => setImageModalOpen(true)} className="shrink-0 w-20 h-24 rounded-lg overflow-hidden border-2 border-white/20 hover:border-white/60 transition-colors relative group" title="View full-size">
-                                <img src={blog.image} alt={blog.title} className="w-full h-full object-cover" />
+                                <img src={resolveResourceUrl(blog.image)} alt={blog.title} className="w-full h-full object-cover" />
                                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 flex items-center justify-center transition-all">
                                     <ZoomIn className="w-4 h-4 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
                                 </div>
@@ -142,7 +142,7 @@ export default function BlogDetailPage() {
                             {blog.image && (
                                 <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
                                     <button onClick={() => setImageModalOpen(true)} className="relative w-full group block" title="Click to view full-size">
-                                        <img src={blog.image} alt={blog.title} className="w-full object-cover max-h-64" />
+                                        <img src={resolveResourceUrl(blog.image)} alt={blog.title} className="w-full object-cover max-h-64" />
                                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all flex items-center justify-center">
                                             <div className="bg-white/90 rounded-full p-2.5 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">
                                                 <ZoomIn className="w-5 h-5 text-gray-900" />

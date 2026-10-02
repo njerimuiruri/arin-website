@@ -5,6 +5,13 @@ import { useRouter } from 'next/navigation';
 import { getBlogs } from '@/services/blogsService';
 import Navbar from '@/app/navbar/Navbar';
 import Footer from '@/app/footer/Footer';
+import { API_CONFIG } from '@/lib/apiConfig';
+
+function resolveImageUrl(url?: string): string | undefined {
+    if (!url) return url;
+    if (url.startsWith('http://') || url.startsWith('https://')) return url;
+    return `${API_CONFIG.BASE_URL}${url}`;
+}
 
 interface Blog {
     _id?: string;
@@ -161,7 +168,7 @@ const BlogsPage = () => {
                                         {/* Image */}
                                         <div className="relative h-56 overflow-hidden">
                                             <img
-                                                src={blog.image || "https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=600&q=80"}
+                                                src={resolveImageUrl(blog.image) || "https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=600&q=80"}
                                                 alt={blog.title}
                                                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                                 onError={(e) => {
