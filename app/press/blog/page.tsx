@@ -37,7 +37,11 @@ const BlogsPage = () => {
         async function fetchBlogs() {
             setLoading(true);
             const data = await getBlogs();
-            setBlogs(data);
+            // Latest blogs first; blogs sharing a date fall back to creation time
+            const time = (d?: string) => (d ? new Date(d).getTime() : 0);
+            setBlogs([...data].sort((a: Blog, b: Blog) =>
+                time(b.date) - time(a.date) || time(b.createdAt) - time(a.createdAt)
+            ));
             setLoading(false);
         }
         fetchBlogs();
