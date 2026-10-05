@@ -153,19 +153,19 @@ const PolicyDialogueDetailPage = () => {
                     <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-[#00c4b3]/10 blur-3xl" />
                     <div className="absolute -bottom-32 -left-20 w-80 h-80 rounded-full bg-[#3a8ba0]/20 blur-3xl" />
 
-                    <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12 lg:pb-16">
+                    <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-6 lg:pb-8">
                         <button
                             onClick={() => router.push('/convening-platforms/policy-dialogues')}
-                            className="flex items-center gap-2 text-white/80 hover:text-white mb-8 lg:mb-10 text-sm font-medium transition-colors group"
+                            className="flex items-center gap-2 text-white/80 hover:text-white mb-4 text-sm font-medium transition-colors group"
                         >
                             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
                             Back to Policy Dialogues
                         </button>
 
-                        <div className="grid lg:grid-cols-[1fr_340px] gap-10 lg:gap-14 items-center">
+                        <div className="grid lg:grid-cols-[1fr_170px] gap-6 lg:gap-10 items-center">
                             <div>
-                                <p className="text-[#00c4b3] text-xs font-semibold uppercase tracking-[0.2em] mb-4">Policy Dialogue</p>
-                                <h1 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-bold leading-tight mb-6">
+                                <p className="text-[#00c4b3] text-xs font-semibold uppercase tracking-[0.2em] mb-2">Policy Dialogue</p>
+                                <h1 className="text-xl sm:text-2xl lg:text-[1.75rem] font-bold leading-snug mb-3">
                                     {dialogue.title}
                                 </h1>
                                 <div className="flex flex-wrap items-center gap-3 text-sm">
@@ -189,9 +189,9 @@ const PolicyDialogueDetailPage = () => {
                                         href={primaryResource.url}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="mt-8 inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-[#00c4b3] text-[#021d49] font-semibold hover:bg-white transition-colors shadow-lg"
+                                        className="mt-4 inline-flex items-center gap-2 px-4 py-2 text-sm rounded-lg bg-[#00c4b3] text-[#021d49] font-semibold hover:bg-white transition-colors shadow-lg"
                                     >
-                                        <Download className="w-5 h-5" />
+                                        <Download className="w-4 h-4" />
                                         Download Report
                                     </a>
                                 )}
@@ -199,7 +199,7 @@ const PolicyDialogueDetailPage = () => {
 
                             {/* Report cover, shown in full rather than cropped */}
                             {img && (
-                                <div className="mx-auto w-full max-w-75 lg:max-w-none">
+                                <div className="mx-auto w-full max-w-40 lg:max-w-none">
                                     <div className="rounded-xl overflow-hidden shadow-2xl ring-1 ring-white/20 lg:rotate-2 hover:rotate-0 transition-transform duration-300">
                                         <img src={img} alt={dialogue.title} className="w-full h-auto block" />
                                     </div>
