@@ -1,8 +1,10 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
-import { ChevronDown, ChevronRight, Menu, Search, X } from 'lucide-react';
+import { ChevronDown, ChevronRight, Menu, X } from 'lucide-react';
 import Image from 'next/image';
 import { getResearchProjects } from '@/services/researchProjectService';
+import { ProjectSummary } from '@/lib/researchProjects';
+import { ResearchMegaMenu, ResearchMobileMenu } from './ResearchProjectsMenu';
 
 type MenuItem = {
     name: string;
@@ -25,9 +27,8 @@ const Navbar = () => {
     const [activeNestedMenu, setActiveNestedMenu] = useState<string | null>(null);
     const [mobileNestedOpen, setMobileNestedOpen] = useState<string | null>(null);
     const [scrolled, setScrolled] = useState(false);
-    const [researchProjects, setResearchProjects] = useState<{ _id: string; title: string }[]>([]);
+    const [researchProjects, setResearchProjects] = useState<ProjectSummary[]>([]);
     const [projectsLoading, setProjectsLoading] = useState(true);
-    const [projectSearchTerm, setProjectSearchTerm] = useState('');
     const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const openMenu = (index: number) => {
@@ -108,7 +109,6 @@ const Navbar = () => {
             }
         } else {
             setActiveNestedMenu(null);
-            setProjectSearchTerm('');
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeMenu]);
@@ -211,12 +211,6 @@ const Navbar = () => {
         return pathname.startsWith(href);
     };
 
-    const filteredResearchProjects = projectSearchTerm.trim()
-        ? researchProjects.filter((project) =>
-            project.title.toLowerCase().includes(projectSearchTerm.trim().toLowerCase())
-        )
-        : researchProjects;
-
     return (
         <React.Fragment>
             <nav className={`w-full sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white shadow-xl' : 'bg-white shadow-md'} border-b border-gray-200`}>
@@ -278,64 +272,7 @@ const Navbar = () => {
                                                     >
                                                         <div className="bg-white shadow-2xl border-t border-gray-200 animate-fadeIn">
                                                             <div className="max-w-[1600px] mx-auto px-6 py-8">
-                                                                <div className="flex items-center justify-between mb-4 gap-4">
-                                                                    <div>
-                                                                        <h3 className="text-lg font-bold text-[#021d49]">All Research Projects</h3>
-                                                                        <p className="text-sm text-gray-500 mt-0.5">
-                                                                            {projectsLoading ? 'Loading projects…' : `${researchProjects.length} project${researchProjects.length !== 1 ? 's' : ''} across ARIN's research programme`}
-                                                                        </p>
-                                                                    </div>
-                                                                    <a
-                                                                        href="/programs/research-projects"
-                                                                        className="flex items-center gap-1 text-sm font-semibold text-[#021d49] hover:text-blue-700 whitespace-nowrap"
-                                                                    >
-                                                                        View all &amp; search
-                                                                        <ChevronRight className="w-4 h-4" />
-                                                                    </a>
-                                                                </div>
-
-                                                                <div className="relative mb-4 max-w-md">
-                                                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                                                                    <input
-                                                                        type="text"
-                                                                        value={projectSearchTerm}
-                                                                        onChange={(e) => setProjectSearchTerm(e.target.value)}
-                                                                        placeholder="Search research projects..."
-                                                                        className="w-full pl-9 pr-9 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#021d49]/20 focus:border-[#021d49] transition-colors"
-                                                                    />
-                                                                    {projectSearchTerm && (
-                                                                        <button
-                                                                            onClick={() => setProjectSearchTerm('')}
-                                                                            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                                                                            aria-label="Clear search"
-                                                                        >
-                                                                            <X className="w-4 h-4" />
-                                                                        </button>
-                                                                    )}
-                                                                </div>
-
-                                                                {projectsLoading ? (
-                                                                    <div className="py-10 text-center text-sm text-gray-400">Loading projects...</div>
-                                                                ) : researchProjects.length === 0 ? (
-                                                                    <div className="py-10 text-center text-sm text-gray-400">No research projects published yet.</div>
-                                                                ) : filteredResearchProjects.length === 0 ? (
-                                                                    <div className="py-10 text-center text-sm text-gray-400">No projects match &quot;{projectSearchTerm}&quot;.</div>
-                                                                ) : (
-                                                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-1 max-h-[55vh] overflow-y-auto pr-2">
-                                                                        {filteredResearchProjects.map((project) => (
-                                                                            <a
-                                                                                key={project._id}
-                                                                                href={`/programs/research-projects/${project._id}`}
-                                                                                className="group/proj flex items-start gap-2 px-2 py-2.5 rounded-lg hover:bg-gray-50 transition-colors"
-                                                                            >
-                                                                                <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#021d49]/30 group-hover/proj:bg-[#021d49] flex-shrink-0" />
-                                                                                <span className="text-[13px] text-gray-700 group-hover/proj:text-[#021d49] leading-snug line-clamp-2">
-                                                                                    {project.title}
-                                                                                </span>
-                                                                            </a>
-                                                                        ))}
-                                                                    </div>
-                                                                )}
+                                                                <ResearchMegaMenu projects={researchProjects} loading={projectsLoading} />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -557,53 +494,7 @@ const Navbar = () => {
                                             />
                                         </button>
                                         {mobileSubmenuOpen === index && item.megaMenu && (
-                                            <div className="ml-2 mt-1 space-y-0.5 animate-fadeIn">
-                                                <a
-                                                    href="/programs/research-projects"
-                                                    className="block px-3 py-2 text-[13px] sm:text-[14px] font-semibold text-[#021d49] rounded-lg hover:bg-gray-50"
-                                                >
-                                                    View all &amp; search →
-                                                </a>
-                                                <div className="relative px-3 py-1.5">
-                                                    <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                                                    <input
-                                                        type="text"
-                                                        value={projectSearchTerm}
-                                                        onChange={(e) => setProjectSearchTerm(e.target.value)}
-                                                        placeholder="Search research projects..."
-                                                        className="w-full pl-9 pr-9 py-2 text-[13px] border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#021d49]/20 focus:border-[#021d49] transition-colors"
-                                                    />
-                                                    {projectSearchTerm && (
-                                                        <button
-                                                            onClick={() => setProjectSearchTerm('')}
-                                                            className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                                                            aria-label="Clear search"
-                                                        >
-                                                            <X className="w-4 h-4" />
-                                                        </button>
-                                                    )}
-                                                </div>
-                                                <div className="max-h-[40vh] overflow-y-auto">
-                                                    {projectsLoading && (
-                                                        <div className="px-3 py-2 text-[12px] text-gray-400">Loading projects...</div>
-                                                    )}
-                                                    {!projectsLoading && researchProjects.length === 0 && (
-                                                        <div className="px-3 py-2 text-[12px] text-gray-400">No research projects published yet.</div>
-                                                    )}
-                                                    {!projectsLoading && researchProjects.length > 0 && filteredResearchProjects.length === 0 && (
-                                                        <div className="px-3 py-2 text-[12px] text-gray-400">No projects match &quot;{projectSearchTerm}&quot;.</div>
-                                                    )}
-                                                    {!projectsLoading && filteredResearchProjects.map((project) => (
-                                                        <a
-                                                            key={project._id}
-                                                            href={`/programs/research-projects/${project._id}`}
-                                                            className="block px-3 py-2 text-[12px] sm:text-[13px] text-gray-700 hover:bg-gray-50 hover:text-[#021d49] rounded-lg line-clamp-1 touch-manipulation"
-                                                        >
-                                                            {project.title}
-                                                        </a>
-                                                    ))}
-                                                </div>
-                                            </div>
+                                            <ResearchMobileMenu projects={researchProjects} loading={projectsLoading} />
                                         )}
                                         {mobileSubmenuOpen === index && item.submenu && (
                                             <div className="ml-2 mt-1 space-y-0.5 animate-fadeIn">

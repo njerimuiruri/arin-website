@@ -7,6 +7,7 @@ interface ProjectHeroProps {
     title: string;
     category?: string;
     dateLabel?: string;
+    status?: string; // 'ongoing' | 'completed'
     excerpt?: string;
     coverImageUrl?: string;
     hasResources: boolean;
@@ -20,6 +21,7 @@ export default function ProjectHero({
     title,
     category,
     dateLabel,
+    status,
     excerpt,
     coverImageUrl,
     hasResources,
@@ -49,6 +51,16 @@ export default function ProjectHero({
                                     style={{ borderColor: RP.line, color: RP.inkSoft }}
                                 >
                                     <Tag className="h-3 w-3" /> {category}
+                                </span>
+                            )}
+                            {status === 'ongoing' && (
+                                <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-emerald-700">
+                                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> Ongoing
+                                </span>
+                            )}
+                            {status === 'completed' && (
+                                <span className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-gray-600">
+                                    Completed
                                 </span>
                             )}
                         </div>

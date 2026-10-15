@@ -31,7 +31,7 @@ export default function ProjectImpact({ outputs, longTermOutcome, intermediateOu
             {outputItems.length > 0 && (
                 <div>
                     <h3 className="mb-6 text-2xl font-bold" style={{ color: RP.ink }}>
-                        What the project produces
+                        Key milestones &amp; outputs
                     </h3>
                     <NumberedCards
                         columns={3}
@@ -44,7 +44,7 @@ export default function ProjectImpact({ outputs, longTermOutcome, intermediateOu
             {outputItems.length === 0 && outputs && (
                 <div className="overflow-hidden rounded-3xl bg-white p-7 shadow-sm ring-1 ring-black/5 sm:p-9">
                     <p className="mb-4 text-[11px] font-bold uppercase tracking-[0.18em]" style={{ color: RP.accentWord }}>
-                        Outputs
+                        Key milestones &amp; outputs
                     </p>
                     <div className="p-prose" dangerouslySetInnerHTML={{ __html: outputs }} />
                 </div>

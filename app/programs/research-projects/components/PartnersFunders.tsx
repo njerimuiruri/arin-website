@@ -8,20 +8,27 @@ export interface OrgItem {
 
 function OrgLogoGrid({ items }: { items: OrgItem[] }) {
     return (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {items.map((item, i) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {items.map((item, i) => item.logo ? (
                 <div
                     key={i}
                     className="flex flex-col items-center justify-center gap-2.5 p-4 bg-white border border-gray-100 rounded-xl shadow-sm"
                 >
                     <div className="h-12 w-full flex items-center justify-center">
-                        {item.logo ? (
-                            <img src={item.logo} alt={item.name} className="max-h-12 max-w-full object-contain" />
-                        ) : (
-                            <Building2 className="w-6 h-6 text-gray-300" />
-                        )}
+                        <img src={item.logo} alt={item.name} className="max-h-12 max-w-full object-contain" />
                     </div>
                     <p className="text-xs text-gray-600 text-center leading-snug line-clamp-2">{item.name}</p>
+                </div>
+            ) : (
+                // No logo: show the full name; spreadsheet-sourced orgs rarely have one.
+                <div
+                    key={i}
+                    className="flex items-center gap-3 p-4 bg-white border border-gray-100 rounded-xl shadow-sm"
+                >
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#021d49]/5">
+                        <Building2 className="w-4 h-4 text-[#021d49]/60" />
+                    </span>
+                    <p className="text-[13px] font-medium text-gray-700 leading-snug">{item.name}</p>
                 </div>
             ))}
         </div>

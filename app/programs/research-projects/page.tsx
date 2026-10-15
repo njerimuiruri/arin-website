@@ -1,16 +1,25 @@
 "use client";
 import React, { useEffect, useMemo, useState } from 'react';
-import { ArrowRight, Calendar, FileText, Search, Filter, X, LayoutList, LayoutGrid } from 'lucide-react';
+import { ArrowRight, Calendar, FileText, Search, X, LayoutList, LayoutGrid } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
 import { getResearchProjects } from '@/services/researchProjectService';
 import { useRouter } from 'next/navigation';
 import Footer from '@/app/footer/Footer';
 import { API_CONFIG } from '@/lib/apiConfig';
+import { areaBySlug, areaOf, groupByArea, isOngoing, projectPeriod, sortProjects } from '@/lib/researchProjects';
+
+type StatusFilter = 'all' | 'ongoing' | 'completed';
+const STATUS_TABS: { value: StatusFilter; label: string }[] = [
+    { value: 'all', label: 'All' },
+    { value: 'ongoing', label: 'Ongoing' },
+    { value: 'completed', label: 'Completed' },
+];
 
 const ResearchProjectsPage = () => {
     const router = useRouter();
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState('All');
+    const [selectedArea, setSelectedArea] = useState('all'); // focus area slug
+    const [selectedStatus, setSelectedStatus] = useState<StatusFilter>('all');
     const [projects, setProjects] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -31,11 +40,25 @@ const ResearchProjectsPage = () => {
         return () => { mounted = false; };
     }, []);
 
-    const categories = useMemo(() => {
-        const set = new Set<string>();
-        projects.forEach(p => { if (p.category) set.add(p.category); });
-        return ['All', ...Array.from(set)];
-    }, [projects]);
+    // Menu links open this page pre-filtered via ?area=<slug>; keep the URL in sync so filters are shareable.
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const area = params.get('area');
+        const status = params.get('status');
+        if (areaBySlug(area)) setSelectedArea(area as string);
+        if (status === 'ongoing' || status === 'completed') setSelectedStatus(status);
+    }, []);
+
+    useEffect(() => {
+        const params = new URLSearchParams();
+        if (selectedArea !== 'all') params.set('area', selectedArea);
+        if (selectedStatus !== 'all') params.set('status', selectedStatus);
+        const qs = params.toString();
+        window.history.replaceState(null, '', qs ? `?${qs}` : window.location.pathname);
+    }, [selectedArea, selectedStatus]);
+
+    const areaGroups = useMemo(() => groupByArea(projects), [projects]);
+    const selectedAreaName = areaBySlug(selectedArea)?.name;
 
     const stripHtml = (html: string) => html.replace(/<[^>]*>/g, '');
     const truncate = (text: string, max: number) =>
@@ -45,17 +68,22 @@ const ResearchProjectsPage = () => {
         return img.startsWith('http') ? img : `${API_CONFIG.BASE_URL}${img}`;
     };
 
-    const filteredProjects = projects.filter(project => {
+    const matchesStatus = (project: any) =>
+        selectedStatus === 'all' || (selectedStatus === 'ongoing' ? isOngoing(project) : !isOngoing(project));
+
+    const filteredProjects = sortProjects(projects.filter(project => {
         const text = stripHtml(project.description || '');
         const matchesSearch = (project.title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
             text.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesCategory = selectedCategory === 'All' || project.category === selectedCategory;
-        return matchesSearch && matchesCategory;
-    }).sort((a, b) => {
-        const dateA = a.date ? new Date(a.date).getTime() : 0;
-        const dateB = b.date ? new Date(b.date).getTime() : 0;
-        return dateB - dateA;
-    });
+        const matchesArea = selectedArea === 'all' || areaOf(project).slug === selectedArea;
+        return matchesSearch && matchesArea && matchesStatus(project);
+    }));
+
+    const clearFilters = () => {
+        setSearchTerm('');
+        setSelectedArea('all');
+        setSelectedStatus('all');
+    };
 
     const handleProjectClick = (projectId: string) => {
         router.push(`/programs/research-projects/${projectId}`);
@@ -92,9 +120,9 @@ const ResearchProjectsPage = () => {
                     {/* Search and Filter Section */}
                     <div className="mb-10">
                         <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-                            <div className="grid md:grid-cols-2 gap-4">
+                            <div className="flex flex-col md:flex-row gap-4">
                                 {/* Search Bar */}
-                                <div className="relative">
+                                <div className="relative flex-1">
                                     <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                                     <input
                                         type="text"
@@ -114,28 +142,43 @@ const ResearchProjectsPage = () => {
                                     )}
                                 </div>
 
-                                {/* Category Filter */}
-                                <div className="relative">
-                                    <Filter className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none" />
-                                    <select
-                                        value={selectedCategory}
-                                        onChange={(e) => setSelectedCategory(e.target.value)}
-                                        className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl focus:border-[#021d49] focus:outline-none transition-all appearance-none bg-white cursor-pointer text-gray-700 font-medium"
-                                    >
-                                        {categories.map(category => (
-                                            <option key={category} value={category}>{category}</option>
-                                        ))}
-                                    </select>
-                                    <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                                        <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                        </svg>
-                                    </div>
+                                {/* Status tabs */}
+                                <div className="flex bg-gray-100 rounded-xl p-1 self-start md:self-stretch">
+                                    {STATUS_TABS.map(tab => (
+                                        <button
+                                            key={tab.value}
+                                            onClick={() => setSelectedStatus(tab.value)}
+                                            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${selectedStatus === tab.value ? 'bg-[#021d49] text-white shadow' : 'text-gray-600 hover:text-[#021d49]'}`}
+                                        >
+                                            {tab.label}
+                                        </button>
+                                    ))}
                                 </div>
                             </div>
 
+                            {/* Focus area chips */}
+                            {areaGroups.length > 0 && (
+                                <div className="mt-4 flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0">
+                                    <button
+                                        onClick={() => setSelectedArea('all')}
+                                        className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-sm font-medium border transition-colors ${selectedArea === 'all' ? 'bg-[#021d49] text-white border-[#021d49]' : 'bg-white text-gray-700 border-gray-200 hover:border-[#021d49] hover:text-[#021d49]'}`}
+                                    >
+                                        All focus areas
+                                    </button>
+                                    {areaGroups.map(({ area, projects: list }) => (
+                                        <button
+                                            key={area.slug}
+                                            onClick={() => setSelectedArea(area.slug)}
+                                            className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-sm font-medium border transition-colors ${selectedArea === area.slug ? 'bg-[#021d49] text-white border-[#021d49]' : 'bg-white text-gray-700 border-gray-200 hover:border-[#021d49] hover:text-[#021d49]'}`}
+                                        >
+                                            {area.name} <span className="opacity-60">({list.filter(matchesStatus).length})</span>
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+
                             {/* Active Filters Display */}
-                            {(searchTerm || selectedCategory !== 'All') && (
+                            {(searchTerm || selectedArea !== 'all' || selectedStatus !== 'all') && (
                                 <div className="mt-4 flex items-center gap-3 flex-wrap">
                                     <span className="text-sm text-gray-600 font-medium">Active filters:</span>
                                     {searchTerm && (
@@ -146,10 +189,18 @@ const ResearchProjectsPage = () => {
                                             </button>
                                         </span>
                                     )}
-                                    {selectedCategory !== 'All' && (
+                                    {selectedAreaName && (
                                         <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#021d49] text-white text-sm rounded-full">
-                                            Category: {selectedCategory}
-                                            <button onClick={() => setSelectedCategory('All')} className="hover:bg-white/20 rounded-full p-0.5">
+                                            Focus area: {selectedAreaName}
+                                            <button onClick={() => setSelectedArea('all')} className="hover:bg-white/20 rounded-full p-0.5">
+                                                <X className="w-3.5 h-3.5" />
+                                            </button>
+                                        </span>
+                                    )}
+                                    {selectedStatus !== 'all' && (
+                                        <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#021d49] text-white text-sm rounded-full">
+                                            Status: {selectedStatus === 'ongoing' ? 'Ongoing' : 'Completed'}
+                                            <button onClick={() => setSelectedStatus('all')} className="hover:bg-white/20 rounded-full p-0.5">
                                                 <X className="w-3.5 h-3.5" />
                                             </button>
                                         </span>
@@ -227,9 +278,10 @@ const ResearchProjectsPage = () => {
                                             <div className="flex items-center justify-between gap-3 text-sm">
                                                 <div className="flex items-center gap-2 text-gray-600">
                                                     <Calendar className="w-4 h-4 text-[#021d49]" />
-                                                    <span className="font-medium">{project.date ? new Date(project.date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'N/A'}</span>
+                                                    <span className="font-medium">{projectPeriod(project) || 'N/A'}</span>
+                                                    {isOngoing(project) && <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full">Ongoing</span>}
                                                 </div>
-                                                {project.category && <span className="inline-block px-3 py-1 bg-[#021d49]/10 text-[#021d49] text-xs font-bold rounded-full border border-[#021d49]/20">{project.category}</span>}
+                                                <span className="inline-block px-3 py-1 bg-[#021d49]/10 text-[#021d49] text-xs font-bold rounded-full border border-[#021d49]/20 text-right">{areaOf(project).name}</span>
                                             </div>
                                             <p className="text-sm text-gray-600 leading-relaxed line-clamp-3 min-h-18">
                                                 {truncate(stripHtml(project.description || 'No description available'), 150)}
@@ -257,7 +309,7 @@ const ResearchProjectsPage = () => {
                         <div className="space-y-3">
                             {filteredProjects.map((project) => {
                                 const imageUrl = buildImageUrl(project.coverImage);
-                                const dateStr = project.date ? new Date(project.date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : '';
+                                const dateStr = projectPeriod(project);
                                 return (
                                     <div
                                         key={project._id}
@@ -277,10 +329,11 @@ const ResearchProjectsPage = () => {
                                         {/* Content */}
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-2 mb-1 flex-wrap">
-                                                {project.category && (
-                                                    <span className="px-2 py-0.5 bg-[#021d49]/10 text-[#021d49] text-xs font-bold uppercase tracking-wide rounded">
-                                                        {project.category}
-                                                    </span>
+                                                <span className="px-2 py-0.5 bg-[#021d49]/10 text-[#021d49] text-xs font-bold uppercase tracking-wide rounded">
+                                                    {areaOf(project).name}
+                                                </span>
+                                                {isOngoing(project) && (
+                                                    <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 text-xs font-bold rounded">Ongoing</span>
                                                 )}
                                                 {dateStr && (
                                                     <span className="flex items-center gap-1 text-xs text-gray-400">
@@ -320,10 +373,7 @@ const ResearchProjectsPage = () => {
                                     We couldn't find any projects matching your search criteria.
                                 </p>
                                 <button
-                                    onClick={() => {
-                                        setSearchTerm('');
-                                        setSelectedCategory('All');
-                                    }}
+                                    onClick={clearFilters}
                                     className="px-6 py-3 bg-[#021d49] text-white font-semibold rounded-xl hover:bg-[#032d6b] transition-colors"
                                 >
                                     Clear All Filters

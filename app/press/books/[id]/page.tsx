@@ -136,10 +136,11 @@ function PaymentSuccess({ result, onClose }: { result: PaymentResult; onClose: (
 
 /* ─── Paystack checkout modal ─────────────────────── */
 function CheckoutModal({
-    book, quantity, onPay, onClose, paying, paystackReady, email, setEmail
+    book, quantity, onPay, onClose, paying, paystackReady, email, setEmail, name, setName
 }: {
     book: Book; quantity: number; paying: boolean; paystackReady: boolean;
     email: string; setEmail: (v: string) => void;
+    name: string; setName: (v: string) => void;
     onPay: () => void; onClose: () => void;
 }) {
     return (
@@ -167,6 +168,19 @@ function CheckoutModal({
                     </div>
 
                     <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                        Full name <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                        type="text"
+                        value={name}
+                        onChange={e => setName(e.target.value)}
+                        placeholder="Jane Doe"
+                        autoComplete="name"
+                        className="w-full border-2 border-gray-200 focus:border-[#021d49] rounded-xl px-4 py-3 text-sm outline-none transition mb-4"
+                        autoFocus
+                    />
+
+                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">
                         Email address <span className="text-red-400">*</span>
                     </label>
                     <input
@@ -175,13 +189,13 @@ function CheckoutModal({
                         onChange={e => setEmail(e.target.value)}
                         onKeyDown={e => e.key === "Enter" && onPay()}
                         placeholder="you@example.com"
+                        autoComplete="email"
                         className="w-full border-2 border-gray-200 focus:border-[#021d49] rounded-xl px-4 py-3 text-sm outline-none transition mb-4"
-                        autoFocus
                     />
 
                     <button
                         onClick={onPay}
-                        disabled={paying || !paystackReady || !email.includes("@")}
+                        disabled={paying || !paystackReady || !name.trim() || !email.includes("@")}
                         className="w-full h-12 bg-[#021d49] hover:bg-[#032a5e] disabled:opacity-50 text-white rounded-xl font-extrabold text-sm transition mb-2.5 flex items-center justify-center gap-2"
                     >
                         {paying ? (
@@ -217,6 +231,7 @@ export default function BookDetailPage() {
     const [quantity, setQuantity] = useState(1);
     const [showCheckout, setShowCheckout] = useState(false);
     const [email, setEmail] = useState("");
+    const [name, setName] = useState("");
     const [paying, setPaying] = useState(false);
     const [paystackReady, setPaystackReady] = useState(false);
     const [paymentResult, setPaymentResult] = useState<PaymentResult | null>(null);
@@ -241,7 +256,7 @@ export default function BookDetailPage() {
 
     const initiatePaystack = () => {
         if (!book?.price) return;
-        if (!email.trim() || !email.includes("@")) return;
+        if (!name.trim() || !email.trim() || !email.includes("@")) return;
         if (!window.PaystackPop) {
             alert("Paystack is still loading, please try again in a moment.");
             return;
@@ -250,16 +265,20 @@ export default function BookDetailPage() {
         const currency = book.currency || "USD";
         const totalCents = Math.round(book.price * quantity * 100);
         const resources = (book.availableResources ?? []).filter(u => typeof u === "string" && u.trim());
+        const buyerName = name.trim();
+        const [firstName, ...rest] = buyerName.split(/\s+/);
 
         try {
             const paystack = new window.PaystackPop();
             paystack.newTransaction({
                 key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || "",
                 email: email.trim(),
+                firstName,
+                lastName: rest.join(" "),
                 amount: totalCents,
                 currency,
                 ref: `ARIN-${Date.now()}-${Math.floor(Math.random() * 99999)}`,
-                metadata: { book_id: book._id, book_title: book.title, quantity },
+                metadata: { book_id: book._id, book_title: book.title, quantity, buyer_name: buyerName },
                 onSuccess: async (transaction: { reference: string }) => {
                     setPaying(false);
                     setShowCheckout(false);
@@ -271,6 +290,7 @@ export default function BookDetailPage() {
                             body: JSON.stringify({
                                 reference: transaction.reference,
                                 email: email.trim(),
+                                name: buyerName,
                                 bookId: book._id,
                                 bookTitle: book.title,
                                 resources,
@@ -362,6 +382,7 @@ export default function BookDetailPage() {
                 <CheckoutModal
                     book={book} quantity={quantity} paying={paying}
                     paystackReady={paystackReady} email={email} setEmail={setEmail}
+                    name={name} setName={setName}
                     onPay={initiatePaystack} onClose={() => setShowCheckout(false)}
                 />
             )}

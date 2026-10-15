@@ -6,6 +6,7 @@ import { API_CONFIG } from '@/lib/apiConfig';
 import { useParams } from 'next/navigation';
 import { getResearchProject, getResearchProjects } from '@/services/researchProjectService';
 import { getThemesByProject } from '@/services/themeService';
+import { projectPeriod } from '@/lib/researchProjects';
 
 import ProjectHero from '../components/ProjectHero';
 import ProjectOverview from '../components/ProjectOverview';
@@ -96,9 +97,10 @@ const ProjectDetailPage = () => {
     }
 
     const excerpt = truncate(stripHtml(project.description || '').trim(), 200);
-    const dateLabel = project.date
+    // Prefer the project period (e.g. "2021 – 2023"); fall back to the publish month.
+    const dateLabel = projectPeriod(project) || (project.date
         ? new Date(project.date).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
-        : undefined;
+        : undefined);
     const gallery = Array.isArray(project.gallery) ? project.gallery : [];
     const relatedInitiatives = Array.isArray(project.relatedInitiatives) ? project.relatedInitiatives : [];
     const teamMembers = Array.isArray(project.teamMembers) ? project.teamMembers : [];
@@ -147,6 +149,7 @@ const ProjectDetailPage = () => {
                     title={project.title}
                     category={project.category}
                     dateLabel={dateLabel}
+                    status={project.status}
                     excerpt={excerpt}
                     coverImageUrl={buildImageUrl(project.coverImage)}
                     hasResources={unifiedResources.length > 0}
