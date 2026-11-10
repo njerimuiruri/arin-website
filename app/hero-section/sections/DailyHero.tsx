@@ -1,3 +1,6 @@
+import { COP31_SHOW_FROM, COP31_SHOW_UNTIL } from "@/data/cop31";
+import Cop31Hero from "./cop31/Cop31hero";
+import { turkeyNow } from "./cop31/lib";
 import HeroOriginalSection from "./HeroOriginalSection";
 import HeroPanelSection from "./HeroPanelSection";
 import HeroCleanSection from "./HeroCleanSection";
@@ -15,6 +18,13 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 const START_DAY = Date.UTC(2026, 8, 29) / DAY_MS;
 
 export default function DailyHero() {
+    // During COP31 (and a few days either side) the conference hero replaces the
+    // rotation. Türkiye and Kenya are both UTC+3, so one date serves both.
+    const { date } = turkeyNow();
+    if (date >= COP31_SHOW_FROM && date <= COP31_SHOW_UNTIL) {
+        return <Cop31Hero />;
+    }
+
     const today = Math.floor((Date.now() + EAT_OFFSET_MS) / DAY_MS);
     const index = (((today - START_DAY) % designs.length) + designs.length) % designs.length;
     const Hero = designs[index];
