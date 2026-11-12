@@ -1,6 +1,7 @@
 import { HeartPulse, ArrowLeft, ArrowUpRight, CheckCircle2 } from "lucide-react";
 import Navbar from "@/app/navbar/Navbar";
 import Footer from "@/app/footer/Footer";
+import { lancetKenya2026 as featured } from "@/data/featured-briefs";
 
 const AREA = {
     title: "Climate and Health",
@@ -93,6 +94,34 @@ export default function ClimateHealthPage() {
                         </div>
 
                         <div className="fd-sidebar">
+                            <a
+                                href={featured.pdf}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="fd-themes-card group block"
+                            >
+                                <div className="fd-themes-label">Featured Publication</div>
+                                <div className="flex gap-4 items-start">
+                                    <img
+                                        src={featured.cover}
+                                        alt={`Cover of ${featured.title}`}
+                                        width={featured.coverWidth}
+                                        height={featured.coverHeight}
+                                        loading="lazy"
+                                        className="w-20 h-auto shrink-0 shadow-[0_1px_2px_rgba(2,29,73,.08),0_10px_20px_-10px_rgba(2,29,73,.4)] transition-transform duration-500 group-hover:-translate-y-0.5"
+                                    />
+                                    <div className="min-w-0">
+                                        <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                                            {featured.series} · {featured.year}
+                                        </p>
+                                        <p className="mt-1 text-sm font-bold leading-snug text-gray-900">{featured.title}</p>
+                                        <span className="mt-2 inline-flex items-center gap-1 text-sm font-semibold" style={{ color: "#021d49" }}>
+                                            Read the brief <ArrowUpRight className="w-4 h-4" />
+                                        </span>
+                                    </div>
+                                </div>
+                            </a>
+
                             <div className="fd-themes-card">
                                 <div className="fd-themes-label">Key Themes</div>
                                 <ul className="fd-theme-list">

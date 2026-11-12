@@ -1,9 +1,10 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { policyBriefsService } from '@/services/policyBriefsService';
-import { Calendar, Search, ChevronLeft, ChevronRight, ArrowRight, Lightbulb, FileText, LayoutList, LayoutGrid } from 'lucide-react';
+import { Calendar, Search, ChevronLeft, ChevronRight, ArrowRight, Lightbulb, FileText, LayoutList, LayoutGrid, Download, ExternalLink } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
 import Footer from '@/app/footer/Footer';
+import { lancetKenya2026 as featured } from '@/data/featured-briefs';
 
 const stripHtml = (html: string) => html ? html.replace(/<[^>]+>/g, '') : '';
 
@@ -47,6 +48,13 @@ const PolicyBriefsPage = () => {
         const matchDate = !b.datePosted || new Date(b.datePosted) <= today;
         return matchSearch && matchCat && matchDate;
     });
+
+    const featuredSearch = searchTerm.trim().toLowerCase();
+    const showFeatured = selectedCategory === 'All' && (
+        !featuredSearch ||
+        [featured.title, featured.series, featured.summary, ...featured.priorities, 'kenya health climate lancet']
+            .some(t => t.toLowerCase().includes(featuredSearch))
+    );
 
     const totalPages = Math.ceil(filtered.length / briefsPerPage);
     const paginated = filtered.slice((currentPage - 1) * briefsPerPage, currentPage * briefsPerPage);
@@ -101,6 +109,70 @@ const PolicyBriefsPage = () => {
 
                 {/* Grid / List */}
                 <section className="max-w-7xl mx-auto px-6 py-10">
+
+                    {/* Featured: Lancet Countdown 2026 Kenya brief (static file, co-developed by ARIN) */}
+                    {showFeatured && (
+                        <article className="mb-10 bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+                            <div className="grid md:grid-cols-[minmax(0,240px)_1fr] lg:grid-cols-[minmax(0,280px)_1fr]">
+                                <a
+                                    href={featured.pdf}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label={`Open ${featured.title} (PDF)`}
+                                    className="group relative flex items-center justify-center bg-[#eef1f6] px-8 py-8 md:py-10"
+                                >
+                                    <img
+                                        src={featured.cover}
+                                        alt={`Cover of ${featured.title}`}
+                                        width={featured.coverWidth}
+                                        height={featured.coverHeight}
+                                        loading="lazy"
+                                        className="w-40 md:w-full max-w-[220px] h-auto shadow-[0_1px_2px_rgba(2,29,73,.08),0_18px_36px_-18px_rgba(2,29,73,.45)] transition-transform duration-500 group-hover:-translate-y-1"
+                                    />
+                                </a>
+
+                                <div className="p-6 md:p-8 lg:p-10 flex flex-col">
+                                    <div className="flex flex-wrap items-center gap-2 mb-3">
+                                        <span className="px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-white bg-[#021d49] rounded-full">Featured</span>
+                                        <span className="px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-[#021d49] bg-[#021d49]/10 rounded-full">{featured.series} · {featured.year}</span>
+                                        <span className="flex items-center gap-1 text-xs text-gray-400"><FileText className="w-3.5 h-3.5" /> PDF · 4 pages</span>
+                                    </div>
+
+                                    <h2 className="text-xl lg:text-2xl font-bold text-gray-900 leading-snug">{featured.title}</h2>
+                                    <p className="text-sm text-gray-500 leading-relaxed mt-2 max-w-2xl">{featured.summary}</p>
+
+                                    <ol className="mt-5 space-y-2.5 max-w-2xl">
+                                        {featured.priorities.map((p, i) => (
+                                            <li key={p} className="flex gap-3 text-sm text-gray-700 leading-snug">
+                                                <span className="shrink-0 w-6 h-6 rounded-full bg-[#021d49]/10 text-[#021d49] text-xs font-bold flex items-center justify-center">{i + 1}</span>
+                                                <span className="pt-0.5">{p}</span>
+                                            </li>
+                                        ))}
+                                    </ol>
+
+                                    <p className="text-xs text-gray-400 leading-relaxed mt-5 max-w-2xl">{featured.partners}</p>
+
+                                    <div className="flex flex-wrap items-center gap-3 mt-6">
+                                        <a
+                                            href={featured.pdf}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#021d49] hover:bg-[#032a6b] text-white text-sm font-semibold rounded-lg transition-colors"
+                                        >
+                                            Read the brief <ExternalLink className="w-4 h-4" />
+                                        </a>
+                                        <a
+                                            href={featured.pdf}
+                                            download
+                                            className="inline-flex items-center gap-2 px-5 py-2.5 border border-gray-300 hover:border-[#021d49] text-[#021d49] text-sm font-semibold rounded-lg transition-colors"
+                                        >
+                                            Download PDF <Download className="w-4 h-4" />
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    )}
 
                     {loading && (
                         <div className="flex flex-col items-center justify-center py-24 gap-3">
