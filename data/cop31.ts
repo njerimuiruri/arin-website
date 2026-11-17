@@ -96,6 +96,34 @@ const ipamPoster: Cop31Poster = {
     alt: "Save the date poster: International Platform on Adaptation Metrics side event, Thursday 12 November 2026, 15:30 to 17:00, Moroccan Pavilion, Blue Zone.",
 };
 
+const bcrupCitiesPoster: Cop31Poster = {
+    src: "/img/cop/posters/bcrup-13-nov.jpg",
+    width: 1080,
+    height: 1080,
+    alt: "ARIN at COP31 poster: Financing Climate Resilient Cities: Scaling the BCRUP Fund for the Urban Poor, 13:15 to 14:45 Türkiye time, Side Event Room 6, Katip Çelebi, Blue Zone.",
+};
+
+const bcrupLaunchPoster: Cop31Poster = {
+    src: "/img/cop/posters/bcrup-14-nov.jpg",
+    width: 1080,
+    height: 1080,
+    alt: "ARIN at COP31 poster: High Level Special Event on the Launch of the Building Climate Resilience with the Urban Poor (BCRUP) Regional Readiness Project for Selected African Countries, 14 November 2026, 16:00 to 17:15 Türkiye time, Circularity Room, Zero Waste Pavilion.",
+};
+
+const bcrupUrbanPoster: Cop31Poster = {
+    src: "/img/cop/posters/bcrup-16-nov.jpg",
+    width: 1600,
+    height: 900,
+    alt: "Speakers poster: COP31 Africa Pavilion high-level side event, Scaling Urban Resilience and Bankable Infrastructure Pipelines for Africa's Urban Poor through the BCRUP Programme, Monday 16 November 2026, 13:00 to 14:30, with opening statements, a BCRUP presentation and a panel that includes Charles Tonui of ARIN.",
+};
+
+const lamaPoster: Cop31Poster = {
+    src: "/img/cop/posters/lama-14-nov.jpg",
+    width: 1132,
+    height: 1600,
+    alt: "Side event poster: Evidence-Based Co-production of Adaptation Metrics and Indicators for Local Adaptation Investments, Saturday 14 November 2026, 10:00 to 11:00, Side Event Room 02, Blue Zone. Hosted by ARIN, the Parliament of Kenya, Parliamentary Research Services and the Pan African Parliamentary Group, with LAMA and GLOBE.",
+};
+
 export const cop31Events: Cop31Event[] = [
     {
         id: "care-international",
@@ -129,6 +157,30 @@ export const cop31Events: Cop31Event[] = [
         poster: ipamPoster,
     },
     {
+        id: "bcrup-cities",
+        // The poster carries no date; 13 November comes from the file name
+        // the team supplied ("BCRUP 13th").
+        date: "2026-11-13",
+        start: "13:15",
+        end: "14:45",
+        organiser: "BCRUP",
+        title: "Financing Climate Resilient Cities: Scaling the BCRUP Fund for the Urban Poor",
+        venue: "Side Event Room 6, Katip Çelebi, Blue Zone",
+        poster: bcrupCitiesPoster,
+    },
+    {
+        id: "lama",
+        date: "2026-11-14",
+        // The LAMA poster prints "10:00 – 11:00 CET". Kept as printed —
+        // confirm with the team whether this should read as Türkiye time.
+        start: "10:00",
+        end: "11:00",
+        organiser: "ARIN · LAMA · Parliament of Kenya",
+        title: "Evidence-Based Co-production of Adaptation Metrics and Indicators for Local Adaptation Investments",
+        venue: "Side Event Room 02, Blue Zone",
+        poster: lamaPoster,
+    },
+    {
         id: "globe-parliament",
         date: "2026-11-14",
         start: "11:00",
@@ -139,18 +191,22 @@ export const cop31Events: Cop31Event[] = [
     {
         id: "bcrup-high-level",
         date: "2026-11-14",
-        start: null,
+        start: "16:00",
+        end: "17:15",
         organiser: "BCRUP",
-        title: "High-Level Event: BCRUP Implementation Pathway through Climate Finance: Translating Global Ambitions into Local Actions",
-        venue: null,
+        title: "High-Level Special Event: Launch of the Building Climate Resilience with the Urban Poor (BCRUP) Regional Readiness Project for Selected African Countries",
+        venue: "Circularity Room, Zero Waste Pavilion",
+        poster: bcrupLaunchPoster,
     },
     {
         id: "bcrup-urban",
         date: "2026-11-16",
-        start: null,
+        start: "13:00",
+        end: "14:30",
         organiser: "BCRUP",
-        title: "Scaling Urban Resilience and Bankable Infrastructure Pipelines for Africa's Urban Poor",
-        venue: null,
+        title: "Scaling Urban Resilience and Bankable Infrastructure Pipelines for Africa's Urban Poor through the BCRUP Programme",
+        venue: "Africa Pavilion, Blue Zone",
+        poster: bcrupUrbanPoster,
     },
     {
         id: "unfccc-technical",
@@ -181,6 +237,51 @@ export const cop31Events: Cop31Event[] = [
 
 // The journal. Newest entries can go anywhere — the page sorts by date.
 export const cop31Days: Cop31Day[] = [
+    {
+        date: "2026-11-11",
+        title: "High-integrity climate action with BioCAM4",
+        summary: "ARIN joined BioCAM4 and partners in Side Event Room 2, Dalyan, to discuss how local action for climate, nature and people can add up to global impact. Participation alone is not enough.",
+        eventIds: ["biocam4"],
+        photos: [
+            {
+                src: "/img/cop/days/2026-11-11/biocam4-session.gif",
+                width: 600,
+                height: 394,
+                alt: "Panellists seated at a long table beneath the UN Climate Change and COP31 Türkiye logos while a moderator speaks from the lectern and the audience listens",
+                caption: "BioCAM4 side event, Side Event Room 2, Dalyan",
+            },
+        ],
+    },
+    {
+        date: "2026-11-12",
+        title: "Advancing the global adaptation metrics agenda with IPAM",
+        summary: "At the Moroccan Pavilion, the International Platform on Adaptation Metrics asked what it would take for adaptation indicators to unlock finance, and what IPAM should deliver with its partners by COP32.",
+        eventIds: ["ipam"],
+        photos: [
+            {
+                src: "/img/cop/days/2026-11-12/ipam-panel.jpg",
+                width: 1280,
+                height: 960,
+                alt: "A speaker at the lectern addresses a panel and audience at the Moroccan Pavilion; the screen asks what it would take for adaptation indicators to unlock finance",
+                caption: "IPAM side event, Moroccan Pavilion, Blue Zone",
+            },
+        ],
+    },
+    {
+        date: "2026-11-14",
+        title: "Researchers and parliamentarians on locally led adaptation metrics",
+        summary: "ARIN brought researchers, Kenyan parliamentarians and climate policy actors together to examine how locally co-produced adaptation metrics, drawing on the LAMA project, can guide adaptation planning, budgets and investment.",
+        eventIds: ["lama"],
+        photos: [
+            {
+                src: "/img/cop/days/2026-11-14/lama-team.jpg",
+                width: 837,
+                height: 586,
+                alt: "The ARIN team and partners stand in a row in front of the UN Climate Change and COP31 Türkiye backdrop, beside a screen showing the State of Locally-Led Adaptation Measurement in Africa (2026) report",
+                caption: "LAMA side event, Side Event Room 02, Blue Zone",
+            },
+        ],
+    },
     // Example:
     // {
     //     date: "2026-11-10",

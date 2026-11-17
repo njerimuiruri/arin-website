@@ -5,7 +5,7 @@ import "./Cop31.css";
 import { cop31Serif } from "./fonts";
 import Journal from "./Journal";
 import PosterButton from "./Posterbutton";
-import ProgrammeStrip, { type ProgrammeItem } from "./ProgrammeStrip";
+import ProgrammeStrip, { type ProgrammeItem } from "./Programmestrip";
 import { eventStatus, fmtDate, sortedEvents, timeLabel, turkeyNow, type Cop31Status } from "./lib";
 
 const STATUS_LABEL: Record<Cop31Status, string> = {

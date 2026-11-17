@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { ArrowRight, Calendar, Globe, Search, Filter } from 'lucide-react';
 import Navbar from '@/app/navbar/Navbar';
 import { API_CONFIG } from '@/lib/apiConfig';
+import Cop31Feature from './Cop31Feature';
 
 interface Cop {
     _id: string;
@@ -65,156 +66,103 @@ const COPPage = () => {
         router.push(`/convening-platforms/cop/${copId}`);
     };
 
-    if (loading) {
-        return (
-            <>
-                <Navbar />
-                <div className="w-full bg-gradient-to-br from-slate-50 via-white to-stone-50 min-h-screen flex items-center justify-center">
-                    <div className="animate-pulse text-center">Loading COP content...</div>
-                </div>
-            </>
-        );
-    }
-
     return (
         <>
             <Navbar />
-            <div className="w-full bg-gradient-to-br from-slate-50 via-white to-stone-50 min-h-screen">
-                {/* Hero Section */}
-                <section className="max-w-[1600px] mx-auto px-6 py-12">
-                    <div className="text-center mb-8">
-                        <div className="flex items-center justify-center gap-3 mb-4">
-                            <Globe className="w-12 h-12 text-[#021d49]" />
-                        </div>
-                        <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
-                            Conference of the{' '}
-                            <span className="bg-gradient-to-r from-[#021d49] to-[#021d49] bg-clip-text text-transparent">
-                                Parties (COP)
-                            </span>
-                        </h1>
+            <div className="w-full bg-slate-50 min-h-screen">
+                <Cop31Feature />
 
-                        <p className="text-lg text-gray-600 leading-relaxed max-w-3xl mx-auto">
-                            ARIN's contributions to global climate policy discussions, driving African-led solutions and advancing the Global Goal on Adaptation
-                        </p>
-                    </div>
-
-                    {/* Search and Filter Section */}
-                    <div className="max-w-4xl mx-auto mb-8">
-                        <div className="bg-white rounded-xl p-4 shadow-lg border border-gray-200">
-                            <div className="grid md:grid-cols-2 gap-4">
-                                {/* Search Bar */}
-                                <div className="relative">
-                                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                {/* Archive of COP materials from the CMS */}
+                {(loading || cops.length > 0) && (
+                    <section className="max-w-6xl mx-auto px-6 pt-12" aria-labelledby="cop-archive-title">
+                        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-5">
+                            <div>
+                                <h2 id="cop-archive-title" className="text-2xl font-bold text-gray-900">More COP materials</h2>
+                                <p className="text-sm text-gray-500 mt-1">
+                                    Briefs, statements and resources from ARIN&apos;s engagement at previous Conferences of the Parties.
+                                </p>
+                            </div>
+                            <div className="flex gap-3 w-full md:w-auto">
+                                <div className="relative flex-1 md:w-64">
+                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
                                     <input
                                         type="text"
                                         placeholder="Search COP content..."
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
-                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#021d49] focus:outline-none transition-colors"
+                                        className="w-full pl-9 pr-3 py-2 text-sm bg-white border border-gray-300 rounded-lg focus:border-[#021d49] focus:outline-none transition-colors"
+                                        aria-label="Search COP content"
                                     />
                                 </div>
-
-                                {/* Year Filter */}
                                 <div className="relative">
-                                    <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                                    <Filter className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
                                     <select
                                         value={selectedYear}
                                         onChange={(e) => setSelectedYear(e.target.value)}
-                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-[#021d49] focus:outline-none transition-colors appearance-none bg-white cursor-pointer"
+                                        className="pl-9 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:border-[#021d49] focus:outline-none appearance-none bg-white cursor-pointer"
+                                        aria-label="Filter by year"
                                     >
                                         {years.map(year => (
-                                            <option key={year} value={year}>{year}</option>
+                                            <option key={year} value={year}>{year === 'All' ? 'All years' : year}</option>
                                         ))}
                                     </select>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    {/* COP Items Grid */}
-                    <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-6 max-w-6xl mx-auto">
-                        {filteredCops.map((cop) => (
-                            <div
-                                key={cop._id}
-                                className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-[#021d49] cursor-pointer group"
-                                onClick={() => handleCopClick(cop._id)}
-                            >
-                                {/* Image */}
-                                <div className="relative h-56 overflow-hidden">
-                                    {cop.image ? (
-                                        <img
-                                            src={cop.image}
-                                            alt={cop.title}
-                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                                        />
-                                    ) : (
-                                        <div className="w-full h-full bg-gradient-to-br from-[#021d49] to-[#021d49] flex items-center justify-center">
-                                            <Globe className="w-16 h-16 text-white/50" />
+                        {loading && (
+                            <div className="animate-pulse text-center text-gray-500 py-10">Loading COP content...</div>
+                        )}
+
+                        <ul className="grid lg:grid-cols-2 gap-4">
+                            {filteredCops.map((cop) => (
+                                <li key={cop._id}>
+                                    <button
+                                        type="button"
+                                        onClick={() => handleCopClick(cop._id)}
+                                        className="w-full text-left bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md border border-gray-200 hover:border-[#021d49] transition-all group flex"
+                                    >
+                                        <div className="relative w-32 sm:w-40 shrink-0 bg-[#021d49]">
+                                            {cop.image ? (
+                                                // eslint-disable-next-line @next/next/no-img-element
+                                                <img src={cop.image} alt="" className="absolute inset-0 w-full h-full object-cover" />
+                                            ) : (
+                                                <div className="absolute inset-0 flex items-center justify-center">
+                                                    <Globe className="w-10 h-10 text-white/40" />
+                                                </div>
+                                            )}
                                         </div>
-                                    )}
-                                    {cop.year && (
-                                        <div className="absolute top-4 right-4">
-                                            <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-gray-900 font-bold text-sm rounded-full shadow-lg">
-                                                {cop.year}
+                                        <div className="p-4 min-w-0 flex-1">
+                                            <div className="flex items-center gap-2 text-xs text-gray-500 mb-1">
+                                                <Calendar className="w-3.5 h-3.5 text-[#021d49]" />
+                                                <span>{new Date(cop.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                                            </div>
+                                            <h3 className="font-semibold text-gray-900 group-hover:text-[#021d49] leading-snug line-clamp-2">
+                                                {cop.title}
+                                            </h3>
+                                            <p className="text-sm text-gray-600 leading-relaxed mt-1 line-clamp-2">
+                                                {cop.description.replace(/<[^>]*>/g, '')}
+                                            </p>
+                                            <span className="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-[#021d49]">
+                                                View details
+                                                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                                             </span>
                                         </div>
-                                    )}
-                                </div>
-
-                                <div className="p-6">
-                                    {/* Title */}
-                                    <h3 className="text-xl font-bold text-gray-900 group-hover:text-[#021d49] transition-colors leading-tight mb-3 line-clamp-3">
-                                        {cop.title}
-                                    </h3>
-
-                                    {/* Date */}
-                                    <div className="space-y-2 mb-3">
-                                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                                            <Calendar className="w-4 h-4 text-[#021d49]" />
-                                            <span>{new Date(cop.date).toLocaleDateString()}</span>
-                                        </div>
-                                    </div>
-
-                                    {/* Description */}
-                                    <p className="text-sm text-gray-600 leading-relaxed mb-4 line-clamp-2">
-                                        {cop.description.replace(/<[^>]*>/g, '')}
-                                    </p>
-
-                                    {/* Read More Button */}
-                                    <button
-                                        onClick={(e) => { e.stopPropagation(); handleCopClick(cop._id); }}
-                                        className="w-full px-5 py-2.5 bg-gradient-to-r from-[#021d49] to-[#021d49] text-white font-semibold rounded-lg shadow-md flex items-center gap-2 justify-center hover:shadow-lg transition-all duration-200"
-                                    >
-                                        <span>View Details</span>
-                                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                                     </button>
-                                </div>
+                                </li>
+                            ))}
+                        </ul>
+
+                        {!loading && filteredCops.length === 0 && (
+                            <div className="text-center py-10 bg-white rounded-xl border border-gray-200">
+                                <h3 className="font-semibold text-gray-900 mb-1">No COP content found</h3>
+                                <p className="text-sm text-gray-600">Try adjusting your search or filter.</p>
                             </div>
-                        ))}
-                    </div>
+                        )}
+                    </section>
+                )}
 
-                    {/* No Results Message */}
-                    {filteredCops.length === 0 && (
-                        <div className="text-center py-16">
-                            <Globe className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                            <h3 className="text-xl font-bold text-gray-900 mb-2">No COP content found</h3>
-                            <p className="text-gray-600">Try adjusting your search or filter criteria</p>
-                        </div>
-                    )}
-                </section>
-
-                {/* Info Section */}
-                <section className="max-w-[1600px] mx-auto px-6 pb-16">
-                    <div className="bg-gradient-to-br from-[#021d49] via-gray-900 to-[#021d49] rounded-2xl p-10 text-white shadow-2xl">
-                        <h2 className="text-3xl font-bold mb-6 text-center">ARIN at COP</h2>
-                        <p className="text-gray-300 text-center max-w-3xl mx-auto leading-relaxed">
-                            The Africa Research and Impact Network actively participates in Conference of the Parties (COP) meetings,
-                            bringing evidence-based research and African perspectives to global climate negotiations. Our work focuses on
-                            advancing locally-led adaptation, strengthening climate-health linkages, and ensuring African voices lead
-                            the development of the Global Goal on Adaptation.
-                        </p>
-                    </div>
-                </section>
+                <div className="pb-16" />
             </div>
         </>
     );
