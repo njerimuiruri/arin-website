@@ -64,6 +64,8 @@ export type Cop31Day = {
     summary?: string;
     /** Programme events this day's photos relate to */
     eventIds?: string[];
+    /** Link to the ARIN news brief written about this day, e.g. "/press/news-briefs/<id>" */
+    newsBrief?: string;
     photos: Cop31Photo[];
 };
 
@@ -239,10 +241,19 @@ export const cop31Events: Cop31Event[] = [
 export const cop31Days: Cop31Day[] = [
     {
         date: "2026-11-11",
-        title: "High-integrity climate action with BioCAM4",
-        summary: "ARIN joined BioCAM4 and partners in Side Event Room 2, Dalyan, to discuss how local action for climate, nature and people can add up to global impact. Participation alone is not enough.",
+        // Title and summary are quoted verbatim from the news brief.
+        title: "Experts Call for Climate Action That Gives Local Communities Real Decision-Making Power",
+        summary: "Climate action will only deliver lasting and equitable results when the communities closest to the land have the authority, resources and recognition to shape decisions affecting their territories and livelihoods.",
         eventIds: ["biocam4"],
+        newsBrief: "/press/news-briefs/6afc7848c13e1df6dacf4d28",
         photos: [
+            {
+                src: "/img/cop/days/2026-11-11/biocam4-panel.jpg",
+                width: 1600,
+                height: 1200,
+                alt: "Six panellists seated at a long table beneath the UN Climate Change and COP31 Türkiye logos while the moderator speaks from the lectern and the audience listens",
+                caption: "Panel discussion at the BioCAM4 side event, Side Event Room 2, Dalyan",
+            },
             {
                 src: "/img/cop/days/2026-11-11/biocam4-session.gif",
                 width: 600,
@@ -269,9 +280,11 @@ export const cop31Days: Cop31Day[] = [
     },
     {
         date: "2026-11-14",
-        title: "Researchers and parliamentarians on locally led adaptation metrics",
-        summary: "ARIN brought researchers, Kenyan parliamentarians and climate policy actors together to examine how locally co-produced adaptation metrics, drawing on the LAMA project, can guide adaptation planning, budgets and investment.",
+        // Title and summary are quoted verbatim from the news brief.
+        title: "ARIN Brings Researchers and Parliamentarians Together to Advance Locally Led Adaptation Metrics",
+        summary: "A COP31 side event in Antalya examined how locally generated evidence can inform adaptation policy, strengthen parliamentary engagement and guide climate investments towards community priorities.",
         eventIds: ["lama"],
+        newsBrief: "/press/news-briefs/6afc6e8073e06bf9d322040e",
         photos: [
             {
                 src: "/img/cop/days/2026-11-14/lama-team.jpg",

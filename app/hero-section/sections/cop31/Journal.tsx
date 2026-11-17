@@ -116,6 +116,13 @@ export default function Journal() {
                     <p className="c31-eyebrow">{fmtDate(day.date, { weekday: "long", day: "numeric", month: "long" })}</p>
                     <h3 className="c31-day-title c31-serif">{day.title}</h3>
                     {day.summary && <p className="c31-day-summary">{day.summary}</p>}
+                    {day.newsBrief && (
+                        <p className="c31-day-summary">
+                            <a href={day.newsBrief} className="c31-link">
+                                Read the news brief →
+                            </a>
+                        </p>
+                    )}
 
                     <dl className="c31-day-meta">
                         {events.length > 0 && (

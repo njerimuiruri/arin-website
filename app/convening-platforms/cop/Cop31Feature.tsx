@@ -3,7 +3,7 @@ import { ArrowRight, Clock, MapPin, Maximize2, Newspaper } from "lucide-react";
 import { cop31Days, mainPoster } from "@/data/cop31";
 import { fmtDate, sortedEvents, timeLabel } from "@/app/hero-section/sections/cop31/lib";
 
-const NEWS_BRIEF_HREF = "/press/news-briefs/6afc6e8073e06bf9d322040e";
+const NEWS_BRIEF_HREF = "/press/news-briefs";
 
 // The latest COP: a compact hero band, the programme and photographs.
 // Reads the same data as the homepage COP31 hero (data/cop31.ts), so the two
@@ -12,7 +12,7 @@ export default function Cop31Feature() {
     const events = sortedEvents();
     const photos = [...cop31Days]
         .sort((a, b) => (a.date < b.date ? -1 : 1))
-        .flatMap((d) => d.photos.map((p) => ({ ...p, date: d.date, dayTitle: d.title })));
+        .flatMap((d) => d.photos.map((p) => ({ ...p, date: d.date, dayTitle: d.title, newsBrief: d.newsBrief })));
 
     return (
         <>
@@ -50,7 +50,7 @@ export default function Cop31Feature() {
                                 className="px-5 py-2.5 border border-gray-300 text-[#021d49] font-semibold rounded-lg inline-flex items-center gap-2 hover:border-[#021d49] transition-colors"
                             >
                                 <Newspaper className="w-4 h-4" />
-                                Read the COP31 news brief
+                                COP31 news briefs
                             </Link>
                         </div>
                     </div>
@@ -171,6 +171,15 @@ export default function Cop31Feature() {
                                             {fmtDate(p.date, { weekday: "short", day: "numeric", month: "short" })}
                                         </p>
                                         <p className="font-semibold text-gray-900 leading-snug text-sm mt-0.5">{p.dayTitle}</p>
+                                        {p.newsBrief && (
+                                            <Link
+                                                href={p.newsBrief}
+                                                className="mt-1.5 inline-flex items-center gap-1 text-sm font-semibold text-[#021d49] hover:underline"
+                                            >
+                                                Read the news brief
+                                                <ArrowRight className="w-3.5 h-3.5" />
+                                            </Link>
+                                        )}
                                     </div>
                                 </li>
                             ))}
