@@ -35,7 +35,7 @@ export function Band({
     // The whole page is white now; sections are separated by a hairline only.
     void bg;
     return (
-        <section id={id} className={`scroll-mt-28 bg-white ${className}`}>
+        <section id={id} className={`scroll-mt-28 bg-white sm:scroll-mt-32 ${className}`}>
             <div className="mx-auto max-w-7xl border-b border-black/[0.07] px-6 py-9 last:border-b-0 sm:py-12">
                 {children}
             </div>
@@ -263,7 +263,7 @@ export function NumberedCards({
             ? 'sm:grid-cols-2'
             : 'sm:grid-cols-2 lg:grid-cols-3';
     return (
-        <div className={`grid ${col} gap-6`}>
+        <div className={`grid ${col} gap-x-6 gap-y-11 pt-5`}>
             {items.map((it, i) => (
                 <div key={i} className="relative rounded-3xl bg-white p-7 pt-9 shadow-sm ring-1 ring-black/5">
                     <span

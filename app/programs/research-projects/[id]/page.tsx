@@ -5,11 +5,16 @@ import Footer from '@/app/footer/Footer';
 import { API_CONFIG } from '@/lib/apiConfig';
 import { useParams } from 'next/navigation';
 import { getResearchProject, getResearchProjects } from '@/services/researchProjectService';
+import { getNewsBriefsByProject } from '@/services/newsBriefsService';
 import { getThemesByProject } from '@/services/themeService';
 import { projectPeriod } from '@/lib/researchProjects';
+import { plainText, splitDescription } from '@/lib/htmlSections';
 
 import ProjectHero from '../components/ProjectHero';
 import ProjectOverview from '../components/ProjectOverview';
+import DescriptionSection from '../components/DescriptionSection';
+import ProjectNewsBriefs from '../components/ProjectNewsBriefs';
+import SectionNav from '../components/SectionNav';
 import ProjectImpact from '../components/ProjectImpact';
 import PartnersFunders from '../components/PartnersFunders';
 import ProjectTeam from '../components/ProjectTeam';
@@ -22,7 +27,6 @@ import RelatedInitiatives from '../components/RelatedInitiatives';
 import RelatedProjects from '../components/RelatedProjects';
 import { Band, SectionHeading } from '../components/rp-ui';
 
-const stripHtml = (html: string) => html.replace(/<[^>]*>/g, '');
 // Cuts at the last full word within `max` chars instead of mid-word.
 const truncate = (text: string, max: number) =>
     text.length <= max ? text : text.slice(0, max).replace(/\s+\S*$/, '') + '…';
@@ -38,6 +42,7 @@ const ProjectDetailPage = () => {
     const [project, setProject] = useState<any | null>(null);
     const [allProjects, setAllProjects] = useState<any[]>([]);
     const [themes, setThemes] = useState<any[]>([]);
+    const [newsBriefs, setNewsBriefs] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -45,15 +50,17 @@ const ProjectDetailPage = () => {
         let mounted = true;
         (async () => {
             try {
-                const [data, list, projectThemes] = await Promise.all([
+                const [data, list, projectThemes, briefs] = await Promise.all([
                     getResearchProject(id as string),
                     getResearchProjects().catch(() => []),
                     getThemesByProject(id as string).catch(() => []),
+                    getNewsBriefsByProject(id as string),
                 ]);
                 if (mounted) {
                     setProject(data);
                     setAllProjects(list);
                     setThemes(projectThemes);
+                    setNewsBriefs(briefs);
                 }
             } catch (e: any) {
                 if (mounted) setError(e?.message || 'Failed to load project');
@@ -96,7 +103,7 @@ const ProjectDetailPage = () => {
         );
     }
 
-    const excerpt = truncate(stripHtml(project.description || '').trim(), 200);
+    const excerpt = truncate(plainText(project.description || ''), 200);
     // Prefer the project period (e.g. "2021 – 2023"); fall back to the publish month.
     const dateLabel = projectPeriod(project) || (project.date
         ? new Date(project.date).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
@@ -133,6 +140,22 @@ const ProjectDetailPage = () => {
     );
     const hasPartners = Boolean(funders.length > 0 || partners.length > 0);
 
+    // A description with its own <h2> headings is laid out section by section.
+    const { intro, sections } = splitDescription(project.description);
+    const navItems = [
+        themes.length > 0 && { id: 'project-areas', label: 'Project Areas' },
+        { id: 'overview', label: 'Overview' },
+        ...sections.map((s) => ({ id: s.id, label: s.title })),
+        hasImpact && { id: 'impact', label: 'Outputs' },
+        newsBriefs.length > 0 && { id: 'news-briefs', label: 'News Briefs', count: newsBriefs.length },
+        unifiedResources.length > 0 && { id: 'resources', label: 'Resources' },
+        abstracts.length > 0 && { id: 'abstracts', label: 'Abstracts' },
+        hasPartners && { id: 'partners', label: 'Partners' },
+        teamMembers.length > 0 && { id: 'team', label: 'Team' },
+        gallery.length > 0 && { id: 'gallery', label: 'Gallery' },
+    ].filter(Boolean) as { id: string; label: string; count?: number }[];
+    const showNav = sections.length > 0 || newsBriefs.length > 0;
+
     return (
         <>
             <Navbar />
@@ -157,7 +180,10 @@ const ProjectDetailPage = () => {
                     projectAreasCount={themes.length}
                     resourcesCount={unifiedResources.length}
                     teamCount={teamMembers.length}
+                    newsBriefsCount={newsBriefs.length}
                 />
+
+                {showNav && <SectionNav items={navItems} maxWidthClass={CONTAINER} />}
 
                 {themes.length > 0 && (
                     <Band id="project-areas">
@@ -182,7 +208,7 @@ const ProjectDetailPage = () => {
                     />
                     <div className="mt-6">
                         <ProjectOverview
-                            description={project.description}
+                            description={intro}
                             goal={project.goal}
                             objectives={project.objectives}
                             focusAreas={project.focusAreas}
@@ -192,13 +218,26 @@ const ProjectDetailPage = () => {
                     </div>
                 </Band>
 
+                {sections.map((s) => {
+                    const words = s.title.split(' ');
+                    const last = words.length > 1 ? words.pop() : undefined;
+                    return (
+                        <Band key={s.id} id={s.id}>
+                            <SectionHeading title={words.join(' ')} accentWord={last} />
+                            <div className="mt-6">
+                                <DescriptionSection html={s.html} />
+                            </div>
+                        </Band>
+                    );
+                })}
+
                 {hasImpact && (
                     <Band id="impact">
                         <SectionHeading
                             eyebrow="Outcomes & evidence"
                             title="The"
                             accentWord="Impact"
-                            subtitle="What this project has produced and the change it's working toward."
+                            subtitle="What this project delivers and the change it's working toward."
                         />
                         <div className="mt-6">
                             <ProjectImpact
@@ -206,6 +245,20 @@ const ProjectDetailPage = () => {
                                 longTermOutcome={project.longTermOutcome}
                                 intermediateOutcomes={project.intermediateOutcomes}
                             />
+                        </div>
+                    </Band>
+                )}
+
+                {newsBriefs.length > 0 && (
+                    <Band id="news-briefs">
+                        <SectionHeading
+                            eyebrow="From the project"
+                            title="News"
+                            accentWord="Briefs"
+                            subtitle="Articles and field reflections published under this project."
+                        />
+                        <div className="mt-8">
+                            <ProjectNewsBriefs items={newsBriefs} />
                         </div>
                     </Band>
                 )}

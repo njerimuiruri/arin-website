@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowRight, Flag } from 'lucide-react';
 import { RP, NumberedCards, AccentPanel, CheckPills } from './rp-ui';
+import { splitLabel } from '@/lib/htmlSections';
 
 interface ThemeLink {
     _id: string;
@@ -196,6 +197,12 @@ export default function ProjectOverview({
     }
 
     const hasRail = themes.length > 0;
+    const goalBeside = !hasRail && Boolean(goal);
+    const goalPanel = goal && (
+        <AccentPanel eyebrow="The goal" icon={<Flag className="h-5 w-5" />}>
+            {goal}
+        </AccentPanel>
+    );
 
     // Projects with no goal / objectives / focus / programmes / phase steps are
     // just a long description — chunk it into cards / columns so it reads well.
@@ -217,7 +224,7 @@ export default function ProjectOverview({
 
     return (
         <div className="space-y-10">
-            <div className={hasRail ? 'grid gap-10 lg:grid-cols-[1fr_340px] lg:gap-14' : ''}>
+            <div className={hasRail || goalBeside ? 'grid gap-10 lg:grid-cols-[1fr_340px] lg:gap-14' : ''}>
                 <div className="space-y-5">
                     {lead && (
                         <p
@@ -237,6 +244,7 @@ export default function ProjectOverview({
                 </div>
 
                 {hasRail && <ProgrammesRail themes={themes} projectId={projectId} />}
+                {goalBeside && <div className="lg:sticky lg:top-44 lg:self-start">{goalPanel}</div>}
             </div>
 
             {steps.length > 0 && (
@@ -273,18 +281,14 @@ export default function ProjectOverview({
                 </div>
             )}
 
-            {goal && (
-                <AccentPanel eyebrow="The goal" icon={<Flag className="h-5 w-5" />}>
-                    {goal}
-                </AccentPanel>
-            )}
+            {!goalBeside && goalPanel}
 
             {objectives.length > 0 && (
                 <div>
                     <h3 className="mb-6 text-2xl font-bold" style={{ color: RP.ink }}>
                         Objectives
                     </h3>
-                    <NumberedCards columns={3} items={objectives.map((o) => ({ body: o }))} />
+                    <NumberedCards columns={3} items={objectives.map(splitLabel)} />
                 </div>
             )}
 

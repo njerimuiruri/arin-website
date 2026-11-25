@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { getNewsBriefById } from "@/services/newsBriefsService";
 import Navbar from "@/app/navbar/Navbar";
-import { Calendar, Users, Download, FileText, ArrowLeft, Share2, ZoomIn, X, Eye } from "lucide-react";
+import { Calendar, Users, Download, FileText, FolderKanban, ArrowLeft, Share2, ZoomIn, X, Eye } from "lucide-react";
 import Footer from "@/app/footer/Footer";
 
 export default function NewsBriefDetailPage() {
@@ -101,7 +101,7 @@ export default function NewsBriefDetailPage() {
                     <div className="grid lg:grid-cols-4 gap-8 items-start">
 
                         {/* Main content */}
-                        <div className="lg:col-span-3">
+                        <div className="min-w-0 lg:col-span-3">
                             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 md:p-10 mb-8">
                                 <div
                                     className="prose prose-base max-w-none
@@ -196,6 +196,11 @@ export default function NewsBriefDetailPage() {
                                     <button onClick={() => router.push('/press/news-briefs')} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-white/20 hover:bg-white/30 rounded-lg transition-colors text-sm font-semibold">
                                         <ArrowLeft className="w-4 h-4" /> All News Briefs
                                     </button>
+                                    {brief.researchProject && (
+                                        <a href={`/programs/research-projects/${brief.researchProject}`} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-white text-[#021d49] rounded-lg hover:bg-blue-50 transition-colors text-sm font-semibold">
+                                            <FolderKanban className="w-4 h-4" /> View Project
+                                        </a>
+                                    )}
                                     {resources.length > 0 && (
                                         <a href="#resources" className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-white text-[#021d49] rounded-lg hover:bg-blue-50 transition-colors text-sm font-semibold">
                                             <FileText className="w-4 h-4" /> View Resources

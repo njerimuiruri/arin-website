@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Newspaper, Calendar, Search, Filter, ChevronLeft, ChevronRight, ArrowRight, Users, ArrowUpDown } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { getNewsBriefs } from '@/services/newsBriefsService';
+import { excerptOf } from '@/lib/htmlSections';
 import Navbar from '@/app/navbar/Navbar';
 import Footer from '@/app/footer/Footer';
 
@@ -39,7 +40,7 @@ const NewsBriefsPage = () => {
         fetchBriefs();
     }, []);
 
-    const knownCategories = ['Friday Reviews', 'Briefs', 'Climate', 'Energy', 'Agriculture', 'Governance', 'Health', 'Biodiversity'];
+    const knownCategories = ['JUCAN', 'Friday Reviews', 'Briefs', 'Climate', 'Energy', 'Agriculture', 'Governance', 'Health', 'Biodiversity'];
     const dynamicCategories = knownCategories.filter((c) =>
         newsBriefs.some((b: NewsBrief) => b.category === c)
     );
@@ -207,8 +208,10 @@ const NewsBriefsPage = () => {
                                                     alt={brief.title}
                                                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                                 />
-                                                {/* Gradient Overlay */}
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+                                                {/* Gradient Overlay (would grey out the JUCAN logo covers) */}
+                                                {brief.category !== 'JUCAN' && (
+                                                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+                                                )}
                                             </>
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center">
@@ -263,7 +266,7 @@ const NewsBriefsPage = () => {
                                         {/* Excerpt */}
                                         <div className="flex-grow mb-4">
                                             <p className="text-sm text-gray-600 leading-relaxed line-clamp-3">
-                                                {brief.excerpt || stripHtml(brief.description).substring(0, 150) + '...'}
+                                                {brief.excerpt || excerptOf(brief.description)}
                                             </p>
                                         </div>
 

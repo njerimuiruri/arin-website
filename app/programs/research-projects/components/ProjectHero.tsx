@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar, Layers, Paperclip, Tag, Users } from 'lucide-react';
+import { Calendar, Layers, Newspaper, Paperclip, Tag, Users } from 'lucide-react';
 import { RP, Eyebrow, PillButton } from './rp-ui';
 import PageArt, { HeroArtPanel } from './PageArt';
 
@@ -15,6 +15,7 @@ interface ProjectHeroProps {
     projectAreasCount?: number;
     resourcesCount?: number;
     teamCount?: number;
+    newsBriefsCount?: number;
 }
 
 export default function ProjectHero({
@@ -29,11 +30,13 @@ export default function ProjectHero({
     projectAreasCount = 0,
     resourcesCount = 0,
     teamCount = 0,
+    newsBriefsCount = 0,
 }: ProjectHeroProps) {
     const meta = [
         dateLabel ? { icon: Calendar, text: dateLabel } : null,
         projectAreasCount ? { icon: Layers, text: `${projectAreasCount} project areas` } : null,
         resourcesCount ? { icon: Paperclip, text: `${resourcesCount} resources` } : null,
+        newsBriefsCount ? { icon: Newspaper, text: `${newsBriefsCount} news brief${newsBriefsCount > 1 ? 's' : ''}` } : null,
         teamCount ? { icon: Users, text: `${teamCount} team members` } : null,
     ].filter(Boolean) as { icon: React.ComponentType<{ className?: string }>; text: string }[];
 
@@ -101,6 +104,11 @@ export default function ProjectHero({
                             {hasThemes && (
                                 <PillButton href="#project-areas" variant="light" withArrow={false}>
                                     <Layers className="h-4 w-4" /> Project Areas
+                                </PillButton>
+                            )}
+                            {newsBriefsCount > 0 && (
+                                <PillButton href="#news-briefs" variant="light" withArrow={false}>
+                                    <Newspaper className="h-4 w-4" /> News Briefs
                                 </PillButton>
                             )}
                             {hasResources && (

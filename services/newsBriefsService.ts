@@ -19,6 +19,22 @@ export async function getNewsBriefs() {
 }
 
 
+export async function getNewsBriefsByProject(researchProjectId: string) {
+  try {
+    const res = await fetchWithTimeout(`${BASE_URL}?researchProject=${researchProjectId}`, { cache: 'no-store', timeout: 10000 });
+    if (!res.ok) return [];
+    const list = await res.json();
+    // An older API ignores the query and returns every brief, so filter here too.
+    return list.filter((b: any) => b.researchProject === researchProjectId);
+  } catch (error) {
+    if (shouldLogErrors) {
+      console.error('Failed to fetch project news briefs:', error);
+    }
+    return [];
+  }
+}
+
+
 export async function getNewsBriefById(id) {
   try {
     const res = await fetchWithTimeout(`${BASE_URL}/${id}`, { timeout: 10000 });
