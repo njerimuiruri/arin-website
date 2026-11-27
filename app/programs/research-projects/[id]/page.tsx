@@ -253,8 +253,8 @@ const ProjectDetailPage = () => {
                     <Band id="news-briefs">
                         <SectionHeading
                             eyebrow="From the project"
-                            title="News"
-                            accentWord="Briefs"
+                            title="JUCAN Nature-Based Solutions Knowledge"
+                            accentWord="Exchange Webinar Blogs"
                             subtitle="Articles and field reflections published under this project."
                         />
                         <div className="mt-8">
